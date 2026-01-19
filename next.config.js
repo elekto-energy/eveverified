@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
   reactStrictMode: true,
   images: {
-    domains: ['eveverified.com', 'eveverified.se'],
+    unoptimized: true,
   },
 }
 
