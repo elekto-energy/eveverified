@@ -1,0 +1,51 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00ff88" stroke-width="0.5" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Radial gradient overlay -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  
+  <!-- Concentric rings -->
+  <circle cx="600" cy="280" r="180" fill="none" stroke="#00ff88" stroke-width="1" stroke-opacity="0.1"/>
+  <circle cx="600" cy="280" r="220" fill="none" stroke="#00ff88" stroke-width="1" stroke-opacity="0.07"/>
+  <circle cx="600" cy="280" r="260" fill="none" stroke="#00ff88" stroke-width="1" stroke-opacity="0.04"/>
+  
+  <!-- Main circle -->
+  <circle cx="600" cy="280" r="100" fill="#0a0a0a" stroke="#00ff88" stroke-width="3"/>
+  
+  <!-- e symbol -->
+  <text x="600" y="300" text-anchor="middle" fill="#00ff88" font-family="Georgia, serif" font-size="80" font-style="italic">e</text>
+  
+  <!-- Title -->
+  <text x="600" y="430" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="48" font-weight="300" letter-spacing="0.2em">EVE VERIFIED</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="475" text-anchor="middle" fill="#888888" font-family="system-ui, sans-serif" font-size="20">Deterministic AI Verification Layer</text>
+  
+  <!-- Pilot badge -->
+  <rect x="470" y="520" width="260" height="40" rx="20" fill="#00ff88" fill-opacity="0.1" stroke="#00ff88" stroke-opacity="0.3"/>
+  <text x="600" y="546" text-anchor="middle" fill="#00ff88" font-family="system-ui, sans-serif" font-size="14" font-weight="500">PILOT PROGRAM · 5 SPOTS AVAILABLE</text>
+  
+  <!-- Corner decorations -->
+  <path d="M 30 30 L 30 80 M 30 30 L 80 30" stroke="#00ff88" stroke-width="2" stroke-opacity="0.3"/>
+  <path d="M 1170 30 L 1170 80 M 1170 30 L 1120 30" stroke="#00ff88" stroke-width="2" stroke-opacity="0.3"/>
+  <path d="M 30 600 L 30 550 M 30 600 L 80 600" stroke="#00ff88" stroke-width="2" stroke-opacity="0.3"/>
+  <path d="M 1170 600 L 1170 550 M 1170 600 L 1120 600" stroke="#00ff88" stroke-width="2" stroke-opacity="0.3"/>
+  
+  <!-- OrganiQ branding -->
+  <text x="600" y="605" text-anchor="middle" fill="#444444" font-family="system-ui, sans-serif" font-size="12">OrganiQ Sweden AB</text>
+</svg>

@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EVE VERIFIED - Global Styles
+   Euler's constant (e) based design system
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Euler's number - the mathematical constant */
+  --e: 2.718281828459045;
+  
+  /* EVE Brand Colors */
+  --eve-green: #00ff88;
+  --eve-green-dim: rgba(0, 255, 136, 0.25);
+  --eve-cyan: #00d4ff;
+  --eve-orange: #ff6b00;
+  --eve-purple: #a855f7;
+  --eve-dark: #0a0a0a;
+  --eve-darker: #050505;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Georgia', serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--eve-dark);
+  color: #ffffff;
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* Selection */
+::selection {
+  background: var(--eve-green-dim);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Custom Animations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes flowPulse {
+  0%, 100% { stroke-opacity: 0.2; }
+  50% { stroke-opacity: 0.6; }
+}
+
+/* Utility classes */
+.animate-ripple {
+  animation: ripple 1s ease-out infinite;
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+.animate-flow-pulse {
+  animation: flowPulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Grid background */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Glow effects */
+.glow-green {
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.glow-green-intense {
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.5), 0 0 80px rgba(0, 255, 136, 0.3);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 40px rgba(0, 255, 136, 0.5), 0 0 80px rgba(0, 255, 136, 0.3);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* e symbol styling */
+.eve-symbol {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--eve-green);
+}
