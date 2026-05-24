@@ -385,9 +385,9 @@ export default function EvePage() {
               displayUrl: 'research.eveverified.com',
             },
             {
-              name: 'EVE GRC Witness',
+              name: 'EVE Verified GRC',
               color: '#ff6b00',
-              desc: 'Resolves customer GRC documents against AI Act requirements. Deterministic resolver v1.0.',
+              desc: 'AI Act Article 9 evidence demo for GRC workflows. Deterministic matching with Supported / Partial / NO_ANSWER coverage, sealed publicly.',
               status: 'LIVE · BY INVITATION',
               href: 'https://grc.eveverified.com',
               external: true,
