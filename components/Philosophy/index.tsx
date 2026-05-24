@@ -60,9 +60,9 @@ export default function Philosophy() {
           "
         </div>
         <blockquote className="text-xl md:text-2xl font-extralight leading-relaxed mt-2">
-          <span className="italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> has infinite decimals but remains exactly defined.
+          Like a formal system: the inference rules are fixed, and conclusions are derived from approved premises.
           <br />
-          <span className="text-eve-green">Our systems are the same.</span>
+          <span className="text-eve-green">Our core is stable — our knowledge expands as new premises pass approval.</span>
         </blockquote>
         <div className="mt-6 text-sm text-gray-600">
           — The Determinism Manifesto
@@ -78,18 +78,19 @@ export default function Philosophy() {
         className="mt-12 grid md:grid-cols-2 gap-8 text-sm text-gray-500"
       >
         <div>
-          <h4 className="text-white font-medium mb-3">The Mathematics</h4>
+          <h4 className="text-white font-medium mb-3">The Symbol</h4>
           <p className="leading-relaxed">
-            Euler's number (<span className="italic text-eve-green" style={{ fontFamily: 'Georgia, serif' }}>e</span> ≈ 2.71828...) 
-            represents continuous growth and natural change. Like EVE, it's defined by an infinite series 
-            that converges to a precise value.
+            The <span className="text-eve-green italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> in EVE stands for Evidence & Verification Engine. 
+            We use Euler's number as our visual symbol — a nod to mathematical precision. 
+            EVE's architecture is built on formal systems: fixed rules, verified premises, derived conclusions.
           </p>
         </div>
         <div>
           <h4 className="text-white font-medium mb-3">The Engineering</h4>
           <p className="leading-relaxed">
-            Every component in EVE is deterministic. Given the same inputs, you get the same outputs. 
-            No randomness in critical paths. No hallucinations. Just verified, traceable truth.
+            Every critical component in EVE is deterministic. 
+            Given the same inputs and approved premises, the system produces the same conclusions. 
+            No randomness in critical paths — outputs are evidence-bound, traceable, and reproducible.
           </p>
         </div>
       </motion.div>

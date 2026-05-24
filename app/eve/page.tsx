@@ -2,9 +2,10 @@ import { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Eve3D from '@/components/Eve3D'
 import Footer from '@/components/Footer'
-import { TrinityViz, ArchitectureViz, WitnessModeViz, XVaultViz, DualLLMViz } from '@/components/EveArchitecture'
-import { HumanInControl, CoreVsPlay, TrinityOrchestration, CreateUIPreview } from '@/components/EveArchitecture/Principles'
+import { ResolutionViz, ArchitectureViz, WitnessModeViz, XVaultViz, DualLLMViz } from '@/components/EveArchitecture'
+import { HumanInControl, CoreVsPlay, OrchestrationViz, CreateUIPreview } from '@/components/EveArchitecture/Principles'
 import AgentEcosystemViz from '@/components/EveArchitecture/AgentEcosystem'
+import AIActCompliance from '@/components/EveArchitecture/AIActCompliance'
 import { eveStats } from '@/data/agents'
 
 export const metadata: Metadata = {
@@ -79,40 +80,40 @@ export default function EvePage() {
         <ArchitectureViz />
       </section>
 
-      {/* Trinity Orchestration - Clarified */}
+      {/* Orchestration */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
         <h2 className="text-2xl font-extralight tracking-wide mb-4 text-center text-white/90">
-          Trinity Orchestration
+          Orchestration
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
           Three stages with clear boundaries. Each stage has explicit limitations.
           No stage can bypass another.
         </p>
-        <TrinityOrchestration />
+        <OrchestrationViz />
       </section>
 
       {/* Create UI Preview */}
       <section className="py-16 px-6 max-w-5xl mx-auto bg-gradient-to-b from-transparent via-white/[0.01] to-transparent">
         <h2 className="text-2xl font-extralight tracking-wide mb-4 text-center text-white/90">
-          Simple Interface, Full Control
+          Simple Interface, Governed Execution
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
-          Describe what you want. Review the plan. Approve execution.
-          Nothing happens without your explicit consent.
+          Describe the task. Review the plan. Approve execution.
+          Nothing is generated, changed, or run without explicit approval.
         </p>
         <CreateUIPreview />
       </section>
 
-      {/* Trinity Pipeline (Technical Details) */}
+      {/* Resolution Flow (Technical Details) */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
         <h2 className="text-2xl font-extralight tracking-wide mb-4 text-center text-white/90">
-          Trinity Pipeline
+          Resolution Flow
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
-          Hierarchical processing: deterministic factory first (~0.1ms), 
-          escalate to LLM only when necessary. Every output is explicitly marked.
+          Deterministic factory first. Escalation only when the task cannot be resolved deterministically.
+          Every output is explicitly marked.
         </p>
-        <TrinityViz />
+        <ResolutionViz />
       </section>
 
       {/* Witness Mode */}
@@ -133,7 +134,7 @@ export default function EvePage() {
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
           The synthesis LLM never sees your question — only retrieved knowledge fragments.
-          Hallucination outside the knowledge core is architecturally impossible.
+          The synthesis LLM is constrained to retrieved fragments and cannot write to approved records.
         </p>
         <DualLLMViz />
       </section>
@@ -165,26 +166,40 @@ export default function EvePage() {
             The system returns verification status and associated evidence.
           </p>
 
-          {/* Verification Input (placeholder) */}
-          <div className="p-6 rounded-xl bg-black/40 border border-white/10">
+          {/* Verification form — submits to verify.eveverified.com */}
+          <form 
+            action="https://verify.eveverified.com/" 
+            method="GET" 
+            target="_blank"
+            className="p-6 rounded-xl bg-black/40 border border-white/10"
+          >
             <div className="flex gap-3">
               <input 
                 type="text"
+                name="id"
                 placeholder="Enter verification hash or reference..."
-                disabled
-                className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-sm placeholder:text-gray-600"
+                required
+                className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:border-eve-green/50 focus:outline-none transition-colors"
               />
               <button 
-                disabled
-                className="px-6 py-3 rounded-lg bg-eve-green/20 border border-eve-green/30 text-eve-green text-sm font-medium opacity-50 cursor-not-allowed"
+                type="submit"
+                className="px-6 py-3 rounded-lg bg-eve-green/20 border border-eve-green/30 text-eve-green text-sm font-medium hover:bg-eve-green/30 transition-colors"
               >
                 Verify
               </button>
             </div>
             <p className="text-gray-600 text-xs mt-4">
-              Verification service coming soon.
+              Verification opens at{' '}
+              <a 
+                href="https://verify.eveverified.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-eve-green/70 hover:text-eve-green underline"
+              >
+                verify.eveverified.com
+              </a>.
             </p>
-          </div>
+          </form>
 
           <p className="mt-8 text-eve-green text-sm">
             Trust is optional. Verification is not.
@@ -242,8 +257,8 @@ export default function EvePage() {
             </thead>
             <tbody>
               {[
-                { prop: 'Hallucination', conv: 'Possible', rag: 'Reduced', eve: 'Prevented' },
-                { prop: 'Human Control', conv: 'Optional', rag: 'Partial', eve: 'Absolute' },
+                { prop: 'Hallucination', conv: 'Possible', rag: 'Reduced', eve: 'Constrained' },
+                { prop: 'Human Control', conv: 'Optional', rag: 'Partial', eve: 'Governed approval' },
                 { prop: 'Traceability', conv: 'Limited', rag: 'Partial', eve: 'Complete' },
                 { prop: 'Reproducibility', conv: 'No', rag: 'No', eve: 'Yes' },
                 { prop: 'Offline Verification', conv: 'N/A', rag: 'Limited', eve: 'Full' },
@@ -260,6 +275,9 @@ export default function EvePage() {
           </table>
         </div>
       </section>
+
+      {/* AI Act Compliance */}
+      <AIActCompliance />
 
       {/* Factories */}
       <section className="py-16 px-6 bg-gradient-to-b from-transparent via-eve-green/[0.02] to-transparent">
@@ -337,6 +355,120 @@ export default function EvePage() {
         </div>
       </section>
 
+      {/* Built on EVE */}
+      <section className="py-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-extralight tracking-wide mb-4 text-center text-white/90">
+          Built on EVE
+        </h2>
+        <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto text-sm">
+          The same architecture applied to six domains. All live today.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            {
+              name: 'ComplieDocs',
+              color: '#00d4ff',
+              desc: 'Voluntary compliance documentation. Three states: VERIFIED, SCOPE_LIMITATION, PROOF_OF_ABSENCE.',
+              status: 'LIVE',
+              href: 'https://compliedocs.com',
+              external: true,
+              displayUrl: 'compliedocs.com',
+            },
+            {
+              name: 'EVE Navigator',
+              color: '#a855f7',
+              desc: 'Biomedical research queries against PubMed-indexed studies. Every claim anchored to source.',
+              status: 'LIVE',
+              href: 'https://research.eveverified.com',
+              external: true,
+              displayUrl: 'research.eveverified.com',
+            },
+            {
+              name: 'EVE GRC Witness',
+              color: '#ff6b00',
+              desc: 'Resolves customer GRC documents against AI Act requirements. Deterministic resolver v1.0.',
+              status: 'LIVE · BY INVITATION',
+              href: 'https://grc.eveverified.com',
+              external: true,
+              displayUrl: 'grc.eveverified.com',
+            },
+            {
+              name: 'EVE-AIACT-PROOF-V1',
+              color: '#00ff88',
+              desc: 'Six AI Act articles sealed with EVE Bridge. Master seal EVE-COMPLIEDOCS-00001125.',
+              status: 'LIVE',
+              href: '/insights/ai-act-proof-v1',
+              external: false,
+              displayUrl: '/insights/ai-act-proof-v1',
+            },
+            {
+              name: 'SeatNav',
+              color: '#3b82f6',
+              desc: 'Real-time ticket market intelligence. Hourly snapshots and deterministic signals — not predictions.',
+              status: 'LIVE',
+              href: 'https://seatnav.com/world-cup-2026/market',
+              external: true,
+              displayUrl: 'seatnav.com',
+            },
+            {
+              name: 'Merilista',
+              color: '#ec4899',
+              desc: 'Verified real estate intelligence across Spain, UAE, Turkey and Cyprus. Deterministic MERI scoring from public market sources, with EVE Bridge-sealed market snapshots.',
+              status: 'LIVE',
+              href: 'https://merilista.com',
+              external: true,
+              displayUrl: 'merilista.com',
+            },
+          ].map((app, i) => (
+            <a
+              key={i}
+              href={app.href}
+              target={app.external ? '_blank' : undefined}
+              rel={app.external ? 'noopener noreferrer' : undefined}
+              className="group block p-5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300"
+            >
+              {/* Status + arrow */}
+              <div className="flex items-center justify-between mb-4">
+                <span
+                  className="text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-medium"
+                  style={{
+                    backgroundColor: `${app.color}15`,
+                    color: app.color,
+                    border: `1px solid ${app.color}30`
+                  }}
+                >
+                  {app.status}
+                </span>
+                <svg
+                  className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-white font-medium text-base mb-2">
+                {app.name}
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-500 text-xs leading-relaxed mb-4">
+                {app.desc}
+              </p>
+
+              {/* URL footer */}
+              <div className="pt-3 border-t border-white/5">
+                <span className="text-[11px] font-mono break-all" style={{ color: app.color }}>
+                  {app.displayUrl}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-20 px-6 text-center">
         <h2 className="text-2xl font-extralight tracking-wide mb-4 text-white/90">
@@ -344,7 +476,7 @@ export default function EvePage() {
         </h2>
         <p className="text-gray-500 mb-8 max-w-xl mx-auto">
           ComplieDocs is the first commercial product built on EVE architecture.
-          Zero hallucination compliance documentation.
+          Evidence-bound compliance documentation.
         </p>
         <div className="flex justify-center gap-4">
           <a 

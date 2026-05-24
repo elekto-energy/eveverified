@@ -135,7 +135,7 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 0.8 }}
         className="mt-6 text-gray-500 text-center max-w-lg leading-relaxed relative px-4"
       >
-        Where infinite expansion meets absolute precision.
+        Fixed rules. Unlimited knowledge. Verified truth.
         <br />
         AI systems that <span className="text-white">never guess</span> — only <span className="text-eve-green">know</span>.
       </motion.p>

@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // MATHEMATICAL CONSTANTS & UTILITIES
-// Euler's number (e) as the foundation for deterministic design
+// Euler's number (e) used for visual design and spacing calculations
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Euler's number - the base of natural logarithms
@@ -59,14 +59,24 @@ export const generateEParticles = (count: number, baseRadius: number = 60) => {
 // Navigation items
 export const navItems = [
   { name: 'EVE', href: '/eve' },
+  { 
+    name: 'ASK', 
+    href: '/ask',
+    children: [
+      { name: 'Research', href: 'https://research.eveverified.com' },
+      { name: 'Healthcare Law', href: '/ask/legal/healthcare' },
+      { name: 'Public Access', href: '/ask/legal/journalism' },
+    ]
+  },
   { name: 'ELEKTO', href: '/elekto' },
-  { name: 'EVE Verified', href: '/eve-verified' },
   { name: 'Philosophy', href: '/philosophy' },
+  { name: 'Insights', href: '/insights' },
   { name: 'ComplieDocs', href: 'https://compliedocs.com' },
   { 
     name: 'About', 
     href: '/about',
     children: [
+      { name: 'What is EVE?', href: '/about/what-is-eve' },
       { name: 'Determinism', href: '/about/determinism' },
       { name: 'EVE Control Room', href: '/about/eve-control-room' },
       { name: 'Company', href: '/about/company' },

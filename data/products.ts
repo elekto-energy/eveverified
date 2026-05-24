@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // EVE PRODUCTS DATA
-// Each product is a new "decimal" in the e-expansion
+// Each product expands EVE's capabilities — one core, infinite products
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface Product {
@@ -23,7 +23,7 @@ export const products: Product[] = [
     description: 'Evidence & Verification Engine with 25 agents and 47 factory engines. The core that powers everything.',
     color: '#00ff88',
     icon: 'e',
-    features: ['Trinity Architecture', 'Witness Mode AI', '325K Knowledge Chunks', 'Self-Coding Capability'],
+    features: ['Witness-Mode Architecture', 'Cryptographic Sealing', '325K Knowledge Chunks', 'Self-Coding Capability'],
     href: '/eve',
     status: 'live'
   },
@@ -31,21 +31,21 @@ export const products: Product[] = [
     id: 'compliedocs',
     name: 'ComplieDocs',
     tagline: 'Governance Layer',
-    description: 'Compliance documentation platform. 53 templates for GDPR, NIS2, EU AI Act. Zero hallucination guarantee.',
+    description: 'Compliance documentation platform. 53 templates for GDPR, NIS2, EU AI Act. Evidence-bound outputs.',
     color: '#00d4ff',
     icon: '§',
-    features: ['53 Legal Templates', 'Zero Hallucination', 'Instant Generation', 'Multi-jurisdiction'],
+    features: ['53 Legal Templates', 'Evidence-Bound Outputs', 'Instant Generation', 'Multi-jurisdiction'],
     href: 'https://compliedocs.com',
     status: 'live'
   },
   {
     id: 'elekto',
     name: 'ELEKTO-X',
-    tagline: 'Cyber-Physical Layer',
-    description: 'Energy tokenization with device attestation. Patent pending technology for marinas and camping sites.',
+    tagline: 'Cyber-Physical Layer · Hardware Trust Foundation',
+    description: 'High-security vault architecture for critical infrastructure. Hardware attestation, WORM logging, and cryptographic snapshots. The foundation of X-Vault.',
     color: '#ff6b00',
     icon: '⚡',
-    features: ['Device Attestation', 'Polygon Blockchain', 'Marina & Camping', 'No PIN/RFID'],
+    features: ['Kassavalvslager (Vault)', 'TPM/HSM Attestation', 'WORM Logging', 'Snapshots', '41 Patent Claims'],
     href: '/elekto',
     status: 'beta'
   },
@@ -62,12 +62,12 @@ export const products: Product[] = [
   }
 ]
 
-// Philosophy principles
+// Philosophy principles - based on formal systems theory
 export const principles = [
   {
     symbol: '∞',
-    title: 'Infinite Precision',
-    description: 'Like e, our systems have infinite depth but remain precisely defined.'
+    title: 'Formal Expansion',
+    description: 'Fixed rules derive new conclusions as premises are approved. The core is stable.'
   },
   {
     symbol: '◉',
@@ -77,12 +77,12 @@ export const principles = [
   {
     symbol: '⚛',
     title: 'Deterministic Core',
-    description: 'Same input always produces same output. No randomness in critical paths.'
+    description: 'Same input produces same output. No randomness in critical paths.'
   },
   {
     symbol: '⛓',
     title: 'Cryptographic Truth',
-    description: 'Every output is verifiable. Every claim is traceable to its source.'
+    description: 'Every sealed output is verifiable. Every approved claim links to its source.'
   }
 ]
 

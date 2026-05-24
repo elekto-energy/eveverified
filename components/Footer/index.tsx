@@ -24,8 +24,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed max-w-sm">
-              Deterministic AI platform where systems never guess — only know. 
-              Evidence & Verification Engine for the future of trusted AI.
+              Deterministic AI platform bound to approved knowledge. 
+              Evidence & Verification Engine for trusted AI.
             </p>
             <div className="mt-4 text-gray-700 text-xs">
               {company.name} · org.nr {company.orgNr}
@@ -53,6 +53,16 @@ export default function Footer() {
           <div>
             <div className="text-gray-500 text-xs tracking-[0.2em] mb-4">CONNECT</div>
             <ul className="space-y-2">
+              <li>
+                <a
+                  href="https://verify.eveverified.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-white transition-colors text-sm"
+                >
+                  Verify a seal →
+                </a>
+              </li>
               <li>
                 <a
                   href="https://github.com/elekto-energy"

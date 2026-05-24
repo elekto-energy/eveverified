@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: 'export', // Disabled for dynamic routes (Supabase auth)
   trailingSlash: true,
   reactStrictMode: true,
   images: {

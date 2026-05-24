@@ -212,17 +212,17 @@ export function CoreVsPlay() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// TRINITY ORCHESTRATION - Not a model, but orchestration
+// ORCHESTRATION - Not a model, but an orchestration layer
 // ════════════════════════════════════════════════════════════════════════════
 
-export function TrinityOrchestration() {
+export function OrchestrationViz() {
   return (
     <div>
       {/* Clarification */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-xs mb-4">
           <span>ℹ</span>
-          Trinity is not a model — it's an orchestration
+          EVE is not a model — it is an orchestration layer
         </div>
       </div>
 
@@ -322,9 +322,9 @@ export function CreateUIPreview() {
         <div className="space-y-4">
           {/* Input field */}
           <div>
-            <label className="text-xs text-gray-500 mb-2 block">Describe what you want to build</label>
+            <label className="text-xs text-gray-500 mb-2 block">Describe the task</label>
             <div className="p-4 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-sm">
-              Generate a GDPR-compliant privacy policy for my SaaS company...
+              Create a documentation plan based on approved sources...
               <span className="animate-pulse">|</span>
             </div>
           </div>
@@ -371,7 +371,7 @@ export function CreateUIPreview() {
                     : 'bg-eve-green text-eve-dark'
               }`}
             >
-              {step < 3 ? '2. Approve & Run' : '✓ Completed'}
+              {step < 3 ? '2. Approve Execution' : '✓ Approved'}
             </button>
           </div>
 
@@ -379,7 +379,7 @@ export function CreateUIPreview() {
           {step >= 2 && (
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <span className="w-2 h-2 rounded-full bg-eve-green animate-pulse" />
-              {step === 2 ? 'Plan ready for review. Nothing runs without your approval.' : 'Output verified and sealed.'}
+              {step === 2 ? 'Plan ready for review. Nothing runs without your approval.' : 'Output ready for review and approval.'}
             </div>
           )}
         </div>
@@ -387,10 +387,10 @@ export function CreateUIPreview() {
 
       {/* Caption */}
       <p className="text-center text-gray-600 text-xs mt-4">
-        Simple interface. Full control. Nothing happens without explicit approval.
+        AI proposes. EVE verifies. You approve.
       </p>
     </div>
   )
 }
 
-export default { HumanInControl, CoreVsPlay, TrinityOrchestration, CreateUIPreview }
+export default { HumanInControl, CoreVsPlay, OrchestrationViz, CreateUIPreview }

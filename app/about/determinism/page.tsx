@@ -3,8 +3,8 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Determinism | The Mathematical Foundation',
-  description: 'e has infinite decimals but remains exactly defined. The philosophy behind EVE: infinite expansion meets absolute precision.',
+  title: 'Determinism | The Formal Systems Foundation',
+  description: 'Like a formal logic system: stable inference rules, conclusions derived from approved premises. The philosophy behind EVE: stable core, expanding knowledge.',
 }
 
 export default function DeterminismPage() {
@@ -22,12 +22,12 @@ export default function DeterminismPage() {
         </div>
         
         <h1 className="text-2xl md:text-3xl font-extralight tracking-wide text-white/90 mb-4">
-          Infinite decimals. Exactly defined.
+          Fixed rules. Derived conclusions.
         </h1>
         <p className="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">
-          Euler's number (e = 2.71828...) has infinite non-repeating decimals, 
-          yet it is precisely defined. This is the philosophical foundation of EVE: 
-          systems that can expand infinitely while remaining mathematically exact.
+          Like a formal logic system, EVE operates on stable inference rules that derive 
+          verified outputs from approved premises. The core is stable. Knowledge expands as new premises are approved.
+          This is Verified Intelligence.
         </p>
       </section>
 
@@ -41,19 +41,19 @@ export default function DeterminismPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="p-6 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="text-eve-green text-2xl mb-4">∞</div>
-              <h3 className="text-white font-medium mb-2">Infinite Expansion</h3>
+              <h3 className="text-white font-medium mb-2">Expanding Knowledge</h3>
               <p className="text-gray-500 text-sm">
-                Like e's infinite decimals, EVE systems can expand without limit. 
-                New agents, new knowledge, new capabilities — growth is unbounded.
+                EVE can expand to new knowledge domains as approved premises are added. 
+                Each new corpus follows the same primitive. New premises, new conclusions.
               </p>
             </div>
             
             <div className="p-6 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="text-eve-green text-2xl mb-4">=</div>
-              <h3 className="text-white font-medium mb-2">Absolute Precision</h3>
+              <h3 className="text-white font-medium mb-2">Stable Core</h3>
               <p className="text-gray-500 text-sm">
-                Yet like e itself, every output is exactly defined. 
-                Same input → same output. No ambiguity. No approximation.
+                The inference rules are stable. Human-approved knowledge becomes verified premises.
+                AI outputs are derived conclusions. Same input → same output.
               </p>
             </div>
           </div>
@@ -78,11 +78,11 @@ export default function DeterminismPage() {
             </div>
             
             <div className="p-6 rounded-xl bg-white/[0.02] border border-white/5">
-              <h3 className="text-white font-medium mb-2">The Deterministic Alternative</h3>
+              <h3 className="text-white font-medium mb-2">The Formal Systems Alternative</h3>
               <p className="text-gray-500 text-sm">
-                EVE constrains AI to deterministic paths. When precision matters, 
-                outputs are generated from templates, verified against rules, 
-                and cryptographically sealed. The AI observes — it does not decide.
+                EVE operates like a formal logic system. Fixed inference rules. Verified premises.
+                Derived conclusions. When precision matters, outputs are generated from 
+                approved knowledge, verified against rules, and cryptographically sealed.
               </p>
             </div>
             
@@ -90,7 +90,7 @@ export default function DeterminismPage() {
               <h3 className="text-white font-medium mb-2">The Best of Both</h3>
               <p className="text-gray-500 text-sm">
                 Creative interpretation when appropriate. Deterministic execution when required. 
-                Human decision always. This is the Trinity architecture: 
+                Human decision required. This is the EVE orchestration pattern: 
                 LLM interprets → EVE verifies → Factory executes.
               </p>
             </div>
@@ -115,17 +115,17 @@ export default function DeterminismPage() {
               {
                 symbol: '⚛',
                 title: 'Deterministic Core',
-                desc: 'Same input produces same output. Always.'
+                desc: 'Same input produces same output.'
               },
               {
                 symbol: '⛓',
                 title: 'Cryptographic Truth',
-                desc: 'Every claim is backed by verifiable evidence.'
+                desc: 'Every sealed claim links to verifiable evidence.'
               },
               {
                 symbol: '∞',
-                title: 'Infinite Expansion, Precise Definition',
-                desc: 'Systems grow without losing mathematical exactness.'
+                title: 'Formal Expansion',
+                desc: 'Fixed rules derive new conclusions as premises are approved. The core is stable.'
               },
             ].map((item, i) => (
               <div key={i} className="p-5 rounded-xl bg-white/[0.02] border border-white/5">
@@ -146,8 +146,9 @@ export default function DeterminismPage() {
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <blockquote className="text-xl md:text-2xl font-extralight text-white/80 italic">
-            "e has infinite decimals but remains exactly defined. 
-            So too must our systems: infinite in capability, precise in execution."
+            "Like a formal system: the inference rules are fixed, 
+            and conclusions are derived from approved premises. 
+            Our core is stable — our knowledge expands as new premises pass approval."
           </blockquote>
           <p className="mt-6 text-gray-600 text-sm">— The EVE Manifesto</p>
         </div>

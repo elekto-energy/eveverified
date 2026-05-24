@@ -130,7 +130,7 @@ export default function Products() {
             <span className="italic" style={{ fontFamily: 'Georgia, serif' }}>e</span>-EXPANSION
           </h2>
           <p className="text-gray-600 mt-4 text-sm md:text-base">
-            Each product is a new decimal — infinite expansion, absolute precision.
+            One core. Infinite products.
           </p>
         </motion.div>
 

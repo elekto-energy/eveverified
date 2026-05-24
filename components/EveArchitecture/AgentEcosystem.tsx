@@ -16,7 +16,7 @@ export function AgentEcosystemViz() {
 
   const coreAgents = [
     {
-      category: 'TRINITY',
+      category: 'MODELS',
       symbol: '△',
       color: '#00d4ff',
       desc: 'Multi-model consensus',
@@ -110,7 +110,7 @@ export function AgentEcosystemViz() {
     },
     {
       feature: 'Knowledge Source',
-      eve: 'Your data only — no external hallucination',
+      eve: 'Your data only — synthesis bound to your sources',
       others: 'Internet-trained, prone to hallucination',
       eveAdvantage: true
     },
@@ -122,7 +122,7 @@ export function AgentEcosystemViz() {
     },
     {
       feature: 'Multi-Model',
-      eve: 'Trinity: 3 models with consensus & routing',
+      eve: '3-model routing with consensus',
       others: 'Single model, no consensus',
       eveAdvantage: true
     },
@@ -188,7 +188,7 @@ export function AgentEcosystemViz() {
           >
             <div className="text-center mb-8">
               <h3 className="text-xl text-white font-medium mb-2">25+ Built-in Agents</h3>
-              <p className="text-gray-500 text-sm">Specialized agents working in concert through Trinity consensus</p>
+              <p className="text-gray-500 text-sm">Specialized agents working through coordinated model routing</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -347,7 +347,7 @@ export function AgentEcosystemViz() {
           >
             <div className="text-center mb-8">
               <h3 className="text-xl text-white font-medium mb-2">Why EVE is Different</h3>
-              <p className="text-gray-500 text-sm">Architecturally impossible to hallucinate, by design</p>
+              <p className="text-gray-500 text-sm">Designed to prevent unsupported claims from becoming approved facts</p>
             </div>
 
             {/* Comparison Table */}
@@ -393,7 +393,7 @@ export function AgentEcosystemViz() {
             <div className="mt-8 text-center">
               <div className="inline-block p-6 rounded-xl bg-white/[0.02] border border-white/5">
                 <p className="text-gray-300 text-lg italic mb-3">
-                  "AI that cannot lie — because it only speaks from verified sources"
+                  "AI bound to retrieved sources — synthesis is constrained by approved evidence"
                 </p>
                 <div className="text-eve-green text-sm">The EVE Architecture Principle</div>
               </div>

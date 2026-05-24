@@ -54,7 +54,7 @@ export const agentData: Record<string, Agent> = {
     children: ['claude', 'qwen', 'deterministic']
   },
 
-  // ═══ TIER 2: TRINITY CHILDREN ═══
+  // ═══ TIER 2: GOVERNANCE CHILDREN ═══
   claude: {
     id: 'claude',
     name: 'Claude API',

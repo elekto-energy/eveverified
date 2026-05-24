@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import LiveControlRoom from './LiveControlRoom'
 
 export const metadata: Metadata = {
   title: 'EVE Control Room | Human Control Over Deterministic Systems',
@@ -106,6 +107,9 @@ export default function EveControlRoomPage() {
           </p>
         </div>
       </section>
+
+      {/* Live Control Room */}
+      <LiveControlRoom />
 
       {/* What the Control Room Is Not */}
       <section className="py-12 px-6">

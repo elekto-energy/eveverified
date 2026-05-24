@@ -57,9 +57,9 @@ export function ArchitectureViz() {
         { id: 'snapshots', name: 'State Snapshots', desc: 'Signed, timestamped system states' }
       ]
     },
-    trinity: {
+    resolution: {
       symbol: '△',
-      name: 'Trinity Pipeline',
+      name: 'Resolution Flow',
       subtitle: '(50)',
       color: '#00ff88',
       desc: 'Three-level processing: Deterministic Factory → Local LLM → External LLM. Escalates only when needed.',
@@ -83,7 +83,7 @@ export function ArchitectureViz() {
   const layerY = 200
   const layerR = 26
   const layerSpacing = 120
-  const layerKeys = ['knowledge', 'witness', 'authorization', 'xvault', 'trinity']
+  const layerKeys = ['knowledge', 'witness', 'authorization', 'xvault', 'resolution']
   const layerPositions = [
     centerX - layerSpacing * 2,
     centerX - layerSpacing,
@@ -458,8 +458,8 @@ export function ArchitectureViz() {
   )
 }
 
-// Trinity Pipeline Visualization
-export function TrinityViz() {
+// Resolution Flow Visualization
+export function ResolutionViz() {
   const [activeLevel, setActiveLevel] = useState(1)
 
   const levels = [
@@ -470,7 +470,7 @@ export function TrinityViz() {
 
   return (
     <div className="bg-white/[0.02] rounded-2xl border border-white/5 p-6 md:p-8">
-      <h3 className="text-lg font-medium text-white mb-6">Trinity Pipeline</h3>
+      <h3 className="text-lg font-medium text-white mb-6">Resolution Flow</h3>
 
       <div className="space-y-3">
         {levels.map((l) => (

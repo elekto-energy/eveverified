@@ -1,11 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { motion } from 'framer-motion'
 
 // Euler's number for timing
 const E = 2.71828182845904
+
+// Verification states
+type VerifyState = 'idle' | 'loading' | 'verified' | 'not_found' | 'error'
 
 // Clean hierarchical ecosystem visualization
 function EcosystemViz() {
@@ -157,6 +161,45 @@ function EcosystemViz() {
 }
 
 export default function EveVerifiedClient() {
+  // Verification state
+  const [verifyId, setVerifyId] = useState('')
+  const [state, setState] = useState<VerifyState>('idle')
+  const [result, setResult] = useState<any>(null)
+  const [errorMsg, setErrorMsg] = useState('')
+
+  // Handle verification (READ-ONLY, witness only)
+  const handleVerify = async () => {
+    if (!verifyId.trim()) return
+    
+    setState('loading')
+    setResult(null)
+    setErrorMsg('')
+    
+    try {
+      const res = await fetch(`http://127.0.0.1:8004/verify/${encodeURIComponent(verifyId.trim())}`)
+      
+      if (res.status === 404) {
+        setState('not_found')
+        return
+      }
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
+      
+      const data = await res.json()
+      setResult(data)
+      
+      // Check if verified (all conditions met)
+      const isVerified = data.verified === true
+      setState(isVerified ? 'verified' : 'not_found')
+      
+    } catch (err: any) {
+      setState('error')
+      setErrorMsg('Verification service offline (8004)')
+    }
+  }
+
   return (
     <main className="min-h-screen bg-eve-dark">
       <Navigation />
@@ -294,20 +337,74 @@ export default function EveVerifiedClient() {
             <div className="flex gap-3">
               <input 
                 type="text"
-                placeholder="Enter verification hash or reference..."
-                disabled
-                className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-sm placeholder:text-gray-600"
+                placeholder="Enter EVE Decision ID (e.g., EVE-2026-000001)"
+                value={verifyId}
+                onChange={(e) => setVerifyId(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
+                className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-eve-green/50 transition-colors"
               />
               <button 
-                disabled
-                className="px-6 py-3 rounded-lg bg-eve-green/20 border border-eve-green/30 text-eve-green text-sm font-medium opacity-50 cursor-not-allowed"
+                onClick={handleVerify}
+                disabled={state === 'loading' || !verifyId.trim()}
+                className={`px-6 py-3 rounded-lg border text-sm font-medium transition-all
+                  ${state === 'loading' || !verifyId.trim()
+                    ? 'bg-eve-green/10 border-eve-green/20 text-eve-green/50 cursor-not-allowed'
+                    : 'bg-eve-green/20 border-eve-green/30 text-eve-green hover:bg-eve-green/30'
+                  }`}
               >
-                Verify
+                {state === 'loading' ? 'Verifying...' : 'Verify'}
               </button>
             </div>
-            <p className="text-gray-600 text-xs mt-4">
-              Verification service coming soon.
-            </p>
+
+            {/* Result display */}
+            <div className="mt-6 min-h-[80px]">
+              {/* Verified */}
+              {state === 'verified' && result && (
+                <div className="p-4 rounded-lg bg-eve-green/10 border border-eve-green/30 text-left">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-eve-green text-xl">✓</span>
+                    <span className="text-eve-green font-medium tracking-wide">EVE VERIFIED</span>
+                  </div>
+                  <div className="text-gray-400 text-xs space-y-1">
+                    <p>Decision ID: <span className="text-white font-mono">{result.eve_decision_id}</span></p>
+                    {result.verification?.decision?.created_at && (
+                      <p>Created: <span className="text-white">{new Date(result.verification.decision.created_at).toLocaleString()}</span></p>
+                    )}
+                    {result.verification?.decision?.type && (
+                      <p>Type: <span className="text-white">{result.verification.decision.type}</span></p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Not found */}
+              {state === 'not_found' && (
+                <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="text-red-400 text-xl">✕</span>
+                    <span className="text-red-400 font-medium tracking-wide">NOT VERIFIED</span>
+                  </div>
+                  <p className="text-gray-500 text-xs mt-2">Decision not found or invalid reference.</p>
+                </div>
+              )}
+              
+              {/* Error (service offline) */}
+              {state === 'error' && (
+                <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-400 text-xl">⚠</span>
+                    <span className="text-yellow-400 font-medium">{errorMsg}</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Idle */}
+              {state === 'idle' && (
+                <p className="text-gray-600 text-xs">
+                  Enter an EVE Decision ID to verify its authenticity.
+                </p>
+              )}
+            </div>
           </div>
 
           <p className="mt-8 text-eve-green text-sm">

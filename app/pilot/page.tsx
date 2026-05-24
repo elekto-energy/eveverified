@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { submitPilotApplication, UseCaseCategory } from '@/lib/supabase'
@@ -13,11 +14,22 @@ const USE_CASE_CATEGORIES = [
   { value: 'research_experimental', label: 'Research / Experimental' },
 ]
 
-export default function PilotPage() {
+function PilotForm() {
+  const searchParams = useSearchParams()
+  const categoryParam = searchParams.get('category')
+  
   const [applicantType, setApplicantType] = useState<'company' | 'individual' | ''>('')
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState('')
+  
+  // Update category if URL param changes
+  useEffect(() => {
+    if (categoryParam && USE_CASE_CATEGORIES.some(c => c.value === categoryParam)) {
+      setSelectedCategory(categoryParam)
+    }
+  }, [categoryParam])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -50,35 +62,29 @@ export default function PilotPage() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen bg-eve-dark">
-        <Navigation />
-        <section className="pt-32 pb-20 px-6 max-w-2xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-full bg-eve-green/10 border border-eve-green/30 flex items-center justify-center mx-auto mb-6">
-            <span className="text-eve-green text-2xl">✓</span>
-          </div>
-          <h1 className="text-2xl font-extralight tracking-wide text-white/90 mb-4">
-            Application Received
-          </h1>
-          <p className="text-gray-500 text-sm leading-relaxed">
-            Your application has been submitted for review.<br />
-            Selected pilots will be contacted directly.
-          </p>
-          <a 
-            href="/"
-            className="inline-block mt-8 text-sm text-eve-green hover:text-eve-green/80 transition-colors"
-          >
-            ← Back to EVE VERIFIED
-          </a>
-        </section>
-        <Footer />
-      </main>
+      <section className="pt-32 pb-20 px-6 max-w-2xl mx-auto text-center">
+        <div className="w-16 h-16 rounded-full bg-eve-green/10 border border-eve-green/30 flex items-center justify-center mx-auto mb-6">
+          <span className="text-eve-green text-2xl">✓</span>
+        </div>
+        <h1 className="text-2xl font-extralight tracking-wide text-white/90 mb-4">
+          Application Received
+        </h1>
+        <p className="text-gray-500 text-sm leading-relaxed">
+          Your application has been submitted for review.<br />
+          Selected pilots will be contacted directly.
+        </p>
+        <a 
+          href="/"
+          className="inline-block mt-8 text-sm text-eve-green hover:text-eve-green/80 transition-colors"
+        >
+          ← Back to EVE VERIFIED
+        </a>
+      </section>
     )
   }
 
   return (
-    <main className="min-h-screen bg-eve-dark">
-      <Navigation />
-      
+    <>
       {/* Hero */}
       <section className="pt-32 pb-12 px-6 max-w-3xl mx-auto">
         <div className="text-center mb-12">
@@ -288,9 +294,10 @@ export default function PilotPage() {
             <select
               name="use_case_category"
               required
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm 
                        focus:border-eve-green/50 focus:outline-none transition-colors appearance-none cursor-pointer"
-              defaultValue=""
             >
               <option value="" disabled className="bg-eve-dark">Select category</option>
               {USE_CASE_CATEGORIES.map((cat) => (
@@ -388,7 +395,28 @@ export default function PilotPage() {
           This pilot does not provide early access to commercial products, tokens, or services.
         </p>
       </section>
+    </>
+  )
+}
 
+function PilotFormFallback() {
+  return (
+    <section className="pt-32 pb-20 px-6 max-w-2xl mx-auto text-center">
+      <div className="animate-pulse">
+        <div className="h-8 bg-white/5 rounded w-64 mx-auto mb-4"></div>
+        <div className="h-4 bg-white/5 rounded w-48 mx-auto"></div>
+      </div>
+    </section>
+  )
+}
+
+export default function PilotPage() {
+  return (
+    <main className="min-h-screen bg-eve-dark">
+      <Navigation />
+      <Suspense fallback={<PilotFormFallback />}>
+        <PilotForm />
+      </Suspense>
       <Footer />
     </main>
   )

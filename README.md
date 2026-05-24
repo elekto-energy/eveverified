@@ -8,7 +8,7 @@
 
 ## 🧠 Philosophy
 
-Like Euler's number (*e* ≈ 2.71828...), EVE represents infinite expansion with absolute precision. Our systems never guess — they only know.
+Like Euler's number (*e* ≈ 2.71828...), EVE applies stable inference rules to approved premises. Outputs are evidence-bound, sealed, and verifiable.
 
 ```
 e = 2.718281828459045...
@@ -74,7 +74,7 @@ const eSpace = (n) => `${(E * n).toFixed(2)}rem`
 | Name | Hex | Usage |
 |------|-----|-------|
 | eve-green | `#00ff88` | Primary, CTAs |
-| eve-cyan | `#00d4ff` | Trinity, secondary |
+| eve-cyan | `#00d4ff` | ComplieDocs, secondary |
 | eve-orange | `#ff6b00` | Witness Mode |
 | eve-purple | `#a855f7` | Factory Engines |
 
@@ -120,4 +120,4 @@ Org.nr: 559505-3579
 
 Proprietary - All Rights Reserved
 
-© 2024-2025 Organiq Sweden AB
+© 2024-2026 Organiq Sweden AB

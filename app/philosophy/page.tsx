@@ -5,7 +5,7 @@ import Philosophy from '@/components/Philosophy'
 
 export const metadata: Metadata = {
   title: 'Philosophy | EVE Determinism',
-  description: 'Where infinite expansion meets absolute precision. AI systems that never guess — only know.',
+  description: 'The philosophy behind EVE: stable inference rules, conclusions derived from approved premises, sealed outputs.',
 }
 
 export default function PhilosophyPage() {

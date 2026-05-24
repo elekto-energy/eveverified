@@ -31,7 +31,7 @@ export default function CompanyPage() {
           </p>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
             Our work spans regulated AI, compliance documentation, and cyber-physical energy systems. 
-            Across all domains, we apply the same principle: <span className="text-white">systems must never guess</span>.
+            Across all domains, we apply the same principle: <span className="text-white">systems must not guess from unverified sources</span>.
           </p>
           <div className="text-gray-600 text-xs">
             <p>Organization number: 559505-3579</p>
@@ -145,7 +145,7 @@ export default function CompanyPage() {
             </div>
             <p className="text-gray-500 text-sm leading-relaxed mb-4">
               ComplieDocs is a compliance evidence documentation system built on EVE. It produces policies, 
-              procedures, and registers through deterministic generation — eliminating hallucination risk.
+              procedures, and registers through deterministic generation — constraining hallucination risk to approved templates.
             </p>
             <p className="text-gray-500 text-sm mb-2">Supported frameworks include:</p>
             <ul className="space-y-1 mb-4">
@@ -252,7 +252,7 @@ export default function CompanyPage() {
             OrganiQ Sweden AB · org.nr 559505-3579 · Stockholm, Sweden
           </p>
           <p className="text-gray-600 text-xs">
-            Deterministic systems that never guess — only know.
+            Deterministic systems bound to approved knowledge.
           </p>
         </div>
       </section>
