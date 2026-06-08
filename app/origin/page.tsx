@@ -36,10 +36,10 @@ const timeline = [
     border: 'border-eve-cyan/20',
   },
   {
-    year: 'January 2026',
+    year: 'December 2025 / January 2026',
     name: 'ComplieDocs',
     tagline: 'First sealed compliance records',
-    description: 'Before EVE Verified became a dedicated governance signal layer, the verification model was already operating inside ComplieDocs. Structured compliance documents were produced with human approval controls, sealed templates, verification files and EVEV identifiers — using a dual-proof model: X-Vault for integrity and EVE VERIFIED ID for decision proof. Domains covered included AI Act, GDPR, NIS2, DORA, CRA and SOC 2.',
+    description: 'Before EVE Verified became a dedicated governance signal layer, the verification model was already operating inside ComplieDocs. ComplieDocs produced structured compliance documents with human approval controls, sealed templates, verification files and EVE VERIFIED identifiers. The architecture used integrity proofs and decision/document proofs to show not only that a document existed, but that it had been approved, sealed and could be independently verified. This phase proved that the model could move beyond energy and infrastructure into regulated documentation workflows.\n\nAround the same period, the same verification principles were also being tested in evidence and research workflows using deterministic scoring, versioned corpus snapshots, hash and Merkle verification and witness-mode AI constraints.',
     items: [
       'Human approval required for every document — no bulk approve',
       'X-Vault integrity proof (SHA-256 + timestamp) per sealed artifact',
@@ -92,11 +92,11 @@ const steps = [
 ]
 
 const earlyRecords = [
-  { id: 'PRV SE 2530545-9',          label: 'ELEKTO-X patent filing',              date: 'August 2025'  },
-  { id: 'EVE-PAT-2026-001',           label: 'EVE witness-mode AI patent',          date: 'January 2026' },
-  { id: 'EVEV-COMP-20260122-000417',  label: 'ComplieDocs — sealed artifact',       date: 'January 2026' },
-  { id: 'EVE-TPRM-00004202',          label: 'EVE Bridge — authority boundary proof', date: '2026'       },
-  { id: 'EVE-CMMC-00004297',          label: 'EVE Bridge — CMMC authority signal',  date: '2026'         },
+  { id: 'PRV SE 2530545-9',          label: 'ELEKTO-X patent filing',               date: 'August 2025'    },
+  { id: 'EVE-PAT-2026-001',           label: 'EVE witness-mode AI patent',           date: 'January 2026'   },
+  { id: 'EVEV-COMP-20260122-000417',  label: 'ComplieDocs — sealed artifact',        date: 'December 2025'  },
+  { id: 'EVE-TPRM-00004202',          label: 'EVE Bridge — authority boundary proof', date: '2026'          },
+  { id: 'EVE-CMMC-00004297',          label: 'EVE Bridge — CMMC authority signal',   date: '2026'           },
 ]
 
 export default function OriginPage() {
@@ -171,13 +171,13 @@ export default function OriginPage() {
                 <h2 className="text-2xl font-light text-white mb-1">{item.name}</h2>
                 <p className="text-sm text-gray-500 mb-4">{item.tagline}</p>
 
-                {item.description && (
-                  <p className="text-sm text-gray-400 leading-relaxed mb-4 max-w-2xl">
-                    {item.description}
+                {item.description && item.description.split('\n\n').map((para, j) => (
+                  <p key={j} className="text-sm text-gray-400 leading-relaxed mb-3 max-w-2xl">
+                    {para}
                   </p>
-                )}
+                ))}
 
-                <div className={`border ${item.border} rounded-lg p-5 bg-white/[0.015]`}>
+                <div className={`border ${item.border} rounded-lg p-5 bg-white/[0.015] ${item.description ? 'mt-4' : ''}`}>
                   <ul className="flex flex-col gap-2.5">
                     {item.items.map((point) => (
                       <li key={point} className="text-sm text-gray-400 flex gap-3">
