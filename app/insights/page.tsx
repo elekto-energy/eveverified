@@ -16,13 +16,16 @@ export const metadata: Metadata = {
 }
 
 type Insight = {
-  slug: string
+  slug?: string
+  href?: string
   title: string
   description: string
+  subline?: string
   published: string
   tags: string[]
   seal?: string
   color: string
+  external?: boolean
 }
 
 const insights: Insight[] = [
@@ -35,6 +38,17 @@ const insights: Insight[] = [
     tags: ['EU AI Act', 'EVE Bridge', 'Sealed proof'],
     seal: 'EVE-COMPLIEDOCS-00001125',
     color: '#00ff88',
+  },
+  {
+    href: 'https://grc.eveverified.com/iso42001/accountability-checkpoint',
+    external: true,
+    title: 'Accountability-Continuity Checkpoint for Chained AI Workflows',
+    description:
+      'A synthetic detector demo showing when a chained AI workflow should continue without interruption — and when declared accountability, authority or approval scope can no longer be confirmed.',
+    subline: 'Reviewer-informed design validation. EVE surfaces the signal; humans decide.',
+    published: '2026-06-10',
+    tags: ['AI Governance', 'EVE Signals', 'Design validation'],
+    color: '#a855f7',
   },
 ]
 
@@ -65,10 +79,16 @@ export default function InsightsPage() {
       {/* Article list */}
       <section className="py-12 px-6 max-w-4xl mx-auto">
         <div className="space-y-4">
-          {insights.map(insight => (
+          {insights.map(insight => {
+            const linkHref = insight.external ? insight.href! : `/insights/${insight.slug}`
+            const linkProps = insight.external
+              ? { target: '_blank' as const, rel: 'noopener noreferrer' }
+              : {}
+            return (
             <Link
-              key={insight.slug}
-              href={`/insights/${insight.slug}`}
+              key={insight.slug || insight.href}
+              href={linkHref}
+              {...linkProps}
               className="block p-6 md:p-8 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 group"
             >
               {/* Tags + date */}
@@ -99,9 +119,16 @@ export default function InsightsPage() {
               </h2>
 
               {/* Description */}
-              <p className="text-gray-500 text-sm leading-relaxed mb-4">
+              <p className="text-gray-500 text-sm leading-relaxed mb-2">
                 {insight.description}
               </p>
+
+              {/* Subline */}
+              {insight.subline && (
+                <p className="text-gray-600 text-xs leading-relaxed mb-4 italic">
+                  {insight.subline}
+                </p>
+              )}
 
               {/* Footer: seal + read more */}
               <div className="flex items-center justify-between pt-4 border-t border-white/5">
@@ -116,14 +143,15 @@ export default function InsightsPage() {
                   <span />
                 )}
                 <span className="text-gray-500 text-xs group-hover:text-white transition-colors inline-flex items-center gap-1">
-                  Read
+                  {insight.external ? 'Open demo' : 'Read'}
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </span>
               </div>
             </Link>
-          ))}
+            )
+          })}
         </div>
       </section>
 
