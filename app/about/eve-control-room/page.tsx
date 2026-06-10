@@ -111,6 +111,44 @@ export default function EveControlRoomPage() {
       {/* Live Control Room */}
       <LiveControlRoom />
 
+      {/* Governance Signal Review */}
+      <section className="py-12 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-lg font-extralight tracking-wide mb-4 text-white/90">
+            Governance Signal Review
+          </h2>
+          <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            The Control Room is also where governance signals are reviewed.
+          </p>
+          <p className="text-gray-500 text-sm leading-relaxed mb-6">
+            A prior approval may exist, but the context may have changed: scope may have
+            expanded, new risk data may have appeared, authority boundaries may have shifted,
+            or responsibility may have moved between people, systems, vendors or AI agents.
+          </p>
+          <p className="text-gray-500 text-sm mb-3">In those cases, EVE can surface a signal such as:</p>
+          <div className="space-y-2 mb-6">
+            {[
+              'approval_scope_mismatch',
+              'accountability_continuity_gap',
+              'authority_boundary_breach',
+              'approval_chain_missing',
+            ].map((signal, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm">
+                <span className="text-purple-400/60">◇</span>
+                <code className="text-purple-400/90 font-mono text-xs">{signal}</code>
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-500 text-sm leading-relaxed mb-4">
+            The Control Room does not let EVE decide what those signals mean.
+          </p>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            A named human owner reviews the signal, confirms responsibility, and decides
+            whether the chain may proceed.
+          </p>
+        </div>
+      </section>
+
       {/* What the Control Room Is Not */}
       <section className="py-12 px-6">
         <div className="max-w-3xl mx-auto">
@@ -124,7 +162,7 @@ export default function EveControlRoomPage() {
               'An AI system',
               'An automation engine',
               'A decision-making authority',
-              'A user-facing dashboard',
+              'A general productivity dashboard',
               'A productivity tool',
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 text-gray-500 text-sm">
@@ -177,8 +215,11 @@ export default function EveControlRoomPage() {
           <p className="text-gray-400 text-sm mb-4">
             Determinism ensures reproducibility. The Control Room ensures accountability.
           </p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-sm mb-4">
             One without the other is insufficient.
+          </p>
+          <p className="text-gray-500 text-sm italic">
+            The Control Room is where deterministic execution becomes accountable execution.
           </p>
         </div>
       </section>
@@ -191,6 +232,9 @@ export default function EveControlRoomPage() {
           </h2>
           <p className="text-gray-400 text-sm mb-4">
             Only outputs that pass through the Control Room can become EVE VERIFIED.
+          </p>
+          <p className="text-gray-400 text-sm mb-4">
+            No governed output becomes EVE VERIFIED without recorded human approval.
           </p>
           <p className="text-gray-500 text-sm">
             Verification without human approval is not verification. It is automation.
