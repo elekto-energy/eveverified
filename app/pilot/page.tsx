@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
-import { submitPilotApplication, UseCaseCategory } from '@/lib/supabase'
 
 const USE_CASE_CATEGORIES = [
   { value: 'compliance_governance', label: 'Compliance & Governance' },
@@ -31,30 +30,44 @@ function PilotForm() {
     }
   }, [categoryParam])
 
+  const submittingRef = useRef(false)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (submittingRef.current) return   // double-click guard
+    submittingRef.current = true
     setIsSubmitting(true)
     setError('')
 
     const formData = new FormData(e.currentTarget)
-    const data = {
-      applicant_type: formData.get('applicant_type') as 'company' | 'individual',
-      organization_name: formData.get('organization_name') as string || null,
+    const body = {
+      applicant_type: formData.get('applicant_type') as string,
+      organization_name: formData.get('organization_name') as string || '',
       contact_name: formData.get('contact_name') as string,
       email: formData.get('email') as string,
       country: formData.get('country') as string,
-      use_case_category: formData.get('use_case_category') as UseCaseCategory,
+      use_case_category: formData.get('use_case_category') as string,
       use_case_description: formData.get('use_case_description') as string,
       contribution_intent: formData.get('contribution_intent') as string,
-      technical_background: formData.get('technical_background') as string || null,
+      technical_background: formData.get('technical_background') as string || '',
     }
 
     try {
-      await submitPilotApplication(data)
-      setIsSubmitted(true)
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
-      console.error(err)
+      const res = await fetch('/api/pilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        setError(json.error || 'Something went wrong. Please try again.')
+        submittingRef.current = false
+      } else {
+        setIsSubmitted(true)
+      }
+    } catch {
+      setError('Network error. Please check your connection and try again.')
+      submittingRef.current = false
     } finally {
       setIsSubmitting(false)
     }
@@ -125,7 +138,7 @@ function PilotForm() {
           </li>
           <li className="flex items-start gap-2">
             <span className="text-eve-green/60 mt-0.5">→</span>
-            Individuals interested in contributing to agent behavior, verification logic, or system stability
+            Individuals interested in verification logic, governance signals, evidence workflows, or system stability
           </li>
         </ul>
         <p className="text-gray-600 text-xs mt-4">
@@ -151,6 +164,10 @@ function PilotForm() {
           <li className="flex items-start gap-2">
             <span className="text-white/40">•</span>
             Reviewing verification outputs and evidence flows
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-white/40">•</span>
+            Reviewing governance signals such as authority boundaries, approval chains, accountability continuity, and approval scope mismatch
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white/40">•</span>
