@@ -87,7 +87,7 @@ export default function WhatIsEvePage() {
                   <span className="text-eve-green mt-1">✓</span>
                   <div>
                     <span className="text-white">When you ask a question:</span>
-                    <p className="text-gray-500">"The answer is X. Here's the proof."</p>
+                    <p className="text-gray-500">"The claim is supported by approved evidence — or EVE returns NO_ANSWER."</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -101,7 +101,7 @@ export default function WhatIsEvePage() {
                   <span className="text-eve-green mt-1">✓</span>
                   <div>
                     <span className="text-white">Memory:</span>
-                    <p className="text-gray-500">Permanent, cryptographic record</p>
+                    <p className="text-gray-500">Sealed records can be verified later</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -287,6 +287,50 @@ export default function WhatIsEvePage() {
                 <p className="text-gray-500 text-xs mt-1">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond Approval: Governance Signals */}
+      <section className="py-16 px-6 bg-white/[0.01]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-xl font-extralight tracking-wide mb-4 text-center text-white/90">
+            Beyond Approval: Governance Signals
+          </h2>
+          <p className="text-center text-gray-500 mb-8 text-sm">
+            Human approval is necessary, but not always sufficient.
+          </p>
+
+          <div className="p-6 rounded-xl bg-white/[0.02] border border-white/5 mb-6">
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              In real workflows, the decision context can change after approval: scope expands,
+              new risk data appears, authority boundaries shift, or responsibility moves between
+              people, systems, vendors or AI agents.
+            </p>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              EVE can surface these conditions as governance signals before the chain continues.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-3 mb-6">
+            {[
+              'Who owns the next decision?',
+              'Under what declared authority?',
+              'Does the prior approval still apply?',
+              'Has the approval scope changed?',
+            ].map((q, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+                <span className="text-purple-400/60 shrink-0">◇</span>
+                <p className="text-gray-400 text-sm">{q}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+            <p className="text-gray-500 text-xs">
+              EVE does not approve, reject, classify incidents, assess materiality or determine compliance.
+              <span className="text-white"> EVE surfaces the signal. Humans decide.</span>
+            </p>
           </div>
         </div>
       </section>
