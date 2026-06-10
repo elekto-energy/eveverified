@@ -110,11 +110,11 @@ export default function Navigation() {
             )
           ))}
           <a
-            href="mailto:info@eveverified.com"
+            href="/pilot"
             className="text-xs px-4 py-2 rounded-full border border-eve-green/30 text-eve-green 
                        hover:bg-eve-green/10 transition-all duration-200"
           >
-            Contact
+            Pilot
           </a>
         </div>
 
