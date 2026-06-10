@@ -135,9 +135,13 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 0.8 }}
         className="mt-6 text-gray-500 text-center max-w-lg leading-relaxed relative px-4"
       >
-        Fixed rules. Unlimited knowledge. Verified truth.
+        Fixed rules. Approved knowledge. Verifiable outputs.
         <br />
-        AI systems that <span className="text-white">never guess</span> — only <span className="text-eve-green">know</span>.
+        Verifiable AI systems that do not guess when evidence is missing.
+        <br />
+        <span className="text-eve-green">When evidence is missing, EVE returns NO_ANSWER.</span>
+        <br />
+        When authority, accountability or approval scope cannot be confirmed, EVE surfaces the signal.
       </motion.p>
 
       {/* CTA Buttons */}
