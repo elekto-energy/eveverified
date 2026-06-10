@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 // ── Synthetic fixtures ──────────────────────────────────────────────────────
 // No real hardware, SCADA, or grid control. Demo only.
 
