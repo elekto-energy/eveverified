@@ -24,7 +24,7 @@ const timeline = [
     year: 'September 2025',
     name: 'ELEKTO-X',
     tagline: 'Attested infrastructure control',
-    description: null,
+    description: 'By September 2025, ELEKTO-X had been extended beyond energy into attested critical-resource control: communication devices, IoT nodes, transport infrastructure, navigation infrastructure, VPN/5G/SCADA links, token-gated access, multi-attestation, secure restart, tamper detection, WORM logging and Proof-of-Origin for components. Patent complement filings were received by PRV on 18 September 2025 (claims 21–29) and 21 September 2025 (claims 30–41).',
     items: [
       'Attested nodes with TPM/HSM-based verification',
       'Signed snapshots and monotonic counters',
@@ -93,6 +93,8 @@ const steps = [
 
 const earlyRecords = [
   { id: 'PRV SE 2530545-9',          label: 'ELEKTO-X / infrastructure patent track',                                     date: 'August 2025'        },
+  { id: 'PRV complement',             label: 'Claims 21–29: critical resources, VPN/5G/SCADA, transport and navigation',   date: '18 Sep 2025'        },
+  { id: 'PRV complement',             label: 'Claims 30–41: Proof-of-Origin, multi-attestation, token-gated access, tamper detection, secure OTA, WORM', date: '21 Sep 2025' },
   { id: 'PRV SE 2630035-0',           label: 'EVE witness-mode AI and cryptographic verification — separate patent track', date: 'Priority 13 Jan 2026' },
   { id: 'EVEV-COMP-20260122-000417',  label: 'ComplieDocs — EVE VERIFIED artifact record',                                date: 'January 2026'       },
   { id: 'EVE-TPRM-00004202',          label: 'EVE Bridge — authority boundary proof', date: '2026'          },
@@ -191,6 +193,58 @@ export default function OriginPage() {
             ))}
           </div>
         </div>
+
+        {/* Two branches */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="mt-20 border border-white/5 rounded-lg p-6 bg-white/[0.02]"
+        >
+          <p className="text-xs tracking-[0.2em] text-gray-500 uppercase mb-5 font-mono">
+            Two branches, one control pattern
+          </p>
+          <div className="space-y-4 text-sm text-gray-400 leading-relaxed max-w-2xl">
+            <p>
+              EVE Verified grew from two related branches.
+            </p>
+            <p>
+              The first branch was <span className="text-eve-cyan">ELEKTO-X / X-Vault</span>: attested
+              control of critical resources, where nodes, commands, links and infrastructure
+              interactions require verification before they can proceed.
+            </p>
+            <p>
+              The second branch was <span className="text-eve-green">witness-limited AI and evidence-bound
+              documentation</span>: approved knowledge, human authorization, deterministic generation,
+              NO_ANSWER when evidence is missing, and sealed proof.
+            </p>
+            <p>
+              <span className="text-purple-400">EVE Signals</span> connects these branches. It turns
+              authority, accountability, approval scope and accumulated risk into deterministic
+              governance signals.
+            </p>
+            <p className="text-gray-500">
+              Together, the pattern is consistent:
+            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-2 items-center pl-2 border-l border-white/5">
+              {[
+                'Declared rule',
+                'Observed activity',
+                'Deterministic signal',
+                'Human authority',
+                'Governed execution or sealed proof',
+                'Verification',
+              ].map((step, i, arr) => (
+                <span key={step} className="flex items-center gap-3">
+                  <span className="text-sm text-white/70 font-mono">{step}</span>
+                  {i < arr.length - 1 && (
+                    <span className="text-eve-green/30 text-sm">→</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
         {/* Selected evidence */}
         <motion.div
