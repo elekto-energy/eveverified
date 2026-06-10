@@ -80,6 +80,7 @@ export const navItems = [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
       { name: 'Determinism', href: '/about/determinism' },
       { name: 'EVE Control Room', href: '/about/eve-control-room' },
+      { name: 'ELEKTO-X / X-Vault', href: '/elekto-x' },
       { name: 'Company', href: '/about/company' },
       { name: 'Origin', href: '/origin' },
       { name: 'Pilot Program', href: '/pilot' },

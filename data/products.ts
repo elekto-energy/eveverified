@@ -52,12 +52,12 @@ export const products: Product[] = [
   {
     id: 'elekto',
     name: 'ELEKTO-X',
-    tagline: 'Cyber-Physical Layer · Hardware Trust Foundation',
-    description: 'High-security vault architecture for critical infrastructure. Hardware attestation, WORM logging, and cryptographic snapshots. The foundation of X-Vault.',
+    tagline: 'Attested Control Layer · Critical-Resource Enforcement',
+    description: 'Attested control of critical resources through hardware attestation, vault approval, token-gated access, multi-attestation, WORM logging and signed snapshots. The enforcement layer of the EVE platform.',
     color: '#ff6b00',
     icon: '⚡',
-    features: ['Kassavalvslager (Vault)', 'TPM/HSM Attestation', 'WORM Logging', 'Snapshots', '41 Patent Claims'],
-    href: '/elekto',
+    features: ['Kassavalvslager (Vault)', 'TPM/HSM Attestation', 'WORM Logging', 'Token-Gated Access', 'Patent Pending'],
+    href: '/elekto-x',
     status: 'beta'
   },
   {
