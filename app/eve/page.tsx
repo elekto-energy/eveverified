@@ -56,6 +56,50 @@ export default function EvePage() {
         </div>
       </section>
 
+      {/* Governance Signal Layer */}
+      <section className="py-16 px-6 max-w-5xl mx-auto">
+        <h2 className="text-2xl font-extralight tracking-wide mb-2 text-center text-white/90">
+          Governance Signal Layer
+        </h2>
+        <p className="text-gray-500 text-center mb-2 max-w-2xl mx-auto">
+          Human approval is necessary, but not always sufficient.
+        </p>
+        <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto text-sm">
+          In chained AI and enterprise workflows, a prior approval may no longer match the current
+          decision context after scope expansion, new risk data, authority changes or additional
+          system actions. EVE surfaces these conditions as deterministic governance signals before
+          execution continues.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+          {[
+            { name: 'Authority Boundary',       color: '#a855f7', desc: 'Checks whether an action remains within declared authority.' },
+            { name: 'Approval Chain',            color: '#a855f7', desc: 'Checks whether required approvals are present and valid.' },
+            { name: 'Approval Scope Mismatch',   color: '#a855f7', desc: 'Surfaces when a prior approval exists, but its scope may no longer match the current decision context.' },
+            { name: 'Accountability Continuity', color: '#a855f7', desc: 'Checks whether the accountable owner for the next decision can still be confirmed.' },
+            { name: 'Overlapping Boundary',      color: '#a855f7', desc: 'Surfaces when multiple weak signals combine into a stronger governance concern.' },
+            { name: 'Collective Outcome',        color: '#a855f7', desc: 'Surfaces when different simultaneous conditions create an unauthorized state.' },
+            { name: 'Accumulation Risk',         color: '#a855f7', desc: 'Surfaces when repeated events exceed a declared threshold over time.' },
+          ].map((signal) => (
+            <div
+              key={signal.name}
+              className="p-4 rounded-xl bg-white/[0.02] border border-white/5"
+              style={{ borderLeftColor: signal.color, borderLeftWidth: '2px' }}
+            >
+              <div className="text-white text-sm font-medium mb-1">{signal.name}</div>
+              <div className="text-gray-500 text-xs leading-relaxed">{signal.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-2xl mx-auto p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+          <p className="text-gray-500 text-xs leading-relaxed">
+            EVE does not approve, reject, classify incidents, assess materiality or determine
+            compliance. EVE surfaces the signal. A named human owner decides.
+          </p>
+        </div>
+      </section>
+
       {/* EVE Core vs EVE Play */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
         <h2 className="text-2xl font-extralight tracking-wide mb-4 text-center text-white/90">

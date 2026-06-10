@@ -27,8 +27,7 @@ export function HumanInControl() {
           You own the idea, the project, and the decision
         </h3>
         <p className="text-gray-500 max-w-xl mx-auto text-sm">
-          EVE interprets, suggests, and executes — but only after explicit human approval.
-          The system never starts projects, changes goals, or acts autonomously.
+          EVE interprets, suggests, verifies, and executes — but only after explicit human approval and within declared governance boundaries.
         </p>
       </div>
 
