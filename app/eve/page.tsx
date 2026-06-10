@@ -106,8 +106,8 @@ export default function EvePage() {
           Two Modes, Clear Boundaries
         </h2>
         <p className="text-gray-500 text-center mb-8 max-w-2xl mx-auto">
-          EVE Core is always the default. EVE Play requires explicit opt-in.
-          Verified outputs only come from Core.
+          Governed mode is always the default. EVE Play requires explicit opt-in.
+          Verified outputs only come from governed mode.
         </p>
         <CoreVsPlay />
       </section>

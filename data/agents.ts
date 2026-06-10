@@ -17,7 +17,7 @@ export const agentData: Record<string, Agent> = {
   // ═══ TIER 0: CORE ═══
   core: {
     id: 'eve-core',
-    name: 'EVE CORE',
+    name: 'EVE',
     symbol: 'e',
     description: 'Evidence & Verification Engine — The deterministic heart that never guesses, only knows.',
     color: '#00ff88',

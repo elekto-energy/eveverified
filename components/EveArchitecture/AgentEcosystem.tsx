@@ -157,7 +157,7 @@ export function AgentEcosystemViz() {
       {/* Tab Navigation */}
       <div className="flex justify-center gap-2 mb-10">
         {[
-          { id: 'core', label: 'Core Agents', icon: '⚙' },
+          { id: 'core', label: 'Built-in Agents', icon: '⚙' },
           { id: 'custom', label: 'Custom Agents', icon: '✦' },
           { id: 'compare', label: 'Why EVE?', icon: '◈' },
         ].map((tab) => (
