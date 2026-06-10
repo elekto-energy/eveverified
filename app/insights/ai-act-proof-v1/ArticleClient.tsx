@@ -709,9 +709,9 @@ export default function ArticleClient() {
         </p>
 
         <p>
-          I am new to compliance as a profession. I am not new to the underlying problem:
-          building systems that are traceable, evidence-based and verifiable when something
-          goes wrong.
+          My background is not traditional compliance consulting. It is building verifiable
+          systems where measurement, settlement, evidence and responsibility have to survive
+          scrutiny.
         </p>
 
         <p>
@@ -809,6 +809,36 @@ export default function ArticleClient() {
             </a>
             .
           </p>
+        </div>
+
+        {/* Related insight */}
+        <div className="mt-12 pt-8 border-t border-white/5">
+          <div className="text-xs text-gray-500 tracking-[0.2em] uppercase mb-4">Related</div>
+          <a
+            href="/insights/accountability-continuity-checkpoint"
+            className="block p-5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 group"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex gap-2 mb-2">
+                  {['AI Governance', 'EVE Signals', 'Design validation'].map(tag => (
+                    <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-white/90 text-sm font-medium group-hover:text-white transition-colors">
+                  Accountability-Continuity Checkpoint for Chained AI Workflows
+                </div>
+                <div className="text-gray-500 text-xs mt-1">
+                  Reviewer-informed design validation. EVE surfaces the signal; humans decide.
+                </div>
+              </div>
+              <svg className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors ml-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
         </div>
       </Section>
 

@@ -40,8 +40,8 @@ const insights: Insight[] = [
     color: '#00ff88',
   },
   {
-    href: 'https://grc.eveverified.com/iso42001/accountability-checkpoint',
-    external: true,
+    href: '/insights/accountability-continuity-checkpoint',
+    external: false,
     title: 'Accountability-Continuity Checkpoint for Chained AI Workflows',
     description:
       'A synthetic detector demo showing when a chained AI workflow should continue without interruption — and when declared accountability, authority or approval scope can no longer be confirmed.',
