@@ -279,6 +279,31 @@ export default function ElektoPage() {
         </div>
       </section>
 
+      {/* From verified sharing to verified control — Control Chain CTA */}
+      <section className="py-12 px-6 bg-white/[0.01]">
+        <div className="max-w-3xl mx-auto">
+          <div className="p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+            <h2 className="text-lg font-extralight tracking-wide text-white/90 mb-3">
+              From verified sharing to verified control
+            </h2>
+            <p className="text-gray-500 text-sm max-w-xl mx-auto mb-5">
+              ELEKTO shows verified energy sharing in normal operation. EVE Verified Control Chain
+              shows what happens during a critical event: grid outage, island mode, critical-load
+              protection, verified resync and sealed proof.
+            </p>
+            <a
+              href="/control-chain/energy"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/15 text-white/80 hover:border-eve-green/40 hover:text-eve-green transition-all text-sm"
+            >
+              Open island-mode control demo
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CTA - Clean */}
       <section className="py-16 px-6 text-center">
         <div className="max-w-xl mx-auto">
