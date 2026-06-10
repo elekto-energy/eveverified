@@ -21,7 +21,7 @@ export default function Philosophy() {
       </motion.div>
 
       {/* Principles Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {principles.map((principle, i) => (
           <motion.div
             key={i}
@@ -80,17 +80,20 @@ export default function Philosophy() {
         <div>
           <h4 className="text-white font-medium mb-3">The Symbol</h4>
           <p className="leading-relaxed">
-            The <span className="text-eve-green italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> in EVE stands for Evidence & Verification Engine. 
-            We use Euler's number as our visual symbol — a nod to mathematical precision. 
-            EVE's architecture is built on formal systems: fixed rules, verified premises, derived conclusions.
+            The <span className="text-eve-green italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> in EVE stands for Evidence & Verification Engine.
+            We use Euler’s number as a visual symbol — a nod to mathematical precision, formal systems and reproducible reasoning.
+            EVE’s architecture is built on fixed rules, verified premises and derived conclusions.
           </p>
         </div>
         <div>
           <h4 className="text-white font-medium mb-3">The Engineering</h4>
           <p className="leading-relaxed">
-            Every critical component in EVE is deterministic. 
-            Given the same inputs and approved premises, the system produces the same conclusions. 
-            No randomness in critical paths — outputs are evidence-bound, traceable, and reproducible.
+            Every critical component in EVE is designed around deterministic execution.
+            Given the same inputs, approved premises and rule versions, the system should produce the same result.
+            Outputs are evidence-bound, traceable and reproducible.
+            When evidence is missing, EVE returns NO_ANSWER.
+            When authority, accountability or approval scope cannot be confirmed, EVE surfaces the signal.
+            EVE verifies. Humans decide.
           </p>
         </div>
       </motion.div>

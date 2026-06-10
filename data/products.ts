@@ -78,23 +78,28 @@ export const principles = [
   {
     symbol: '∞',
     title: 'Formal Expansion',
-    description: 'Fixed rules derive new conclusions as premises are approved. The core is stable.'
+    description: 'Fixed rules derive new conclusions as premises are approved. The core is stable. Knowledge expands only when new premises pass approval.'
   },
   {
     symbol: '◉',
     title: 'Witness, Never Decide',
-    description: 'AI that observes and verifies, but never makes autonomous decisions.'
+    description: 'EVE observes, verifies and reports. It does not make autonomous decisions, classify incidents, assess materiality or determine compliance. Humans decide. EVE surfaces what the evidence, rules and signals support.'
   },
   {
     symbol: '⚛',
     title: 'Deterministic Core',
-    description: 'Same input produces same output. No randomness in critical paths.'
+    description: 'Same input, same approved premises and same rules produce the same output. No randomness in critical paths. No hidden decision-making. No unsupported conclusions.'
   },
   {
     symbol: '⛓',
     title: 'Cryptographic Truth',
-    description: 'Every sealed output is verifiable. Every approved claim links to its source.'
-  }
+    description: 'Every sealed output is verifiable. Every approved claim links to its source. Every record can be checked without trusting the system that produced it.'
+  },
+  {
+    symbol: '◇',
+    title: 'Governance Signals',
+    description: 'Human approval is necessary, but not always sufficient. EVE surfaces authority, accountability and approval-scope gaps as deterministic governance signals. EVE does not decide what the signal means. A named human owner decides.'
+  },
 ]
 
 // Company info

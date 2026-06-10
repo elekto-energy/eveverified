@@ -24,8 +24,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed max-w-sm">
-              Deterministic AI platform bound to approved knowledge. 
-              Evidence & Verification Engine for trusted AI.
+              Deterministic verification platform for approved knowledge, governance signals and evidence-bound workflows.
             </p>
             <div className="mt-4 text-gray-700 text-xs">
               {company.name} · org.nr {company.orgNr}
