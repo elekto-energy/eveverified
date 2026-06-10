@@ -27,7 +27,7 @@ export default function DeterminismPage() {
         <p className="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">
           Like a formal logic system, EVE operates on stable inference rules that derive 
           verified outputs from approved premises. The core is stable. Knowledge expands as new premises are approved.
-          This is Verified Intelligence.
+          This is EVE's deterministic verification model.
         </p>
       </section>
 
@@ -120,12 +120,17 @@ export default function DeterminismPage() {
               {
                 symbol: '⛓',
                 title: 'Cryptographic Truth',
-                desc: 'Every sealed claim links to verifiable evidence.'
+                desc: 'Every sealed output links to verifiable evidence or a recorded proof state.'
               },
               {
                 symbol: '∞',
                 title: 'Formal Expansion',
                 desc: 'Fixed rules derive new conclusions as premises are approved. The core is stable.'
+              },
+              {
+                symbol: '◇',
+                title: 'Governance Signals',
+                desc: 'Authority, accountability and approval-scope gaps are surfaced as deterministic signals. EVE surfaces; humans decide.'
               },
             ].map((item, i) => (
               <div key={i} className="p-5 rounded-xl bg-white/[0.02] border border-white/5">
