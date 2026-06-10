@@ -81,6 +81,7 @@ export const navItems = [
       { name: 'Determinism', href: '/about/determinism' },
       { name: 'EVE Control Room', href: '/about/eve-control-room' },
       { name: 'ELEKTO-X / X-Vault', href: '/elekto-x' },
+      { name: 'Control Chain', href: '/control-chain' },
       { name: 'Company', href: '/about/company' },
       { name: 'Origin', href: '/origin' },
       { name: 'Pilot Program', href: '/pilot' },
