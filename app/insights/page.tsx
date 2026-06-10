@@ -80,7 +80,11 @@ export default function InsightsPage() {
       <section className="py-12 px-6 max-w-4xl mx-auto">
         <div className="space-y-4">
           {insights.map(insight => {
-            const linkHref = insight.external ? insight.href! : `/insights/${insight.slug}`
+            const linkHref = insight.href && !insight.slug
+              ? insight.href
+              : insight.external
+                ? insight.href!
+                : `/insights/${insight.slug}`
             const linkProps = insight.external
               ? { target: '_blank' as const, rel: 'noopener noreferrer' }
               : {}
