@@ -73,8 +73,8 @@ const timeline = [
     items: [
       'Authority boundary, approval chain, overlapping controls',
       'Accumulated risk and collective outcome signals',
-      'Sealed and publicly verifiable decision records',
-      'Live across TPRM, DORA, AI Act and CMMC',
+      'Sealed and publicly verifiable records where publication is enabled',
+      'Applied in live demos across TPRM, DORA, AI Act and CMMC',
     ],
     dot: 'bg-eve-green',
     text: 'text-eve-green',
@@ -92,9 +92,9 @@ const steps = [
 ]
 
 const earlyRecords = [
-  { id: 'PRV SE 2530545-9',          label: 'ELEKTO-X patent filing',               date: 'August 2025'    },
-  { id: 'EVE-PAT-2026-001',           label: 'EVE witness-mode AI patent',           date: 'January 2026'   },
-  { id: 'EVEV-COMP-20260122-000417',  label: 'ComplieDocs — sealed artifact',        date: 'December 2025'  },
+  { id: 'PRV SE 2530545-9',          label: 'ELEKTO-X / infrastructure patent track',                                     date: 'August 2025'        },
+  { id: 'PRV SE 2630035-0',           label: 'EVE witness-mode AI and cryptographic verification — separate patent track', date: 'Priority 13 Jan 2026' },
+  { id: 'EVEV-COMP-20260122-000417',  label: 'ComplieDocs — EVE VERIFIED artifact record',                                date: 'January 2026'       },
   { id: 'EVE-TPRM-00004202',          label: 'EVE Bridge — authority boundary proof', date: '2026'          },
   { id: 'EVE-CMMC-00004297',          label: 'EVE Bridge — CMMC authority signal',   date: '2026'           },
 ]
@@ -237,9 +237,17 @@ export default function OriginPage() {
             EVE Verified is not a document checker and not an AI firewall.
           </p>
           <p className="text-white text-base leading-relaxed max-w-2xl mb-8">
-            It is a governance signal verification layer — built on a chain that runs from
-            verifiable energy sharing through attested infrastructure, sealed compliance records
-            and witness-limited AI, to independently verifiable governance decisions.
+            It is a governance signal verification platform: a way to show what happened,
+            which rule applied, who held authority, what evidence existed, and whether
+            the resulting record can still be verified independently.
+          </p>
+          <p className="text-gray-400 text-base leading-relaxed max-w-2xl mb-2">
+            Its origin is not a single feature. It is a control pattern repeated across
+            energy, infrastructure, documentation, research and governance.
+          </p>
+          <p className="text-gray-500 text-sm leading-relaxed max-w-2xl mb-8">
+            EVE Verified does not enforce, block or veto AI actions. It surfaces what
+            the evidence, rules and signals support. Humans decide.
           </p>
           <div className="flex flex-wrap gap-6">
             <a
