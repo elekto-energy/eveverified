@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
-import BRFViz from '@/components/BRFViz'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
@@ -110,23 +109,46 @@ export default function ElektoPage() {
         </div>
       </section>
 
-      {/* Housing Community Visualization */}
+      {/* Live demo panel — replaces BRFViz */}
       <section className="py-12 px-6 bg-white/[0.01]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-6">
-            <h2 className="text-lg font-extralight tracking-wide text-white/90">
-              Housing Community
-            </h2>
-            <p className="text-gray-500 text-sm mt-1">
-              Interactive demonstration
+        <div className="max-w-3xl mx-auto">
+          <div className="p-6 rounded-2xl border border-eve-green/20 bg-eve-green/5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-2 h-2 rounded-full bg-eve-green animate-pulse" />
+              <span className="text-eve-green text-sm font-mono">Live backend demo available</span>
+            </div>
+            <p className="text-gray-400 text-sm mb-5">
+              The ELEKTO energy model runs against a real verification chain. Every step produces
+              hashed events, a deterministic verdict, and a sealed record with cryptographic proof.
             </p>
+            <div className="space-y-2 mb-6">
+              {[
+                { label: 'Normal recovery', verdict: 'ALLOWED', extra: 'verify: VALID' },
+                { label: 'Stale resync', verdict: 'HELD', extra: 'verify: VALID' },
+                { label: 'Battery reserve breach', verdict: 'HELD', extra: 'settlement_eligible: false · verify: VALID' },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between px-4 py-2 rounded-lg bg-white/[0.03] border border-white/5 text-[11px] font-mono">
+                  <span className="text-gray-400">{row.label}</span>
+                  <span className="flex items-center gap-3">
+                    <span style={{ color: row.verdict === 'ALLOWED' ? '#00ff88' : '#f59e0b' }}>{row.verdict}</span>
+                    <span className="text-gray-600">{row.extra}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600 text-xs font-mono">Visual model · real verification chain</span>
+              <a
+                href="/control-chain/energy"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm"
+              >
+                Open live demo
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
           </div>
-          
-          <BRFViz />
-          
-          <p className="text-center text-gray-600 text-xs mt-3">
-            Click elements to explore the energy flow
-          </p>
         </div>
       </section>
 
