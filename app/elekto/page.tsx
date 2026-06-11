@@ -97,15 +97,11 @@ export default function ElektoPage() {
             ))}
           </div>
           
-          {/* Sharing ≠ Selling */}
-          <div className="p-6 rounded-xl bg-eve-green/5 border border-eve-green/20 text-center">
-            <div className="text-2xl text-eve-green mb-3">≠</div>
-            <h3 className="text-white font-medium mb-2">Sharing ≠ Selling</h3>
-            <p className="text-gray-400 text-sm max-w-lg mx-auto">
-              Designed for housing communities, marinas, and closed infrastructures. 
-              Energy circulates within trusted networks — not traded on open markets.
-            </p>
-          </div>
+          
+          {/* Boundary — neutral, small */}
+          <p className="text-gray-600 text-xs text-center mt-6 max-w-2xl mx-auto">
+            ELEKTO is presented as verified internal kWh accounting for controlled community models, not as a public electricity sale, financial instrument, investment product or public utility billing system.
+          </p>
         </div>
       </section>
 
