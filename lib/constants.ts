@@ -69,6 +69,7 @@ export const navItems = [
     ]
   },
   { name: 'ELEKTO', href: '/elekto' },
+  { name: 'AGV Demo', href: '/control-chain/agv' },
   { name: 'Philosophy', href: '/philosophy' },
   { name: 'Insights', href: '/insights' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
