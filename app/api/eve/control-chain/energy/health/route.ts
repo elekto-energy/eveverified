@@ -9,5 +9,5 @@ export async function GET() {
     // Fail closed: OFFLINE is reported as OFFLINE. Never simulated success.
     return NextResponse.json({ live: false, mode: 'OFFLINE', detail: upstream.body }, { status: 503 })
   }
-  return NextResponse.json({ live: true, upstream: upstream.body })
+  return NextResponse.json({ live: true, upstream: upstream.body }, { headers: { 'Cache-Control': 'no-store' } })
 }
