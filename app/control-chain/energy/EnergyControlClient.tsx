@@ -6,7 +6,7 @@
 // EVE-CTRL-ENERGY-* record, verify adapter). Nothing here is client-side
 // simulation; if the backend is unreachable the page shows OFFLINE — it never
 // fakes success. Verdicts are only ALLOWED / HELD / DENIED / UNKNOWN.
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
@@ -92,21 +92,21 @@ export default function EnergyControlClient() {
   const [error, setError] = useState('')
   const [showRaw, setShowRaw] = useState(false)
 
-  const checkHealth = useCallback(async () => {
+  const checkHealth = async () => {
     try {
       const res = await fetch('/api/eve/control-chain/energy/health', { cache: 'no-store' })
       if (!res.ok) { setLive(false); return }
       const json = await res.json()
-      // Proxy wraps upstream: { live: boolean, upstream: { status, chain_valid, ... } }
       setLive(json.live === true && json.upstream?.status === 'ok')
     } catch {
       setLive(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
     checkHealth()
-  }, [checkHealth])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function createSession() {
     setBusy(true); setError(''); setSeal(null); setShowRaw(false)
