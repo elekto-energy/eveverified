@@ -3,7 +3,7 @@ import { ctrlEnergyFetch, isEnergyStep, isSessionId } from '@/lib/ctrl-energy'
 
 export const dynamic = 'force-dynamic'
 
-// The proxy forwards ONLY { step_id, options.stale_snapshot } — never the raw
+// The proxy forwards ONLY { step_id, options.stale_snapshot, options.reserve_breach } — never the raw
 // client body. Allowlist enforced here AND in the internal service.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -20,9 +20,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!isEnergyStep(stepId)) {
     return NextResponse.json({ error: 'step_id must be in the energy step allowlist' }, { status: 400 })
   }
-  const stale = (body as { options?: { stale_snapshot?: unknown } })?.options?.stale_snapshot
-  const forward: { step_id: string; options?: { stale_snapshot: boolean } } = { step_id: stepId }
-  if (typeof stale === 'boolean') forward.options = { stale_snapshot: stale }
+  const opts = (body as { options?: { stale_snapshot?: unknown; reserve_breach?: unknown } })?.options
+  const stale = opts?.stale_snapshot
+  const breach = opts?.reserve_breach
+  const forward: { step_id: string; options?: { stale_snapshot?: boolean; reserve_breach?: boolean } } = { step_id: stepId }
+  if (typeof stale === 'boolean' || typeof breach === 'boolean') {
+    forward.options = {}
+    if (typeof stale === 'boolean') forward.options.stale_snapshot = stale
+    if (typeof breach === 'boolean') forward.options.reserve_breach = breach
+  }
 
   const upstream = await ctrlEnergyFetch(`/energy/session/${id}/step`, { method: 'POST', json: forward })
   if (!upstream.ok && upstream.status === 503) {

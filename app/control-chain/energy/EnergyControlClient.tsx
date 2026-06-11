@@ -87,6 +87,7 @@ export default function EnergyControlClient() {
   const [session, setSession] = useState<Session | null>(null)
   const [seal, setSeal] = useState<SealResponse | null>(null)
   const [staleToggle, setStaleToggle] = useState(false)
+  const [breachToggle, setBreachToggle] = useState(false)
   const [advancedMode, setAdvancedMode] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -129,8 +130,9 @@ export default function EnergyControlClient() {
     if (!session) return
     setBusy(true); setError('')
     try {
-      const body: { step_id: string; options?: { stale_snapshot: boolean } } = { step_id: stepId }
+      const body: { step_id: string; options?: { stale_snapshot?: boolean; reserve_breach?: boolean } } = { step_id: stepId }
       if (stepId === 'request_resync') body.options = { stale_snapshot: staleToggle }
+      if (stepId === 'mint_verified_surplus' && breachToggle) body.options = { reserve_breach: true }
       const res = await fetch(`/api/eve/control-chain/energy/session/${session.session_id}/step`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       })
@@ -157,7 +159,7 @@ export default function EnergyControlClient() {
   }
 
   function reset() {
-    setSession(null); setSeal(null); setError(''); setStaleToggle(false); setShowRaw(false)
+    setSession(null); setSeal(null); setError(''); setStaleToggle(false); setBreachToggle(false); setShowRaw(false)
     retry()
   }
 
@@ -445,6 +447,12 @@ export default function EnergyControlClient() {
                         Simulate stale snapshot (HELD path)
                       </label>
                     )}
+                    {nextGuidedStep!.stepId === 'mint_verified_surplus' && (
+                      <label className="flex items-center gap-2 px-1 py-1 text-[11px] text-gray-500 font-mono">
+                        <input type="checkbox" checked={breachToggle} onChange={(e) => setBreachToggle(e.target.checked)} />
+                        Simulate battery reserve breach (HELD path)
+                      </label>
+                    )}
                     <button onClick={() => runStep(nextGuidedStep!.stepId)} disabled={busy}
                       className="w-full px-4 py-2 rounded-lg text-sm border bg-white/[0.03] border-eve-green/30 text-eve-green hover:bg-eve-green/10 disabled:opacity-40">
                       {busy ? 'Running…' : `→ ${nextGuidedStep!.label}`}
@@ -503,6 +511,12 @@ export default function EnergyControlClient() {
                 <div className="text-[11px] font-mono text-gray-500 mt-2">
                   {session!.last_verdict.basis.join(' · ')}
                 </div>
+                {session!.last_verdict.verdict === 'HELD' && s.domain_signals.includes('BATTERY_RESERVE_BREACH') && (
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    Minting is held: the battery reserve is below the declared critical threshold.
+                    Settlement eligibility is false for this session.
+                  </p>
+                )}
                 {session!.last_verdict.verdict === 'HELD' && s.domain_signals.includes('STATE_UNVERIFIABLE') && (
                   <p className="text-[11px] text-gray-400 mt-2">
                     The grid may be restored, but resync is held because island-mode state can no longer be verified.
