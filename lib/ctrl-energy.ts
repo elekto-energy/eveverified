@@ -26,9 +26,12 @@ export async function ctrlEnergyFetch(
   if (!base) {
     return { ok: false, status: 503, body: { error: 'ctrl_energy_not_configured', mode: 'OFFLINE' } }
   }
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = {}
   const key = process.env.CTRL_ENERGY_KEY
   if (key) headers['X-Ctrl-Energy-Key'] = key
+
+  const hasBody = init?.json !== undefined
+  if (hasBody) headers['Content-Type'] = 'application/json'
 
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)

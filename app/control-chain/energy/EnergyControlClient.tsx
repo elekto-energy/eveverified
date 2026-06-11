@@ -102,8 +102,15 @@ export default function EnergyControlClient() {
   async function createSession() {
     setBusy(true); setError(''); setSeal(null); setShowRaw(false)
     try {
-      const res = await fetch('/api/eve/control-chain/energy/session', { method: 'POST' })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const res = await fetch('/api/eve/control-chain/energy/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      })
+      if (!res.ok) {
+        if (res.status === 503) setStatus('offline')
+        throw new Error(`HTTP ${res.status}`)
+      }
       setSession(await res.json())
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error')
