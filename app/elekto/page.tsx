@@ -224,46 +224,21 @@ export default function ElektoPage() {
         </div>
       </section>
 
-      {/* ELEKTO-X Section - Moved Down, Calm */}
+      {/* EVE Control Chain */}
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="p-8 rounded-2xl bg-gradient-to-b from-eve-orange/5 to-transparent border border-eve-orange/20">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-eve-orange/10 border border-eve-orange/30 flex items-center justify-center text-eve-orange text-xl flex-shrink-0">
-                ⚡
-              </div>
-              <div>
-                <h2 className="text-xl font-medium text-white">
-                  ELEKTO-X
-                </h2>
-                <p className="text-eve-orange text-sm">
-                  Hardware Trust Foundation
-                </p>
-              </div>
+          <div className="p-8 rounded-2xl bg-white/[0.02] border border-white/10">
+            <div className="mb-4">
+              <h2 className="text-xl font-medium text-white">EVE Control Chain</h2>
+              <p className="text-eve-green text-sm mt-1">Verification and control-chain evidence layer</p>
             </div>
-            
-            <p className="text-gray-400 leading-relaxed mb-6">
-              A cyber-physical trust layer for critical systems. Provides hardware attestation, 
-              tamper-proof logging and cryptographic evidence.
+            <p className="text-gray-400 leading-relaxed mb-4">
+              ELEKTO began as a verified local energy-sharing concept. The EVE Control Chain extends
+              this into a general evidence layer for critical control events: observed state, requested
+              action, deterministic verdict, hash-chained events, sealed record and later verification.
             </p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-              {[
-                { icon: '🔐', label: 'Hardware Attestation', desc: 'TPM/HSM verified' },
-                { icon: '📋', label: 'Immutable Logging', desc: 'Write-once records' },
-                { icon: '📸', label: 'Cryptographic Snapshots', desc: 'Signed state proofs' },
-                { icon: '🔄', label: 'Secure Resync', desc: 'Offline recovery' },
-              ].map((item, i) => (
-                <div key={i} className="p-3 rounded-lg bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-lg mb-1">{item.icon}</div>
-                  <div className="text-white text-xs font-medium">{item.label}</div>
-                  <div className="text-gray-600 text-[10px]">{item.desc}</div>
-                </div>
-              ))}
-            </div>
-            
-            <p className="text-gray-500 text-sm">
-              Used by ELEKTO and integrated into the EVE verification architecture.
+            <p className="text-gray-600 text-xs">
+              The attested-control lineage originates in earlier critical-infrastructure patent work.
             </p>
           </div>
         </div>

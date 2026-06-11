@@ -51,14 +51,14 @@ export const products: Product[] = [
   },
   {
     id: 'elekto',
-    name: 'ELEKTO-X',
-    tagline: 'Attested Control Layer · Critical-Resource Enforcement',
-    description: 'Attested control of critical resources through hardware attestation, vault approval, token-gated access, multi-attestation, WORM logging and signed snapshots. The enforcement layer of the EVE platform.',
-    color: '#ff6b00',
-    icon: '⚡',
-    features: ['Kassavalvslager (Vault)', 'TPM/HSM Attestation', 'WORM Logging', 'Token-Gated Access', 'Patent Pending'],
-    href: '/elekto-x',
-    status: 'beta'
+    name: 'EVE Control Chain',
+    tagline: 'Verification and control-chain evidence layer',
+    description: 'Evidence layer for critical control events: observed state, requested action, deterministic verdict, hash-chained events, sealed record and later verification.',
+    color: '#00ff88',
+    icon: '⛓',
+    features: ['Deterministic Verdict', 'Hash-Chained Events', 'Sealed Record', 'Verify Adapter', 'Patent Pending'],
+    href: '/control-chain/energy',
+    status: 'live'
   },
   {
     id: 'cabledna',
