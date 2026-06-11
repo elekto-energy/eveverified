@@ -1,53 +1,41 @@
 'use client'
 
 // Verified Energy Community Control Demo — /control-chain/energy
-// Visual model, REAL verification chain: every button runs through the
-// internal eve-ctrl-poc service (verdict engine, hashed event chain, sealed
-// EVE-CTRL-ENERGY-* record, verify adapter). Nothing here is client-side
-// simulation; if the backend is unreachable the page shows OFFLINE — it never
-// fakes success. Verdicts are only ALLOWED / HELD / DENIED / UNKNOWN.
+// Visual model, REAL verification chain. Verdicts: ALLOWED / HELD / DENIED / UNKNOWN only.
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
-// ── Types (mirror backend responses; backend is the authority) ──────────────
+// ── Backend status (three-state, explicit) ────────────────────────────────────
+type BackendStatus = 'checking' | 'online' | 'offline'
 
-interface House {
-  id: string
-  name: string
-  pv_kw: number
-  load_kw: number
-  sharing: boolean
+interface HealthData {
+  live: boolean
+  upstream?: {
+    status: string
+    mode: string
+    bind: string
+    chain_length: number
+    chain_valid: boolean
+    bridge_mode: string
+    is_demo: boolean
+  }
 }
+
+// ── Domain types ──────────────────────────────────────────────────────────────
+interface House { id: string; name: string; pv_kw: number; load_kw: number; sharing: boolean }
 interface EnergyState {
-  grid: string
-  mode: string
-  homes: House[]
+  grid: string; mode: string; homes: House[]
   battery: { capacity_kwh: number; soc_kwh: number; critical_reserve_kwh: number; reserve_protected: boolean }
   guest_chargers: { id: string; status: string }[]
-  critical_loads: string
-  non_critical_loads: string
-  elekto_minted_today_kwh: number
-  domain_signals: string[]
+  critical_loads: string; non_critical_loads: string
+  elekto_minted_today_kwh: number; domain_signals: string[]
 }
-interface EventRef {
-  seq: number
-  type: string
-  hash: string
-  prev_hash: string
-  timestamp: string
-}
-interface Verdict {
-  verdict: 'ALLOWED' | 'HELD' | 'DENIED' | 'UNKNOWN'
-  basis: string[]
-}
+interface EventRef { seq: number; type: string; hash: string; prev_hash: string; timestamp: string }
+interface Verdict { verdict: 'ALLOWED' | 'HELD' | 'DENIED' | 'UNKNOWN'; basis: string[] }
 interface Session {
-  session_id: string
-  state: EnergyState
-  steps_executed: string[]
-  events: EventRef[]
-  last_verdict: Verdict | null
-  sealed_record_id: string | null
+  session_id: string; state: EnergyState; steps_executed: string[]
+  events: EventRef[]; last_verdict: Verdict | null; sealed_record_id: string | null
 }
 interface SealResponse {
   session_id: string
@@ -55,17 +43,14 @@ interface SealResponse {
   verify: Record<string, unknown> & { verdict: string }
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function verdictColor(v: string) {
   if (v === 'ALLOWED' || v === 'VALID') return '#00ff88'
   if (v === 'HELD') return '#f59e0b'
   if (v === 'DENIED') return '#ef4444'
-  return '#9ca3af' // UNKNOWN / OFFLINE
+  return '#9ca3af'
 }
-function short(h: string) {
-  return h.length > 16 ? `${h.slice(0, 8)}…${h.slice(-8)}` : h
-}
+function short(h: string) { return h.length > 16 ? `${h.slice(0, 8)}…${h.slice(-8)}` : h }
 
 const BOUNDARY =
   'No real grid, charger, battery, SCADA system or infrastructure is controlled by this public demo. ' +
@@ -73,18 +58,16 @@ const BOUNDARY =
   'output are generated through the verification chain.'
 
 const MODE_BADGES = [
-  'Visual model',
-  'Real verification chain',
-  'Hardware attestation: pending M3',
-  'Grid control: visual only',
-  'Bridge mode: not_direct_bridge',
-  'Verification chain: active',
+  'Visual model', 'Real verification chain', 'Hardware attestation: pending M3',
+  'Grid control: visual only', 'Bridge mode: not_direct_bridge', 'Verification chain: active',
 ]
 
-// ── Component ────────────────────────────────────────────────────────────────
-
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function EnergyControlClient() {
-  const [live, setLive] = useState<boolean | null>(null)
+  const [status, setStatus] = useState<BackendStatus>('checking')
+  const [lastHealth, setLastHealth] = useState<HealthData | null>(null)
+  const [lastError, setLastError] = useState<string>('')
+  const [checkedAt, setCheckedAt] = useState<string>('')
   const [session, setSession] = useState<Session | null>(null)
   const [seal, setSeal] = useState<SealResponse | null>(null)
   const [staleToggle, setStaleToggle] = useState(false)
@@ -94,22 +77,34 @@ export default function EnergyControlClient() {
   const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
-    let cancelled = false
+    setStatus('checking')
     fetch('/api/eve/control-chain/energy/health', { cache: 'no-store' })
       .then((r) => r.json())
-      .then((j) => { if (!cancelled) setLive(j.live === true && j.upstream?.status === 'ok') })
-      .catch(() => { if (!cancelled) setLive(false) })
-    return () => { cancelled = true }
+      .then((data: HealthData) => {
+        const isOnline = data?.live === true && data?.upstream?.status === 'ok'
+        setLastHealth(data)
+        setCheckedAt(new Date().toISOString())
+        if (isOnline) {
+          setStatus('online')
+        } else {
+          setStatus('offline')
+        }
+      })
+      .catch((err: unknown) => {
+        setStatus('offline')
+        setLastError(String(err))
+        setCheckedAt(new Date().toISOString())
+      })
   }, [retryCount])
 
-  function retryHealth() { setRetryCount((n) => n + 1) }
+  function retry() { setRetryCount((n) => n + 1) }
 
   async function createSession() {
     setBusy(true); setError(''); setSeal(null); setShowRaw(false)
     try {
       const res = await fetch('/api/eve/control-chain/energy/session', { method: 'POST' })
-      if (!res.ok) { setLive(res.status === 503 ? false : live); throw new Error(`HTTP ${res.status}`) }
-      setSession(await res.json()); setLive(true)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      setSession(await res.json())
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error')
     } finally { setBusy(false) }
@@ -122,12 +117,10 @@ export default function EnergyControlClient() {
       const body: { step_id: string; options?: { stale_snapshot: boolean } } = { step_id: stepId }
       if (stepId === 'request_resync') body.options = { stale_snapshot: staleToggle }
       const res = await fetch(`/api/eve/control-chain/energy/session/${session.session_id}/step`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       })
       const json = await res.json()
-      if (res.status === 503) { setLive(false); throw new Error('Backend OFFLINE — fail closed, no simulated result') }
+      if (res.status === 503) { setStatus('offline'); throw new Error('Backend OFFLINE — fail closed') }
       if (!res.ok) throw new Error(json?.error ?? `HTTP ${res.status}`)
       setSession(json)
     } catch (e) {
@@ -141,10 +134,9 @@ export default function EnergyControlClient() {
     try {
       const res = await fetch(`/api/eve/control-chain/energy/session/${session.session_id}/seal`, { method: 'POST' })
       const json = await res.json()
-      if (res.status === 503) { setLive(false); throw new Error('Backend OFFLINE — fail closed, no simulated result') }
+      if (res.status === 503) { setStatus('offline'); throw new Error('Backend OFFLINE — fail closed') }
       if (!res.ok) throw new Error(json?.error ?? `HTTP ${res.status}`)
       setSeal(json)
-      // Seal response is authoritative; mark the local session view as sealed.
       setSession((prev) => (prev ? { ...prev, sealed_record_id: json.record.record_id } : prev))
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error')
@@ -153,17 +145,19 @@ export default function EnergyControlClient() {
 
   function reset() {
     setSession(null); setSeal(null); setError(''); setStaleToggle(false); setShowRaw(false)
-    retryHealth()
+    retry()
   }
 
   const s = session?.state
   const sealed = Boolean(session?.sealed_record_id) || Boolean(seal)
+  const isOnline = status === 'online'
+
   const buttons: { id: string; label: string; enabled: boolean }[] = s && !sealed ? [
     { id: 'break_grid', label: 'Break grid', enabled: s.grid === 'ONLINE' },
     { id: 'enter_island_mode', label: 'Enter island mode', enabled: s.mode === 'RESILIENCE_CHECK' },
     { id: 'pause_guest_charging', label: 'Pause guest charging', enabled: !s.guest_chargers.every((c) => c.status === 'HELD') },
     { id: 'protect_critical_loads', label: 'Protect critical loads', enabled: s.mode === 'ISLAND_MODE' },
-    { id: 'mint_verified_surplus', label: 'Mint verified surplus', enabled: (s.mode === 'ISLAND_MODE' || s.mode === 'GRID_CONNECTED') },
+    { id: 'mint_verified_surplus', label: 'Mint verified surplus', enabled: s.mode === 'ISLAND_MODE' || s.mode === 'GRID_CONNECTED' },
     { id: 'restore_grid', label: 'Restore grid', enabled: s.grid === 'OFFLINE' },
     { id: 'request_resync', label: 'Request verified resync', enabled: s.mode === 'RESYNC_PENDING' || s.mode === 'ISLAND_MODE_HELD' },
   ] : []
@@ -184,14 +178,12 @@ export default function EnergyControlClient() {
           Ten homes, shared battery, verified energy sharing and island-mode control.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed max-w-2xl mx-auto mb-6">
-          Visual model, real verification chain. Every step below runs through the EVE Verified
+          Visual model, real verification chain. Every step runs through the EVE Verified
           Control Chain: verdict engine, hashed event chain, sealed record and verify adapter.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {MODE_BADGES.map((b) => (
-            <span key={b} className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">
-              {b}
-            </span>
+            <span key={b} className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">{b}</span>
           ))}
         </div>
       </section>
@@ -203,43 +195,70 @@ export default function EnergyControlClient() {
         </div>
       </section>
 
-      {/* Live status / OFFLINE */}
-      <section className="px-6 max-w-5xl mx-auto mb-8">
-        {live === false && (
+      {/* ── Backend status panel ── */}
+      <section className="px-6 max-w-3xl mx-auto mb-8">
+
+        {status === 'checking' && (
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+            <p className="text-gray-400 text-sm font-mono">Checking live verification backend…</p>
+          </div>
+        )}
+
+        {status === 'online' && (
+          <div className="p-4 rounded-xl border border-eve-green/20 bg-eve-green/5">
+            <div className="text-eve-green text-sm font-mono mb-2">Live verification backend connected</div>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[11px] font-mono text-gray-400">
+              <span>Chain valid: <span className="text-eve-green">{String(lastHealth?.upstream?.chain_valid)}</span></span>
+              <span>Runtime: <span className="text-white/70">{lastHealth?.upstream?.mode}</span></span>
+              <span>Bridge mode: <span className="text-white/70">{lastHealth?.upstream?.bridge_mode}</span></span>
+              <span>Chain length: <span className="text-white/70">{lastHealth?.upstream?.chain_length}</span></span>
+            </div>
+          </div>
+        )}
+
+        {status === 'offline' && (
           <div className="p-6 rounded-xl border text-center" style={{ borderColor: '#9ca3af40', background: '#9ca3af0d' }}>
             <div className="text-2xl font-mono mb-2" style={{ color: '#9ca3af' }}>UNKNOWN / OFFLINE</div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-sm mb-4">
               The verification backend is unreachable. This page fails closed — it never shows
               simulated results under a live label.
             </p>
-            <button onClick={retryHealth} className="mt-4 px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
+            {lastError && <p className="text-red-400 text-xs font-mono mb-3">{lastError}</p>}
+            <button onClick={retry} className="px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
               Retry connection
             </button>
           </div>
         )}
 
-        {live && !session && (
-          <div className="text-center">
-            <button
-              onClick={createSession}
-              disabled={busy}
-              className="px-8 py-3 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm disabled:opacity-40"
-            >
-              {busy ? 'Creating…' : 'Create session'}
-            </button>
-            <p className="text-gray-600 text-xs mt-3 font-mono">
-              Creates a real session on the verification chain — first event is hashed immediately.
-            </p>
+        {checkedAt && (
+          <div className="mt-3 p-3 rounded-lg bg-black/20 border border-white/5 text-[10px] font-mono text-gray-600">
+            <div className="text-gray-500 mb-1">Last health check</div>
+            <div>status: <span className="text-white/60">{status}</span></div>
+            <div>live: <span className="text-white/60">{String(lastHealth?.live)}</span></div>
+            <div>upstream.status: <span className="text-white/60">{lastHealth?.upstream?.status ?? '—'}</span></div>
+            <div>chain_valid: <span className="text-white/60">{String(lastHealth?.upstream?.chain_valid)}</span></div>
+            <div>checked_at: <span className="text-white/60">{checkedAt}</span></div>
           </div>
         )}
       </section>
 
+      {/* Create session */}
+      {isOnline && !session && (
+        <section className="px-6 max-w-5xl mx-auto mb-8 text-center">
+          <button onClick={createSession} disabled={busy}
+            className="px-8 py-3 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm disabled:opacity-40">
+            {busy ? 'Creating…' : 'Create session'}
+          </button>
+          <p className="text-gray-600 text-xs mt-3 font-mono">
+            Creates a real session on the verification chain — first event is hashed immediately.
+          </p>
+        </section>
+      )}
+
       {/* Visual model + control panel */}
-      {live && s && (
+      {isOnline && s && (
         <section className="px-6 max-w-6xl mx-auto mb-10 grid lg:grid-cols-[1fr_340px] gap-6">
-          {/* Microgrid visual */}
           <div className="space-y-4">
-            {/* Grid / mode chips */}
             <div className="flex flex-wrap gap-2 items-center">
               <span className="text-[11px] font-mono px-3 py-1 rounded-full border"
                 style={{ color: s.grid === 'ONLINE' ? '#00ff88' : s.grid === 'OFFLINE' ? '#ef4444' : '#f59e0b', borderColor: '#ffffff1a', background: '#ffffff08' }}>
@@ -250,13 +269,10 @@ export default function EnergyControlClient() {
                 Mode: {s.mode}
               </span>
               {s.domain_signals.map((d, i) => (
-                <span key={i} className="text-[11px] font-mono px-3 py-1 rounded-full border border-eve-orange/30 text-eve-orange bg-eve-orange/5">
-                  {d}
-                </span>
+                <span key={i} className="text-[11px] font-mono px-3 py-1 rounded-full border border-eve-orange/30 text-eve-orange bg-eve-orange/5">{d}</span>
               ))}
             </div>
 
-            {/* Homes */}
             <div className="grid grid-cols-5 gap-2">
               {s.homes.map((h) => (
                 <div key={h.id} className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
@@ -270,7 +286,6 @@ export default function EnergyControlClient() {
               ))}
             </div>
 
-            {/* Battery + chargers + loads */}
             <div className="grid md:grid-cols-3 gap-3">
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
                 <div className="text-xs text-gray-400 mb-2">Community battery (100 kWh)</div>
@@ -301,13 +316,10 @@ export default function EnergyControlClient() {
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
                 <div className="text-xs text-gray-400 mb-2">ELEKTO minted today</div>
                 <div className="text-eve-green font-mono text-lg">{s.elekto_minted_today_kwh} kWh credits</div>
-                <div className="text-[10px] text-gray-600 mt-1">
-                  1 ELEKTO = 1 verified kWh within the closed-network accounting model.
-                </div>
+                <div className="text-[10px] text-gray-600 mt-1">1 ELEKTO = 1 verified kWh within the closed-network accounting model.</div>
               </div>
             </div>
 
-            {/* Event chain */}
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="text-xs text-gray-400 mb-3">Event chain (hashed, append-only)</div>
               <div className="space-y-1 max-h-64 overflow-y-auto">
@@ -322,18 +334,13 @@ export default function EnergyControlClient() {
             </div>
           </div>
 
-          {/* Control panel */}
           <div className="space-y-3">
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="text-xs text-gray-400 mb-3">Controls · session <span className="font-mono text-white/70">{session!.session_id}</span></div>
               <div className="space-y-2">
                 {buttons.map((b) => (
-                  <button
-                    key={b.id}
-                    onClick={() => runStep(b.id)}
-                    disabled={busy || !b.enabled}
-                    className="w-full px-4 py-2 rounded-lg text-sm text-left border transition-all disabled:opacity-30 bg-white/[0.03] border-white/10 text-white/80 hover:border-eve-green/40"
-                  >
+                  <button key={b.id} onClick={() => runStep(b.id)} disabled={busy || !b.enabled}
+                    className="w-full px-4 py-2 rounded-lg text-sm text-left border transition-all disabled:opacity-30 bg-white/[0.03] border-white/10 text-white/80 hover:border-eve-green/40">
                     {b.label}
                   </button>
                 ))}
@@ -341,24 +348,17 @@ export default function EnergyControlClient() {
                   <input type="checkbox" checked={staleToggle} onChange={(e) => setStaleToggle(e.target.checked)} />
                   Simulate stale snapshot (on resync)
                 </label>
-                <button
-                  onClick={sealAndVerify}
-                  disabled={busy || sealed || !session || session.steps_executed.length === 0}
-                  className="w-full px-4 py-2 rounded-lg text-sm border bg-eve-green/10 border-eve-green/30 text-eve-green hover:bg-eve-green/20 disabled:opacity-30"
-                >
+                <button onClick={sealAndVerify} disabled={busy || sealed || !session || session.steps_executed.length === 0}
+                  className="w-full px-4 py-2 rounded-lg text-sm border bg-eve-green/10 border-eve-green/30 text-eve-green hover:bg-eve-green/20 disabled:opacity-30">
                   Seal + verify
                 </button>
-                <button
-                  onClick={reset}
-                  disabled={busy}
-                  className="w-full px-4 py-2 rounded-lg text-sm border bg-white/[0.03] border-white/10 text-gray-400 hover:bg-white/10 disabled:opacity-30"
-                >
+                <button onClick={reset} disabled={busy}
+                  className="w-full px-4 py-2 rounded-lg text-sm border bg-white/[0.03] border-white/10 text-gray-400 hover:bg-white/10 disabled:opacity-30">
                   Reset
                 </button>
               </div>
             </div>
 
-            {/* Verdict */}
             {session!.last_verdict && (
               <div className="p-4 rounded-xl border" style={{ borderColor: `${verdictColor(session!.last_verdict.verdict)}40`, background: `${verdictColor(session!.last_verdict.verdict)}0d` }}>
                 <div className="text-xs text-gray-400 mb-1">
@@ -372,23 +372,19 @@ export default function EnergyControlClient() {
                 </div>
                 {session!.last_verdict.verdict === 'HELD' && session!.state.domain_signals.includes('STATE_UNVERIFIABLE') && (
                   <p className="text-[11px] text-gray-400 mt-2">
-                    The grid may be restored, but resync is held because island-mode state can no
-                    longer be verified.
+                    The grid may be restored, but resync is held because island-mode state can no longer be verified.
                   </p>
                 )}
               </div>
             )}
 
             {error && (
-              <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-xs font-mono">
-                {error}
-              </div>
+              <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-xs font-mono">{error}</div>
             )}
           </div>
         </section>
       )}
 
-      {/* Sealed record + verify */}
       {seal && (
         <section className="px-6 max-w-4xl mx-auto mb-12">
           <div className="p-6 rounded-xl bg-white/[0.02] border border-white/10">
@@ -399,24 +395,15 @@ export default function EnergyControlClient() {
               </div>
               <div className="text-right">
                 <div className="text-xs text-gray-500">Verify adapter</div>
-                <div className="font-mono text-lg" style={{ color: verdictColor(String(seal.verify.verdict)) }}>
-                  {String(seal.verify.verdict)}
-                </div>
+                <div className="font-mono text-lg" style={{ color: verdictColor(String(seal.verify.verdict)) }}>{String(seal.verify.verdict)}</div>
               </div>
               <div className="text-right">
                 <div className="text-xs text-gray-500">Record verdict</div>
-                <div className="font-mono text-lg" style={{ color: verdictColor(String(seal.record.execution_verdict)) }}>
-                  {String(seal.record.execution_verdict)}
-                </div>
+                <div className="font-mono text-lg" style={{ color: verdictColor(String(seal.record.execution_verdict)) }}>{String(seal.record.execution_verdict)}</div>
               </div>
             </div>
-            <div className="text-[11px] font-mono text-gray-500 break-all mb-4">
-              seal_hash: {String(seal.record.seal_hash)}
-            </div>
-            <button
-              onClick={() => setShowRaw(!showRaw)}
-              className="px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10"
-            >
+            <div className="text-[11px] font-mono text-gray-500 break-all mb-4">seal_hash: {String(seal.record.seal_hash)}</div>
+            <button onClick={() => setShowRaw(!showRaw)} className="px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
               {showRaw ? 'Hide raw JSON' : 'Show raw JSON'}
             </button>
             {showRaw && (
@@ -428,15 +415,12 @@ export default function EnergyControlClient() {
         </section>
       )}
 
-      {/* Settlement layer note */}
       <section className="px-6 max-w-3xl mx-auto mb-16">
         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
           <p className="text-gray-500 text-xs leading-relaxed">
-            Optional settlement layer: ELEKTO can represent verified internal kWh credits in a
-            closed-network accounting model. ELEKTO credits, if enabled, represent verified
-            internal kWh accounting and settlement signals for a controlled community model. They
-            are not presented as a public electricity sale, financial instrument, investment
-            product or public utility billing system.
+            Optional settlement layer: ELEKTO can represent verified internal kWh credits in a closed-network accounting model.
+            ELEKTO credits, if enabled, represent verified internal kWh accounting and settlement signals for a controlled community model.
+            They are not presented as a public electricity sale, financial instrument, investment product or public utility billing system.
           </p>
           <p className="text-gray-600 text-xs mt-2">
             The attested-control lineage originates in earlier critical-infrastructure patent work.
