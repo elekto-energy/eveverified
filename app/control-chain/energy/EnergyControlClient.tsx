@@ -91,22 +91,18 @@ export default function EnergyControlClient() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [showRaw, setShowRaw] = useState(false)
-
-  const checkHealth = async () => {
-    try {
-      const res = await fetch('/api/eve/control-chain/energy/health', { cache: 'no-store' })
-      if (!res.ok) { setLive(false); return }
-      const json = await res.json()
-      setLive(json.live === true && json.upstream?.status === 'ok')
-    } catch {
-      setLive(false)
-    }
-  }
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
-    checkHealth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    let cancelled = false
+    fetch('/api/eve/control-chain/energy/health', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled) setLive(j.live === true && j.upstream?.status === 'ok') })
+      .catch(() => { if (!cancelled) setLive(false) })
+    return () => { cancelled = true }
+  }, [retryCount])
+
+  function retryHealth() { setRetryCount((n) => n + 1) }
 
   async function createSession() {
     setBusy(true); setError(''); setSeal(null); setShowRaw(false)
@@ -157,7 +153,7 @@ export default function EnergyControlClient() {
 
   function reset() {
     setSession(null); setSeal(null); setError(''); setStaleToggle(false); setShowRaw(false)
-    checkHealth()
+    retryHealth()
   }
 
   const s = session?.state
@@ -216,7 +212,7 @@ export default function EnergyControlClient() {
               The verification backend is unreachable. This page fails closed — it never shows
               simulated results under a live label.
             </p>
-            <button onClick={checkHealth} className="mt-4 px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
+            <button onClick={retryHealth} className="mt-4 px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
               Retry connection
             </button>
           </div>
