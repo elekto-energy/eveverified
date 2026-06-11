@@ -95,7 +95,10 @@ export default function EnergyControlClient() {
   const checkHealth = useCallback(async () => {
     try {
       const res = await fetch('/api/eve/control-chain/energy/health')
-      setLive(res.ok)
+      if (!res.ok) { setLive(false); return }
+      const json = await res.json()
+      // Proxy wraps upstream: { live: boolean, upstream: { status, chain_valid, ... } }
+      setLive(json.live === true && json.upstream?.status === 'ok')
     } catch {
       setLive(false)
     }
