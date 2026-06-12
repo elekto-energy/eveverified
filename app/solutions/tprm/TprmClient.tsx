@@ -97,14 +97,14 @@ export default function TprmClient() {
 
             {/* Proof chip — a real sealed record, not a claim */}
             <a
-              href="https://verify.eveverified.com/?id=EVE-TPRM-00004506"
+              href="https://verify.eveverified.com/?id=EVE-TPRM-00004516"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 border border-white/15 rounded-sm px-4 py-2.5 mb-10
                          font-mono text-xs text-gray-400 hover:border-white/40 hover:text-gray-200 transition-colors"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-eve-green" />
-              <span>EVE-TPRM-00004506</span>
+              <span>EVE-TPRM-00004516</span>
               <span className="text-gray-600">·</span>
               <span>sealed 2026-06-12</span>
               <span className="text-gray-600">·</span>

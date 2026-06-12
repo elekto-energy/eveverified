@@ -1,11 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // Synthetic assessment demo data — GENERATED FROM REAL OUTPUT, DO NOT HAND-EDIT
 //
-// Source: eve-verified-grc/samples/synthetic_starter/live_run/ (2026-06-12)
-// Production run on grc.eveverified.com. Documents are synthetic; every value
-// below (verdicts, coverage, hashes, seal IDs) is real machine output from the
-// sealed assessments assess_fd9de68b (A) and assess_a4625a48 (B), verified
-// 16/16 content hashes against an independent local resolver run.
+// Source: eve-verified-grc/samples/synthetic_starter/live_run/ (2026-06-13)
+// Production run on grc.eveverified.com. Vendors are 100% fictitious
+// ("EVE Synthetic Vendor A/B" — names that cannot exist as real companies).
+// Every value below (verdicts, coverage, hashes, seal IDs, excerpts) is real
+// machine output from the sealed assessments assess_3ef8282a (A) and
+// assess_4456b338 (B), verified 16/16 content hashes against an independent
+// local resolver run.
 //
 // If the demo vendors are ever re-run, regenerate this file from the new
 // live_run artefacts — never edit values by hand.
@@ -48,18 +50,18 @@ export interface DemoVendor {
 export const DEMO_VENDORS: DemoVendor[] = [
   {
     id: 'A',
-    name: 'EVE Demo Vendor A — Northwind Cloud Services',
-    tagline: 'Strong evidence package',
-    profileId: 'tprm_vendor_northwind_cloud_services_ab_managed_cloud_platform',
-    assessmentId: 'assess_fd9de68b',
-    manifestSeal: 'EVE-TPRM-00004506',
-    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004506',
-    workpaperUrl: '/demo/EVE_TPRM_Workpaper_Northwind.xlsx',
+    name: 'EVE Synthetic Vendor A',
+    tagline: 'Strong evidence package (fictitious)',
+    profileId: 'tprm_vendor_eve_synthetic_vendor_a_synthetic_demo_service_a',
+    assessmentId: 'assess_3ef8282a',
+    manifestSeal: 'EVE-TPRM-00004516',
+    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004516',
+    workpaperUrl: '/demo/EVE_TPRM_Workpaper_SyntheticVendorA.xlsx',
     summary: '4/4 SUPPORTED',
     documents: [
-      { file: 'northwind_change_management_policy.txt', sha16: 'd5e5b651a311b2c1', chars: 1625 },
-      { file: 'northwind_information_security_policy.txt', sha16: '522ee70be1165b81', chars: 1906 },
-      { file: 'northwind_vendor_risk_policy.txt', sha16: '4fc1cea295f62e82', chars: 1210 },
+      { file: 'sva_change_management_policy.txt', sha16: 'ebb5a0f1bb17ffe6', chars: 1639 },
+      { file: 'sva_information_security_policy.txt', sha16: 'f5db23a86c878eb0', chars: 1924 },
+      { file: 'sva_vendor_risk_policy.txt', sha16: '1b21ef7822ca0700', chars: 1228 },
     ],
     findings: [
       {
@@ -70,13 +72,13 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004502',
-        contentHash: 'e1cdd912787805e94b4a2aad971d268a15b4d55313caac4de847685d80bfc6ac',
+        findingSeal: 'EVE-TPRM-00004512',
+        contentHash: '0ec5f3f46e1729d00294e62909f0a3380e3a32616bb875af61d80ccd8e47046b',
         note: null,
         excerpt: {
           term: 'privileged accounts are limited to',
           text: 'privileged accounts are limited to personnel with a documented business need.',
-          doc: 'northwind_information_security_policy.txt',
+          doc: 'sva_information_security_policy.txt',
         },
       },
       {
@@ -87,13 +89,13 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '5/0/0',
-        findingSeal: 'EVE-TPRM-00004503',
-        contentHash: '825313967515e8c37559854ccd047189feed7d239726c14904b4af487968baa2',
+        findingSeal: 'EVE-TPRM-00004513',
+        contentHash: 'f328f63250bb3d70dc9da44fbb5cbacadf964839695f65f70f62e496ce9ab0c3',
         note: null,
         excerpt: {
           term: 'change requests are logged',
           text: 'change requests are logged with a unique identifier. No change without a ticket.',
-          doc: 'northwind_change_management_policy.txt',
+          doc: 'sva_change_management_policy.txt',
         },
       },
       {
@@ -104,13 +106,13 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004504',
-        contentHash: '3c1af8f7653a19b70b34d3d93815b0ec0ecf635b27c6066708f1a5503e4efa2c',
+        findingSeal: 'EVE-TPRM-00004514',
+        contentHash: 'c268a1b020f3d7b7063144b7d564a3b72cc22d4e287de83025f05cf53cf460de',
         note: null,
         excerpt: {
           term: 'third-party risk management process',
-          text: 'Northwind operates a documented third-party risk management process, supported by a vendor risk management policy approved by executive management.',
-          doc: 'northwind_vendor_risk_policy.txt',
+          text: 'The company operates a documented third-party risk management process, supported by a vendor risk management policy approved by executive management.',
+          doc: 'sva_vendor_risk_policy.txt',
         },
       },
       {
@@ -121,30 +123,30 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004505',
-        contentHash: 'e44fec994de047158ef7de00f5293d933901508f8b6cd1d601cad402fddac20f',
+        findingSeal: 'EVE-TPRM-00004515',
+        contentHash: 'b596da0c44c436a41fa395782f9b3871eb4ade1aa7dfb88c46cc8f534c71a117',
         note: null,
         excerpt: {
           term: 'documented incident response plan',
-          text: 'Northwind maintains a documented incident response plan owned by the Chief Information Security Officer.',
-          doc: 'northwind_information_security_policy.txt',
+          text: 'The company maintains a documented incident response plan owned by the Chief Information Security Officer.',
+          doc: 'sva_information_security_policy.txt',
         },
       },
     ],
   },
   {
     id: 'B',
-    name: 'EVE Demo Vendor B — Baltic Data Systems',
-    tagline: 'Weak / partial evidence package',
-    profileId: 'tprm_vendor_baltic_data_systems_ou_data_processing_services',
-    assessmentId: 'assess_a4625a48',
-    manifestSeal: 'EVE-TPRM-00004511',
-    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004511',
-    workpaperUrl: '/demo/EVE_TPRM_Workpaper_Baltic.xlsx',
+    name: 'EVE Synthetic Vendor B',
+    tagline: 'Weak / partial evidence package (fictitious)',
+    profileId: 'tprm_vendor_eve_synthetic_vendor_b_synthetic_demo_service_b',
+    assessmentId: 'assess_4456b338',
+    manifestSeal: 'EVE-TPRM-00004521',
+    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004521',
+    workpaperUrl: '/demo/EVE_TPRM_Workpaper_SyntheticVendorB.xlsx',
     summary: '2 PARTIAL · 2 NO_ANSWER',
     documents: [
-      { file: 'baltic_it_security_overview.txt', sha16: 'ce46fddd3eb52ae4', chars: 753 },
-      { file: 'baltic_operations_handbook.txt', sha16: '1bcdc87a024c40ce', chars: 920 },
+      { file: 'svb_it_security_overview.txt', sha16: '6d5cd4a2518d7262', chars: 773 },
+      { file: 'svb_operations_handbook.txt', sha16: '04d58c0af63f8ca4', chars: 945 },
     ],
     findings: [
       {
@@ -155,8 +157,8 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '—',
         strength: null,
         epCounts: '0/0/3',
-        findingSeal: 'EVE-TPRM-00004507',
-        contentHash: 'b28647e07639f24c60284016dfaa5d590f7dad7d63cdcb0aaa9b1fc89e49eef6',
+        findingSeal: 'EVE-TPRM-00004517',
+        contentHash: '833a5d65edd6bf6f1865b4f380506829e78408edb568443c46c606e14e6f40a0',
         note: '6 negated findings: "MFA is available", "MFA enrollment is encouraged", "rollout is planned" — negated mentions are never counted as evidence.',
       },
       {
@@ -167,13 +169,13 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '40',
         strength: 'Medium',
         epCounts: '1/1/3',
-        findingSeal: 'EVE-TPRM-00004508',
-        contentHash: 'b2d155aaceeaa25696abf3e5ee2c927aed90ea199e2eec8c209ddcaf6439f418',
+        findingSeal: 'EVE-TPRM-00004518',
+        contentHash: 'bc2703947c833c24d688153f5bca83ef127e7e5a50356e4283fc816fb7cf51bc',
         note: 'Change tracking strong; approval keyword-level only; pre-production testing absent. Combination "authorization AND testing" unsatisfied.',
         excerpt: {
           term: 'all changes are tracked in',
           text: 'All changes are tracked in our internal ticket system.',
-          doc: 'baltic_operations_handbook.txt',
+          doc: 'svb_operations_handbook.txt',
         },
       },
       {
@@ -184,8 +186,8 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '0',
         strength: 'Low',
         epCounts: '1/0/2',
-        findingSeal: 'EVE-TPRM-00004509',
-        contentHash: 'ee9c6daacdf276a014e63f3b08341797f315651ecea4232d258bc26ef5e0c590',
+        findingSeal: 'EVE-TPRM-00004519',
+        contentHash: 'ff9f94be0e4a47343eecdfb37614d84a0095c9dc244865cfecf95477d85d34a2',
         note: 'A vendor risk process exists, but due diligence is "planned for the 2027 roadmap" — negating language detected, score capped.',
       },
       {
@@ -196,8 +198,8 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '—',
         strength: null,
         epCounts: '0/0/3',
-        findingSeal: 'EVE-TPRM-00004510',
-        contentHash: '3d7d68fa9fcc8769867f1d9d3d3526917608a0bef07879e0d7d3c6affb8150ce',
+        findingSeal: 'EVE-TPRM-00004520',
+        contentHash: '9a1cbbcaf10aa8c12d39d6ad6f6f3b3215ab94d204ca86164b65ecaf8408d765',
         note: 'No incident-response evidence anywhere in the submitted package. EVE never guesses.',
       },
     ],
