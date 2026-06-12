@@ -28,6 +28,7 @@ export interface DemoFinding {
   findingSeal: string
   contentHash: string
   note: string | null
+  excerpt?: { term: string; text: string; doc: string } // verbatim from matched_excerpts
 }
 
 export interface DemoVendor {
@@ -72,6 +73,11 @@ export const DEMO_VENDORS: DemoVendor[] = [
         findingSeal: 'EVE-TPRM-00004502',
         contentHash: 'e1cdd912787805e94b4a2aad971d268a15b4d55313caac4de847685d80bfc6ac',
         note: null,
+        excerpt: {
+          term: 'privileged accounts are limited to',
+          text: 'privileged accounts are limited to personnel with a documented business need.',
+          doc: 'northwind_information_security_policy.txt',
+        },
       },
       {
         ruleId: 'TPRM_CHANGE_001',
@@ -84,6 +90,11 @@ export const DEMO_VENDORS: DemoVendor[] = [
         findingSeal: 'EVE-TPRM-00004503',
         contentHash: '825313967515e8c37559854ccd047189feed7d239726c14904b4af487968baa2',
         note: null,
+        excerpt: {
+          term: 'change requests are logged',
+          text: 'change requests are logged with a unique identifier. No change without a ticket.',
+          doc: 'northwind_change_management_policy.txt',
+        },
       },
       {
         ruleId: 'TPRM_VENDOR_001',
@@ -96,6 +107,11 @@ export const DEMO_VENDORS: DemoVendor[] = [
         findingSeal: 'EVE-TPRM-00004504',
         contentHash: '3c1af8f7653a19b70b34d3d93815b0ec0ecf635b27c6066708f1a5503e4efa2c',
         note: null,
+        excerpt: {
+          term: 'third-party risk management process',
+          text: 'Northwind operates a documented third-party risk management process, supported by a vendor risk management policy approved by executive management.',
+          doc: 'northwind_vendor_risk_policy.txt',
+        },
       },
       {
         ruleId: 'TPRM_INCIDENT_001',
@@ -108,6 +124,11 @@ export const DEMO_VENDORS: DemoVendor[] = [
         findingSeal: 'EVE-TPRM-00004505',
         contentHash: 'e44fec994de047158ef7de00f5293d933901508f8b6cd1d601cad402fddac20f',
         note: null,
+        excerpt: {
+          term: 'documented incident response plan',
+          text: 'Northwind maintains a documented incident response plan owned by the Chief Information Security Officer.',
+          doc: 'northwind_information_security_policy.txt',
+        },
       },
     ],
   },
@@ -149,6 +170,11 @@ export const DEMO_VENDORS: DemoVendor[] = [
         findingSeal: 'EVE-TPRM-00004508',
         contentHash: 'b2d155aaceeaa25696abf3e5ee2c927aed90ea199e2eec8c209ddcaf6439f418',
         note: 'Change tracking strong; approval keyword-level only; pre-production testing absent. Combination "authorization AND testing" unsatisfied.',
+        excerpt: {
+          term: 'all changes are tracked in',
+          text: 'All changes are tracked in our internal ticket system.',
+          doc: 'baltic_operations_handbook.txt',
+        },
       },
       {
         ruleId: 'TPRM_VENDOR_001',

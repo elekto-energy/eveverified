@@ -90,8 +90,9 @@ export default function TprmClient() {
               <span className="text-eve-green">Verified.</span>
             </h1>
             <p className="text-lg text-gray-400 leading-relaxed mb-8">
-              EVE shows what vendor evidence supports, what is partial, and what
-              is missing — then seals the workpaper for later verification.
+              EVE Vendor Evidence Assessment verifies what a vendor&apos;s
+              documentation actually supports — and returns NO_ANSWER when
+              approved evidence is missing.
             </p>
 
             {/* Proof chip — a real sealed record, not a claim */}
@@ -239,6 +240,10 @@ export default function TprmClient() {
           </div>
           <div className="border-l-2 border-amber-500/40 pl-6">
             <h2 className="text-3xl font-light mb-6">What this is not</h2>
+            <p className="text-gray-300 text-sm leading-relaxed mb-4">
+              EVE does not certify compliance. EVE verifies evidence support and
+              records what requires human review.
+            </p>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               This is not an audit, not legal advice, not a certification and
               not a compliance determination. Coverage is not compliance — every
@@ -250,6 +255,52 @@ export default function TprmClient() {
               side. The workpaper records what the evidence shows — your team
               decides what to do about it.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Design partner offer — 3 slots */}
+      <section className="border-t border-slate-500/20 bg-[#0c0f15]">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <p className="text-xs tracking-[0.3em] text-gray-500 mb-4">DESIGN PARTNER PROGRAM</p>
+              <h2 className="text-3xl font-light mb-4">
+                Three slots for TPRM practitioners
+              </h2>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Pressure-test the workpaper format against real-world assessor
+                expectations. You run one full assessment — on your own vendor
+                package or our synthetic set — and tell us what an assessor
+                actually needs in it.
+              </p>
+            </div>
+            <div className="border border-slate-500/25 rounded-sm p-6 bg-[#0e1218]">
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between gap-6">
+                  <span className="text-gray-400">Scope</span>
+                  <span className="text-gray-200 text-right">1 full Vendor Evidence Assessment, base scope</span>
+                </div>
+                <div className="flex justify-between gap-6">
+                  <span className="text-gray-400">Fee</span>
+                  <span className="font-mono text-gray-200">5 000 SEK ex VAT</span>
+                </div>
+                <div className="flex justify-between gap-6">
+                  <span className="text-gray-400">In return</span>
+                  <span className="text-gray-200 text-right">Structured written feedback on the workpaper + one follow-up call</span>
+                </div>
+                <div className="flex justify-between gap-6">
+                  <span className="text-gray-400">Slots</span>
+                  <span className="font-mono text-gray-200">3 · then full price applies</span>
+                </div>
+              </div>
+              <a
+                href="/pilot"
+                className="inline-block mt-6 px-6 py-3 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
+              >
+                Claim a design partner slot
+              </a>
+            </div>
           </div>
         </div>
       </section>

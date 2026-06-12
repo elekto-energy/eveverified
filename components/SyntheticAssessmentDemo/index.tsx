@@ -181,6 +181,12 @@ export default function SyntheticAssessmentDemo() {
                       <div className="font-mono text-[11px] text-gray-600 mt-1">
                         finding {f.findingSeal} · content_hash {f.contentHash.slice(0, 16)}…
                       </div>
+                      {f.excerpt && (
+                        <p className="text-xs text-gray-500 mt-1.5 border-l border-slate-500/40 pl-3">
+                          “{f.excerpt.text}”
+                          <span className="text-gray-600"> — {f.excerpt.doc}</span>
+                        </p>
+                      )}
                       {f.note && <p className="text-xs text-gray-500 mt-1">{f.note}</p>}
                     </div>
                   ))}
