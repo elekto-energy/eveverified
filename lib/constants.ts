@@ -59,6 +59,13 @@ export const generateEParticles = (count: number, baseRadius: number = 60) => {
 // Navigation items
 export const navItems = [
   { name: 'EVE', href: '/eve' },
+  {
+    name: 'Solutions',
+    href: '/solutions/tprm',
+    children: [
+      { name: 'TPRM Vendor Evidence Assessment', href: '/solutions/tprm' },
+    ]
+  },
   { 
     name: 'ASK', 
     href: '/ask',

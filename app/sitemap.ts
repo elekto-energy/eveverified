@@ -25,6 +25,7 @@ const ROUTES: Route[] = [
   // Top-level
   { path: '/',                          priority: 1.0, changeFrequency: 'monthly' },
   { path: '/eve',                       priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/solutions/tprm',            priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-06-12') },
   { path: '/eve-verified',              priority: 0.8, changeFrequency: 'monthly' },
   { path: '/elekto',                    priority: 0.8, changeFrequency: 'monthly' },
   { path: '/philosophy',                priority: 0.7, changeFrequency: 'monthly' },
