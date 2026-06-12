@@ -506,6 +506,10 @@ export default function EnergyControlClient() {
                   <input type="checkbox" checked={staleToggle} onChange={(e) => setStaleToggle(e.target.checked)} />
                   Simulate stale snapshot (on resync)
                 </label>
+                <label className="flex items-center gap-2 px-1 py-1 text-[11px] text-gray-500 font-mono">
+                  <input type="checkbox" checked={breachToggle} onChange={(e) => setBreachToggle(e.target.checked)} />
+                  Simulate battery reserve breach (on mint)
+                </label>
                 {sealed ? (
                   <div className="p-3 rounded-lg bg-eve-green/5 border border-eve-green/20 text-center text-eve-green text-sm font-mono">
                     Session sealed — reset to start a new run.
