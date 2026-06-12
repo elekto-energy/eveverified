@@ -123,15 +123,15 @@ export default function ElektoPage() {
             {[
               {
                 title: 'Housing communities',
-                desc: 'Shared solar production between apartments. Every kWh tracked from panel to meter, settled annually with cryptographic proof.',
+                desc: 'Verified local energy accounting for shared solar production across apartments, buildings or housing associations. Every kWh can be traced from production to consumption, with signed records for internal allocation, reporting and annual reconciliation.',
               },
               {
                 title: 'Marinas and port infrastructure',
-                desc: 'Shore power verified per berth. Consumption metered, signed, and settled between the marina operator and tenants.',
+                desc: 'Verified shore-power accounting per berth, vessel or tenant. Consumption is metered, signed and linked to a verifiable record between the marina operator and the participating users.',
               },
               {
                 title: 'Industrial and campus microgrids',
-                desc: 'Multi-tenant energy communities where ISO 50001 or similar frameworks require verifiable consumption and allocation.',
+                desc: 'Multi-tenant energy environments where operators need auditable allocation of production, consumption and reserve logic. ELEKTO can support verifiable internal kWh accounting for energy communities, campus infrastructure and ISO 50001-style reporting workflows.',
               },
             ].map((item) => (
               <div key={item.title}
@@ -177,10 +177,11 @@ export default function ElektoPage() {
         <div className="max-w-4xl mx-auto">
           <div className="p-8 rounded-2xl bg-white/[0.02] border border-white/10">
             <h2 className="text-xl font-medium text-white mb-1">EVE Control Chain</h2>
-            <p className="text-eve-green text-sm mb-4">Verification and control-chain evidence layer</p>
+            <p className="text-eve-green text-sm mb-4">Related but distinct verification track</p>
             <p className="text-gray-400 leading-relaxed mb-4">
-              ELEKTO began as a verified local energy-sharing concept. The EVE Control Chain extends
-              this into a general evidence layer for critical control events: observed state, requested
+              ELEKTO began as a verified local energy-sharing concept. EVE Control Chain is a
+              related but distinct verification track for control-chain evidence in critical
+              control events: observed state, requested
               action, deterministic verdict, hash-chained events, sealed record, and later verification.
             </p>
             <p className="text-gray-400 leading-relaxed mb-6">
@@ -229,8 +230,7 @@ export default function ElektoPage() {
             </svg>
           </a>
           <p className="text-gray-700 text-xs mt-6">
-            ELEKTO is presented as verified internal kWh accounting for controlled community models —
-            not as a public electricity sale, financial instrument, investment product or public utility billing system.
+            ELEKTO is not presented as a public electricity marketplace, financial instrument or utility billing system. It is a verified internal kWh accounting and control-chain evidence layer for controlled communities and infrastructure environments.
           </p>
         </div>
       </section>

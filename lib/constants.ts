@@ -69,7 +69,15 @@ export const navItems = [
     ]
   },
   { name: 'ELEKTO', href: '/elekto' },
-  { name: 'AGV Demo', href: '/control-chain/agv' },
+  {
+    name: 'Control Chain',
+    href: '/control-chain',
+    children: [
+      { name: 'Overview', href: '/control-chain' },
+      { name: 'Energy Control Chain', href: '/control-chain/energy' },
+      { name: 'AGV Control Chain', href: '/control-chain/agv' },
+    ]
+  },
   { name: 'Philosophy', href: '/philosophy' },
   { name: 'Insights', href: '/insights' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
@@ -82,7 +90,6 @@ export const navItems = [
       { name: 'Determinism', href: '/about/determinism' },
       { name: 'EVE Control Room', href: '/about/eve-control-room' },
       { name: 'ELEKTO-X / X-Vault', href: '/elekto-x' },
-      { name: 'Control Chain', href: '/control-chain' },
       { name: 'Company', href: '/about/company' },
       { name: 'Origin', href: '/origin' },
       { name: 'Pilot Program', href: '/pilot' },

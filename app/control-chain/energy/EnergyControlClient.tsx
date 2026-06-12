@@ -63,6 +63,21 @@ const BOUNDARY =
   'The microgrid is visual, but the EVE control-chain record, event hashes, verdict and verify-adapter ' +
   'output are generated through the verification chain.'
 
+const DISCLAIMER =
+  'This is not a functional safety system. This demo does not provide safety assurance. ' +
+  'No certified safety controller, PLC, robot, grid system or infrastructure is operated. ' +
+  'The purpose is to test control-chain evidence records: observed state, requested action, ' +
+  'deterministic verdict, action-applied status, sealed record and later verification.'
+
+const ENERGY_BOUNDARY =
+  'EVE does not operate grid infrastructure, SCADA, chargers or batteries. ' +
+  'The energy system is visual/synthetic. The verification chain is real.'
+
+const TRACK_NOTE =
+  'EVE Verified / Governance Signals provides evidence trails for governed human decisions. ' +
+  'EVE Control Chain is a separate experimental track for automated deterministic verdict ' +
+  'records in cyber-physical workflows.'
+
 const MODE_BADGES = [
   'Visual model', 'Real verification chain', 'Hardware attestation: pending M3',
   'Grid control: visual only', 'Bridge mode: not_direct_bridge', 'Verification chain: active',
@@ -200,17 +215,17 @@ export default function EnergyControlClient() {
       {/* Hero */}
       <section className="pt-32 pb-10 px-6 max-w-4xl mx-auto text-center">
         <span className="text-xs text-eve-green tracking-[0.3em] uppercase font-mono">
-          EVE Verified Control Chain · Energy Domain
+          EVE Control Chain · Energy Domain
         </span>
         <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-4 mb-2">
           Verified Energy Community Control Demo
         </h1>
         <p className="text-gray-400 text-base mb-4">
-          Ten homes, shared battery, verified energy sharing and island-mode control.
+          Ten homes, shared battery, verified energy sharing and island-mode scenario.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed max-w-2xl mx-auto mb-6">
-          Visual model, real verification chain. Every step runs through the EVE Verified
-          Control Chain: verdict engine, hashed event chain, sealed record and verify adapter.
+          Visual model, real verification chain. Every step runs through the EVE Control
+          Chain: verdict engine, hashed event chain, sealed record and verify adapter.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {MODE_BADGES.map((b) => (
@@ -219,10 +234,20 @@ export default function EnergyControlClient() {
         </div>
       </section>
 
-      {/* Boundary */}
-      <section className="px-6 max-w-3xl mx-auto mb-8">
+      {/* Boundary + safety disclaimer */}
+      <section className="px-6 max-w-3xl mx-auto mb-8 space-y-3">
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-eve-orange/25">
+          <p className="text-eve-orange text-xs font-mono mb-2">Not a functional safety system</p>
+          <p className="text-gray-400 text-xs leading-relaxed">{DISCLAIMER}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+          <p className="text-gray-500 text-xs leading-relaxed">{ENERGY_BOUNDARY}</p>
+        </div>
         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
           <p className="text-gray-500 text-xs leading-relaxed">{BOUNDARY}</p>
+        </div>
+        <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-center">
+          <p className="text-gray-600 text-[11px] leading-relaxed">{TRACK_NOTE}</p>
         </div>
       </section>
 

@@ -117,6 +117,22 @@ function motionColor(motion: string) {
 
 const BOUNDARY = 'No real robot, AGV, PLC, safety controller or warehouse system is controlled by this public demo. The warehouse robot is visual, but the EVE control-chain record, event hashes, verdict and verify-adapter output are generated through the verification chain.'
 
+const DISCLAIMER =
+  'This is not a functional safety system. This demo does not provide safety assurance. ' +
+  'No certified safety controller, PLC, robot, grid system or infrastructure is operated. ' +
+  'The purpose is to test control-chain evidence records: observed state, requested action, ' +
+  'deterministic verdict, action-applied status, sealed record and later verification.'
+
+const AGV_SAFETY_BOUNDARY =
+  'EVE does not replace certified safety controllers, PLCs, emergency-stop systems or robot ' +
+  'control firmware. Physical enforcement remains the responsibility of the control adapter ' +
+  'and certified safety layer.'
+
+const TRACK_NOTE =
+  'EVE Verified / Governance Signals provides evidence trails for governed human decisions. ' +
+  'EVE Control Chain is a separate experimental track for automated deterministic verdict ' +
+  'records in cyber-physical workflows.'
+
 const MODE_BADGES = [
   'Visual robot model',
   'Real verification chain',
@@ -248,14 +264,14 @@ export default function AgvControlClient() {
       {/* Hero */}
       <section className="pt-32 pb-10 px-6 max-w-4xl mx-auto text-center">
         <span className="text-xs text-eve-green tracking-[0.3em] uppercase font-mono">
-          EVE Verified Control Chain · AGV Domain
+          EVE Control Chain · AGV Domain
         </span>
         <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-4 mb-2">
           Verified autonomous warehouse robot control-chain demo.
         </h1>
         <p className="text-gray-400 text-base mb-4">
           Visual robot model, real verification chain. Every critical control intent runs through
-          the EVE Verified Control Chain: event chain, deterministic verdict, sealed record and
+          the EVE Control Chain: event chain, deterministic verdict, sealed record and
           verify adapter.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
@@ -265,10 +281,20 @@ export default function AgvControlClient() {
         </div>
       </section>
 
-      {/* Boundary */}
-      <section className="px-6 max-w-3xl mx-auto mb-8">
+      {/* Boundary + safety disclaimer */}
+      <section className="px-6 max-w-3xl mx-auto mb-8 space-y-3">
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-eve-orange/25">
+          <p className="text-eve-orange text-xs font-mono mb-2">Not a functional safety system</p>
+          <p className="text-gray-400 text-xs leading-relaxed">{DISCLAIMER}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+          <p className="text-gray-500 text-xs leading-relaxed">{AGV_SAFETY_BOUNDARY}</p>
+        </div>
         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
           <p className="text-gray-500 text-xs leading-relaxed">{BOUNDARY}</p>
+        </div>
+        <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-center">
+          <p className="text-gray-600 text-[11px] leading-relaxed">{TRACK_NOTE}</p>
         </div>
       </section>
 
@@ -595,7 +621,7 @@ export default function AgvControlClient() {
       <section className="px-6 max-w-3xl mx-auto mb-16">
         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
           <p className="text-gray-500 text-xs leading-relaxed">
-            EVE Verified Control Chain — AGV domain. The robot is visual; the evidence chain is real.
+            EVE Control Chain — AGV domain. The robot is visual; the evidence chain is real.
             Every control intent is recorded, evaluated by deterministic rules, and sealed with a
             cryptographic proof before the result is returned. The control adapter or certified safety
             layer must enforce the physical stop — EVE records and verifies, it does not actuate.

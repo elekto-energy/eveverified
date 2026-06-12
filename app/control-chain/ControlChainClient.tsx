@@ -98,19 +98,24 @@ export default function ControlChainClient() {
       {/* Hero */}
       <section className="pt-32 pb-12 px-6 max-w-4xl mx-auto text-center">
         <span className="text-xs text-eve-green tracking-[0.3em] uppercase font-mono">
-          EVE Verified · Platform Demo
+          EVE Control Chain · Experimental Track
         </span>
         <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-4 mb-2">
-          EVE Verified Control Chain
+          EVE Control Chain
         </h1>
         <p className="text-gray-400 text-base mb-6">
           From signal to authority, from execution to proof.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed max-w-2xl mx-auto">
-          EVE Verified Control Chain shows the full governed execution pattern: a critical action
+          EVE Control Chain shows the full governed execution pattern: a critical action
           is requested, EVE Signals evaluates governance gaps, a named human owner confirms
           authority, the critical execution layer allows or holds execution, and the resulting
           record is sealed for later verification.
+        </p>
+        <p className="text-gray-600 text-xs leading-relaxed max-w-2xl mx-auto mt-4">
+          EVE Verified / Governance Signals provides evidence trails for governed human
+          decisions. EVE Control Chain is a separate experimental track for automated
+          deterministic verdict records in cyber-physical workflows.
         </p>
         <div className="inline-flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-white/5 border border-white/10">
           <span className="text-xs text-gray-500 font-mono">Synthetic demo · No real hardware or SCADA</span>
@@ -278,7 +283,7 @@ export default function ControlChainClient() {
             secure restart/resync and WORM-logged proof.
           </p>
           <p className="text-gray-500 text-sm leading-relaxed">
-            ELEKTO-X remains the critical-resource control lineage, while EVE Verified Control
+            ELEKTO-X remains the critical-resource control lineage, while EVE Control
             Chain is the packaged platform demo. See{' '}
             <a href="/elekto-x" className="text-eve-cyan/70 hover:text-eve-cyan transition-colors underline underline-offset-4 decoration-eve-cyan/20">
               ELEKTO-X / X-Vault
