@@ -14,15 +14,25 @@ const CONTROL_CHAIN_DISCLAIMER =
   'No certified safety controller, PLC, robot, grid system or infrastructure is operated. ' +
   'EVE produces deterministic verdict records — it does not actuate anything.'
 
-// ── Story data ────────────────────────────────────────────────────────────────
-// verify_url: replace placeholder with real sealed record URL when available.
-// integrity_note: "tamper-evident / publicly verifiable integrity check" — never
-// "independently verifiable" (that implies third-party attestation outside Organiq).
+// ── Shared type ───────────────────────────────────────────────────────────────
+interface Story {
+  track: string
+  trackNote: string
+  trackColor: string
+  headline: string
+  tags: string[]
+  sections: { q: string; a: string }[]
+  verifyLabel: string
+  verifyUrl: string | null
+  verifyPlaceholder: string | null
+  boundaryNote: string
+}
 
-const GOVERNANCE_STORY = {
+// ── Story data ────────────────────────────────────────────────────────────────
+const GOVERNANCE_STORY: Story = {
   track: 'Governance',
   trackNote: 'Human decision trail',
-  trackColor: '#a855f7' as const,
+  trackColor: '#a855f7',
   headline: 'The approval still exists — but no one knows if it still applies.',
   tags: ['AI governance', 'ISO 42001', 'Accountability continuity'],
   sections: [
@@ -40,20 +50,20 @@ const GOVERNANCE_STORY = {
     },
     {
       q: 'What was sealed?',
-      a: 'A tamper-evident record of the prior approval, the detected gap and its signals, and the human owner\'s re-confirmation decision — hash-chained so the full decision trail can be reconstructed after the fact.',
+      a: "A tamper-evident record of the prior approval, the detected gap and its signals, and the human owner's re-confirmation decision — hash-chained so the full decision trail can be reconstructed after the fact.",
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: null, // replace with real verify URL when governance record is published
+  verifyUrl: null,
   verifyPlaceholder: 'Available on request — governance record not yet published publicly.',
   boundaryNote:
     'EVE surfaces the signal. A named human owner decides. Human approval is necessary, but not always sufficient.',
 }
 
-const ENERGY_STORY = {
+const ENERGY_STORY: Story = {
   track: 'EVE Control Chain — Energy',
   trackNote: 'Experimental track · Not a functional safety system',
-  trackColor: '#f59e0b' as const,
+  trackColor: '#f59e0b',
   headline: 'Reserve breach and stale resync — HELD.',
   tags: ['Control Chain', 'Energy', 'HELD verdict'],
   sections: [
@@ -75,15 +85,15 @@ const ENERGY_STORY = {
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: 'https://verify.eveverified.com', // replace with specific record ID when available
+  verifyUrl: 'https://verify.eveverified.com',
   verifyPlaceholder: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
-const AGV_STORY = {
+const AGV_STORY: Story = {
   track: 'EVE Control Chain — AGV',
   trackNote: 'Experimental track · Not a functional safety system',
-  trackColor: '#ef4444' as const,
+  trackColor: '#ef4444',
   headline: 'Unsafe continue denied — action_applied: false.',
   tags: ['Control Chain', 'AGV', 'DENIED verdict'],
   sections: [
@@ -97,7 +107,7 @@ const AGV_STORY = {
     },
     {
       q: 'What verdict / signal did EVE produce?',
-      a: 'Control Chain verdict: DENIED. action_applied: false. HTTP 409. EVE recorded the denial and the unsafe intent before returning the verdict. EVE did not stop, actuate, or control a physical robot — physical enforcement is the certified safety layer\'s responsibility.',
+      a: "Control Chain verdict: DENIED. action_applied: false. HTTP 409. EVE recorded the denial and the unsafe intent before returning the verdict. EVE did not stop, actuate, or control a physical robot — physical enforcement is the certified safety layer's responsibility.",
     },
     {
       q: 'What was sealed?',
@@ -105,16 +115,15 @@ const AGV_STORY = {
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: 'https://verify.eveverified.com', // replace with specific record ID when available
+  verifyUrl: 'https://verify.eveverified.com',
   verifyPlaceholder: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
+const STORIES: Story[] = [GOVERNANCE_STORY, ENERGY_STORY, AGV_STORY]
+
 // ── Story card ────────────────────────────────────────────────────────────────
-function StoryCard({ story, index }: {
-  story: typeof GOVERNANCE_STORY | typeof ENERGY_STORY | typeof AGV_STORY
-  index: number
-}) {
+function StoryCard({ story, index }: { story: Story; index: number }) {
   return (
     <div className="rounded-2xl bg-white/[0.02] border border-white/5 overflow-hidden">
       {/* Card header */}
@@ -141,7 +150,7 @@ function StoryCard({ story, index }: {
         </h2>
 
         <div className="flex flex-wrap gap-2">
-          {story.tags.map(tag => (
+          {story.tags.map((tag) => (
             <span
               key={tag}
               className="text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider"
@@ -227,9 +236,9 @@ export default function StoriesClient() {
           <em>does that decision still hold, and can anyone prove what it rested on?</em>
         </p>
         <p className="text-gray-600 max-w-2xl mx-auto text-xs leading-relaxed mt-3">
-          Three concrete failure scenarios. Each shown through the same five questions:
-          what went wrong, what EVE observed, what verdict or signal EVE produced, what was sealed,
-          and how to verify the record.
+          Three concrete failure scenarios — same five questions each: what went wrong, what
+          EVE observed, what verdict or signal EVE produced, what was sealed, and how to verify
+          the record.
         </p>
       </section>
 
@@ -252,7 +261,7 @@ export default function StoriesClient() {
           <div className="flex-1 h-px bg-white/5" />
           <span className="text-[10px] text-gray-600">Human decision trail</span>
         </div>
-        <StoryCard story={GOVERNANCE_STORY} index={0} />
+        <StoryCard story={STORIES[0]} index={0} />
       </section>
 
       {/* Track 2 — Control Chain */}
@@ -264,18 +273,18 @@ export default function StoriesClient() {
           <div className="flex-1 h-px bg-white/5" />
         </div>
         <div className="space-y-6">
-          <StoryCard story={ENERGY_STORY} index={1} />
-          <StoryCard story={AGV_STORY} index={2} />
+          <StoryCard story={STORIES[1]} index={1} />
+          <StoryCard story={STORIES[2]} index={2} />
         </div>
       </section>
 
       {/* Footer note */}
       <section className="px-6 max-w-4xl mx-auto py-12 text-center">
         <p className="text-gray-600 text-xs leading-relaxed max-w-xl mx-auto">
-          "Verify" means a{' '}
+          &ldquo;Verify&rdquo; means a{' '}
           <span className="text-gray-400">tamper-evident, publicly verifiable integrity check</span>
-          {' '}— proof the sealed record is unchanged since it was sealed.
-          It is not third-party attestation.
+          {' '}— proof the sealed record is unchanged since it was sealed. It is not third-party
+          attestation.
         </p>
         <p className="text-gray-700 text-[11px] mt-3">
           EVE surfaces the signal. A named human owner decides.

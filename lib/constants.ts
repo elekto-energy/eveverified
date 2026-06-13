@@ -87,6 +87,7 @@ export const navItems = [
   },
   { name: 'Philosophy', href: '/philosophy' },
   { name: 'Insights', href: '/insights' },
+  { name: 'Stories', href: '/stories' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
   { name: 'ComplieDocs', href: 'https://compliedocs.com' },
   { 
