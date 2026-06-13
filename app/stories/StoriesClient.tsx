@@ -54,8 +54,8 @@ const GOVERNANCE_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: null,
-  verifyPlaceholder: 'Available on request — governance record not yet published publicly.',
+  verifyUrl: 'https://verify.eveverified.com/?id=EVE-ISO42001-00004652',
+  verifyPlaceholder: null,
   boundaryNote:
     'EVE surfaces the signal. A named human owner decides. Human approval is necessary, but not always sufficient.',
 }
