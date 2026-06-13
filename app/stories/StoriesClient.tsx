@@ -95,9 +95,10 @@ const ENERGY_STORY: Story = {
   verifyLabel: 'Verify record',
   liveDemoUrl: '/control-chain/energy',
   liveDemoLabel: 'See it run live',
-  verifyUrl: null,
-  verifyPlaceholder: 'Control-chain records are sealed in the local verify-adapter (BUILD_SPEC §10). Public Bridge seal lands at M9.',
-  verifyExplain: null,
+  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-ENERGY-00004659',
+  verifyPlaceholder: null,
+  verifyExplain:
+    'A VALID result proves the sealed HELD verdict and its basis (battery_reserve_insufficient) are unchanged since sealing.',
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
