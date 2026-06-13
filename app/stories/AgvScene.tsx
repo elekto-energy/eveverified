@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const VERIFY_URL = 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658'
+const CHAIN_URL = '/control-chain/agv'
 
 const GREEN = '#00ff88' // FULL_SPEED
 const AMBER = '#f59e0b' // unsafe intent
@@ -35,6 +36,7 @@ const STEPS: StepDef[] = [
 export default function AgvScene() {
   const svgRef = useRef<SVGSVGElement | null>(null)
   const verifyRef = useRef<HTMLAnchorElement | null>(null)
+  const chainRef = useRef<HTMLAnchorElement | null>(null)
   const playRef = useRef<(() => void) | null>(null)
   const [hasPlayed, setHasPlayed] = useState(false)
 
@@ -53,10 +55,11 @@ export default function AgvScene() {
     const eventsG = byId('ag-events') as SVGGElement | null
     const verdict = byId('ag-verdict') as SVGGElement | null
     const verifyLink = verifyRef.current
+    const chainLink = chainRef.current
     const robotShell = robot ? robot.querySelector('rect') : null
     const wheels = robot ? Array.from(robot.querySelectorAll('circle')) : []
 
-    if (!robot || !motion || !human || !dist || !stepEl || !capEl || !subEl || !eventsG || !verdict || !verifyLink || !robotShell) {
+    if (!robot || !motion || !human || !dist || !stepEl || !capEl || !subEl || !eventsG || !verdict || !verifyLink || !chainLink || !robotShell) {
       return
     }
 
@@ -113,6 +116,7 @@ export default function AgvScene() {
         motion.style.opacity = '0'
         verdict.style.transition = 'opacity .5s'; verdict.style.opacity = '1'
         verifyLink.style.transition = 'opacity .5s'; verifyLink.style.opacity = '1'; verifyLink.style.pointerEvents = 'auto'
+        chainLink.style.transition = 'opacity .5s'; chainLink.style.opacity = '1'; chainLink.style.pointerEvents = 'auto'
       }
       if (s.ev) addEvent(i + 1, s.ev)
     }
@@ -123,6 +127,7 @@ export default function AgvScene() {
       eventsG.innerHTML = ''; evY = 318; curX = 0
       motion.style.opacity = '0'; human.style.opacity = '0'; dist.style.opacity = '0'
       verdict.style.opacity = '0'; verifyLink.style.opacity = '0'; verifyLink.style.pointerEvents = 'none'
+      chainLink.style.opacity = '0'; chainLink.style.pointerEvents = 'none'
       robotShell.setAttribute('stroke', GREEN)
       wheels.forEach((w) => w.setAttribute('stroke', GREEN))
       robot.setAttribute('transform', 'translate(0,0)')
@@ -224,16 +229,28 @@ export default function AgvScene() {
         >
           <span aria-hidden="true">{hasPlayed ? '↻' : '▶'}</span> {hasPlayed ? 'Replay' : 'Play scene'}
         </button>
-        <a
-          ref={verifyRef}
-          href={VERIFY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
-          style={{ opacity: 0, pointerEvents: 'none', color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}
-        >
-          Verify record →
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            ref={chainRef}
+            href={CHAIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
+            style={{ opacity: 0, pointerEvents: 'none', color: '#9ca3af', borderColor: '#ffffff20', background: '#ffffff08' }}
+          >
+            See full chain →
+          </a>
+          <a
+            ref={verifyRef}
+            href={VERIFY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
+            style={{ opacity: 0, pointerEvents: 'none', color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}
+          >
+            Verify record →
+          </a>
+        </div>
       </div>
     </div>
   )
