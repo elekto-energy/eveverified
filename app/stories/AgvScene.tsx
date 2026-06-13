@@ -1,15 +1,16 @@
 'use client'
 
 // EVE Control Chain — AGV scene (proof-of-concept narrative)
-// Visual rendering of the sealed verdict chain for record EVE-CTRL-AGV-000010.
+// Visual rendering of the AGV control-chain verdict for the warehouse-robot demo.
 // Steps mirror SCENARIO_B_STEPS in AgvControlClient.tsx exactly — nothing invented.
 //   mission_start → route_assigned (FULL_SPEED) → human_detected @ 2.4 m
-//   → continue_at_full_speed (unsafe intent hashed FIRST) → DENIED (action_applied: false, HTTP 409, MISSION_HELD)
+//   → continue_at_full_speed (unsafe intent recorded FIRST) → DENIED (action_applied: false, HTTP 409, MISSION_HELD)
 // No WebGL, no canvas, no three.js. Pure SVG + requestAnimationFrame. prefers-reduced-motion aware.
-// The scene visualises the chain; the only authoritative proof is the Verify button → backend.
-import { useEffect, useRef } from 'react'
+// Scene = visual explanation. The live demo is verify-adapter v0 (BUILD_SPEC §10, §13.7).
+// Bridge direct (verify.eveverified.com URL) lands at M9 — not yet done.
+import { useEffect, useRef, useState } from 'react'
 
-const VERIFY_URL = 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-000010'
+const DEMO_URL = 'https://eveverified.com/control-chain/agv'
 
 const GREEN = '#00ff88' // FULL_SPEED
 const AMBER = '#f59e0b' // unsafe intent
@@ -33,25 +34,31 @@ const STEPS: StepDef[] = [
 
 export default function AgvScene() {
   const svgRef = useRef<SVGSVGElement | null>(null)
+  const verifyRef = useRef<HTMLAnchorElement | null>(null)
   const playRef = useRef<(() => void) | null>(null)
+  const [hasPlayed, setHasPlayed] = useState(false)
 
   useEffect(() => {
     const svg = svgRef.current
     if (!svg) return
 
-    const q = <T extends Element>(id: string) => svg.querySelector<T>(`#${id}`)
-    const robot = q<SVGGElement>('ag-robot')!
-    const motion = q<SVGGElement>('ag-motion')!
-    const human = q<SVGGElement>('ag-human')!
-    const dist = q<SVGGElement>('ag-dist')!
-    const stepEl = q<SVGTextElement>('ag-step')!
-    const capEl = q<SVGTextElement>('ag-cap')!
-    const subEl = q<SVGTextElement>('ag-sub')!
-    const eventsG = q<SVGGElement>('ag-events')!
-    const verdict = q<SVGGElement>('ag-verdict')!
-    const verifyLink = q<HTMLAnchorElement>('ag-verify-link')!
-    const robotShell = robot.querySelector('rect')!
-    const wheels = Array.from(robot.querySelectorAll('circle'))
+    const byId = (id: string) => svg.querySelector(`#${id}`)
+    const robot = byId('ag-robot') as SVGGElement | null
+    const motion = byId('ag-motion') as SVGGElement | null
+    const human = byId('ag-human') as SVGGElement | null
+    const dist = byId('ag-dist') as SVGGElement | null
+    const stepEl = byId('ag-step') as SVGTextElement | null
+    const capEl = byId('ag-cap') as SVGTextElement | null
+    const subEl = byId('ag-sub') as SVGTextElement | null
+    const eventsG = byId('ag-events') as SVGGElement | null
+    const verdict = byId('ag-verdict') as SVGGElement | null
+    const verifyLink = verifyRef.current
+    const robotShell = robot ? robot.querySelector('rect') : null
+    const wheels = robot ? Array.from(robot.querySelectorAll('circle')) : []
+
+    if (!robot || !motion || !human || !dist || !stepEl || !capEl || !subEl || !eventsG || !verdict || !verifyLink || !robotShell) {
+      return
+    }
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -68,7 +75,7 @@ export default function AgvScene() {
       row.setAttribute('x', '40'); row.setAttribute('y', String(evY))
       row.setAttribute('fill', ev.c); row.setAttribute('font-family', 'monospace'); row.setAttribute('font-size', '11')
       row.style.opacity = '0'
-      row.innerHTML = `#${seq}  ${ev.t}   <tspan fill="#4b5563">event_hash: see sealed record</tspan>`
+      row.innerHTML = `#${seq}  ${ev.t}   <tspan fill="#4b5563">recorded to control chain</tspan>`
       eventsG.appendChild(row)
       requestAnimationFrame(() => { row.style.transition = 'opacity .4s'; row.style.opacity = '1' })
       evY += 16
@@ -138,9 +145,16 @@ export default function AgvScene() {
     }
 
     playRef.current = play
-    play()
+    // Render the initial (static) frame — STEP 1 setup, no motion. Do NOT autoplay.
+    reset()
+    applyStep(0)
     return () => clear()
   }, [])
+
+  const startPlay = () => {
+    setHasPlayed(true)
+    playRef.current?.()
+  }
 
   return (
     <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: '#0a0e14' }}>
@@ -191,26 +205,34 @@ export default function AgvScene() {
           <text x="60" y="140" fill={RED} fontFamily="monospace" fontSize="22" fontWeight="500">DENIED</text>
           <text x="60" y="164" fill="#9ca3af" fontFamily="monospace" fontSize="11">basis: human_proximity_unsafe</text>
           <text x="60" y="184" fill="#9ca3af" fontFamily="monospace" fontSize="11">action_applied: <tspan fill={RED}>false</tspan>  ·  HTTP 409  ·  mission: <tspan fill={RED}>HELD</tspan></text>
-          <text x="624" y="140" textAnchor="end" fill="#6b7280" fontFamily="monospace" fontSize="10">EVE-CTRL-AGV-000010</text>
         </g>
+
+        {!hasPlayed && (
+          <g onClick={startPlay} style={{ cursor: 'pointer' }} role="button" aria-label="Play scene">
+            <rect x="0" y="0" width="680" height="360" fill="#0a0e14" opacity="0.55" />
+            <circle cx="340" cy="180" r="34" fill="#0f1620" stroke={GREEN} strokeWidth="1.5" />
+            <path d="M331 165 L331 195 L356 180 Z" fill={GREEN} />
+            <text x="340" y="238" textAnchor="middle" fill="#e5e7eb" fontFamily="monospace" fontSize="12" letterSpacing="0.12em">PLAY SCENE</text>
+          </g>
+        )}
       </svg>
 
       <div className="flex items-center justify-between gap-3 px-4 py-3 border-t border-white/10">
         <button
-          onClick={() => playRef.current?.()}
+          onClick={startPlay}
           className="inline-flex items-center gap-2 text-xs font-mono px-4 py-2 rounded-full border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 transition-colors"
         >
-          <span aria-hidden="true">↻</span> Replay
+          <span aria-hidden="true">{hasPlayed ? '↻' : '▶'}</span> {hasPlayed ? 'Replay' : 'Play scene'}
         </button>
         <a
-          id="ag-verify-link"
-          href={VERIFY_URL}
+          ref={verifyRef}
+          href={DEMO_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
           style={{ opacity: 0, pointerEvents: 'none', color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}
         >
-          Verify record <span aria-hidden="true">→</span>
+          See live demo →
         </a>
       </div>
     </div>
