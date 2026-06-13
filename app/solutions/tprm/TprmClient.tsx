@@ -1,15 +1,15 @@
-'use client'
+﻿'use client'
 
-// ═══════════════════════════════════════════════════════════════════════════
-// /solutions/tprm — EVE Verified Vendor Evidence Assessment (buyer page)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// /solutions/tprm â€” EVE Verified Vendor Evidence Assessment (buyer page)
 //
 // Built ON the offer (OFFER_VENDOR_EVIDENCE_ASSESSMENT v1.1):
 // verdict language is the page language; architecture only under How it works.
 // The demo section replays the SEALED production runs of the synthetic vendors
-// (EVE-TPRM-00004506 / 00004511) — real data in data/syntheticAssessments.ts.
+// (EVE-TPRM-00004556 / 00004561) â€” real data in data/syntheticAssessments.ts.
 // No prices on this page (locked until 3 paid deliveries calibrate them).
-// No public upload in v1 — that belongs in the pilot flow.
-// ═══════════════════════════════════════════════════════════════════════════
+// No public upload in v1 â€” that belongs in the pilot flow.
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
@@ -33,7 +33,7 @@ const VERDICTS = [
     name: 'NO_ANSWER',
     label: 'No accepted evidence',
     color: '#9ca3af',
-    desc: 'No accepted evidence supports the claim. EVE never guesses — silence and future plans do not count as evidence.',
+    desc: 'No accepted evidence supports the claim. EVE never guesses â€” silence and future plans do not count as evidence.',
   },
 ]
 
@@ -44,7 +44,7 @@ const ARTEFACTS = [
   },
   {
     title: 'Sealed record',
-    desc: 'The assessment manifest — documents, rules, findings, timestamp — is cryptographically sealed. Three levels: document SHA-256, finding seal, assessment manifest seal.',
+    desc: 'The assessment manifest â€” documents, rules, findings, timestamp â€” is cryptographically sealed. Three levels: document SHA-256, finding seal, assessment manifest seal.',
   },
   {
     title: 'Verification link',
@@ -52,7 +52,7 @@ const ARTEFACTS = [
   },
   {
     title: 'Gap summary',
-    desc: 'What is supported, what is partial, what is missing — with the rule\u2019s own questions as ready-to-send evidence requests.',
+    desc: 'What is supported, what is partial, what is missing â€” with the rule\u2019s own questions as ready-to-send evidence requests.',
   },
   {
     title: 'Human review log',
@@ -61,12 +61,12 @@ const ARTEFACTS = [
 ]
 
 const FLOW = [
-  { step: 'Intake', desc: 'You send the vendor\u2019s evidence package — policies, reports, questionnaire answers. Up to 25 documents.' },
+  { step: 'Intake', desc: 'You send the vendor\u2019s evidence package â€” policies, reports, questionnaire answers. Up to 25 documents.' },
   { step: 'Scope confirmation', desc: 'Assessment scope is confirmed and the rule set is locked. Material arriving after rule lock is a supplement or a new run.' },
-  { step: 'Deterministic review', desc: 'Every document is evaluated against every rule by the deterministic resolver. No AI in the matching path. Same input, same output — every time.' },
+  { step: 'Deterministic review', desc: 'Every document is evaluated against every rule by the deterministic resolver. No AI in the matching path. Same input, same output â€” every time.' },
   { step: 'Human review round', desc: 'Verdicts flagged for human judgement go to your named reviewer. Decisions are recorded.' },
   { step: 'Seal', desc: 'The final workpaper is sealed. A verification record is created in the public chain.' },
-  { step: 'Delivery', desc: 'Workpaper, sealed record, verification instruction and gap summary — plus a 60-minute walkthrough. Five business days from complete intake.' },
+  { step: 'Delivery', desc: 'Workpaper, sealed record, verification instruction and gap summary â€” plus a 60-minute walkthrough. Five business days from complete intake.' },
 ]
 
 export default function TprmClient() {
@@ -74,13 +74,13 @@ export default function TprmClient() {
     <main className="min-h-screen bg-eve-dark text-white">
       <Navigation />
 
-      {/* ── Hero with EvidenceSealField ─────────────────────────────────── */}
+      {/* â”€â”€ Hero with EvidenceSealField â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="relative min-h-[92vh] flex items-center">
         <EvidenceSealField />
         <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-16 w-full">
           <div className="max-w-2xl">
             <p className="text-xs tracking-[0.3em] text-gray-500 mb-6">
-              EVE VERIFIED — VENDOR EVIDENCE ASSESSMENT
+              EVE VERIFIED â€” VENDOR EVIDENCE ASSESSMENT
             </p>
             <h1
               className="text-5xl md:text-6xl font-light leading-tight mb-6"
@@ -91,25 +91,25 @@ export default function TprmClient() {
             </h1>
             <p className="text-lg text-gray-400 leading-relaxed mb-8">
               EVE Vendor Evidence Assessment verifies what a vendor&apos;s
-              documentation actually supports — and returns NO_ANSWER when
+              documentation actually supports â€” and returns NO_ANSWER when
               approved evidence is missing.
             </p>
 
-            {/* Proof chip — a real sealed record, not a claim */}
+            {/* Proof chip â€” a real sealed record, not a claim */}
             <a
-              href="https://verify.eveverified.com/?id=EVE-TPRM-00004516"
+              href="https://verify.eveverified.com/?id=EVE-TPRM-00004556"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 border border-white/15 rounded-sm px-4 py-2.5 mb-10
                          font-mono text-xs text-gray-400 hover:border-white/40 hover:text-gray-200 transition-colors"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-eve-green" />
-              <span>EVE-TPRM-00004516</span>
-              <span className="text-gray-600">·</span>
-              <span>sealed 2026-06-12</span>
-              <span className="text-gray-600">·</span>
+              <span>EVE-TPRM-00004556</span>
+              <span className="text-gray-600">Â·</span>
+              <span>sealed 2026-06-13</span>
+              <span className="text-gray-600">Â·</span>
               <span className="text-eve-green">valid: true</span>
-              <span className="text-gray-600 ml-1">verify →</span>
+              <span className="text-gray-600 ml-1">verify â†’</span>
             </a>
             <div className="flex flex-wrap gap-4">
               <a
@@ -137,7 +137,7 @@ export default function TprmClient() {
                     {v.name}
                   </span>
                   <span className="font-mono text-[10px] tracking-wide text-gray-600">
-                    — {v.label}
+                    â€” {v.label}
                   </span>
                 </div>
                 <p className="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
@@ -147,7 +147,7 @@ export default function TprmClient() {
         </div>
       </section>
 
-      {/* ── The problem, in the buyer's words ───────────────────────────── */}
+      {/* â”€â”€ The problem, in the buyer's words â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <div className="max-w-3xl">
           <h2 className="text-3xl font-light mb-6">
@@ -164,16 +164,16 @@ export default function TprmClient() {
           <p className="text-gray-400 leading-relaxed">
             EVE replaces opinion with a reproducible evidence record: send the
             vendor&apos;s evidence package, get back a sealed workpaper where every
-            verdict traces to an exact excerpt in an exact document — or to the
+            verdict traces to an exact excerpt in an exact document â€” or to the
             documented absence of one.
           </p>
         </div>
       </section>
 
-      {/* Try the verified synthetic assessment — real function, sealed data */}
+      {/* Try the verified synthetic assessment â€” real function, sealed data */}
       <SyntheticAssessmentDemo />
 
-      {/* ── What you receive ─────────────────────────────────────────────── */}
+      {/* â”€â”€ What you receive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="border-t border-slate-500/20 bg-[#0c0f15]">
         <div className="max-w-7xl mx-auto px-6 py-24">
           <h2 className="text-3xl font-light mb-12">What you receive</h2>
@@ -196,12 +196,12 @@ export default function TprmClient() {
         </div>
       </section>
 
-      {/* ── How it works (real sequence → numbering carries information) ── */}
+      {/* â”€â”€ How it works (real sequence â†’ numbering carries information) â”€â”€ */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-3xl font-light mb-4">How it works</h2>
         <p className="text-gray-500 text-sm mb-12 max-w-2xl">
           Deterministic evidence review. No AI in the matching path. The same
-          evidence package always produces the same workpaper — that is what
+          evidence package always produces the same workpaper â€” that is what
           makes it checkable.
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
@@ -217,23 +217,23 @@ export default function TprmClient() {
         </div>
       </section>
 
-      {/* ── Scope & boundaries ───────────────────────────────────────────── */}
+      {/* â”€â”€ Scope & boundaries â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <div className="grid lg:grid-cols-2 gap-16">
           <div>
             <h2 className="text-3xl font-light mb-6">Base scope</h2>
             <ul className="space-y-3 text-gray-400 text-sm">
-              <li className="flex gap-3"><span className="text-slate-500">—</span> TPRM evidence coverage</li>
-              <li className="flex gap-3"><span className="text-slate-500">—</span> Access control evidence</li>
-              <li className="flex gap-3"><span className="text-slate-500">—</span> Change management evidence</li>
-              <li className="flex gap-3"><span className="text-slate-500">—</span> Vendor due diligence evidence</li>
-              <li className="flex gap-3"><span className="text-slate-500">—</span> Incident response evidence coverage</li>
-              <li className="flex gap-3"><span className="text-slate-500">—</span> Partial grading with evidence completeness score</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> TPRM evidence coverage</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> Access control evidence</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> Change management evidence</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> Vendor due diligence evidence</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> Incident response evidence coverage</li>
+              <li className="flex gap-3"><span className="text-slate-500">â€”</span> Partial grading with evidence completeness score</li>
             </ul>
             <p className="text-xs text-gray-600 mt-6 leading-relaxed">
               DORA-, AI Act- and CMMC-oriented scope available as add-ons.
               EVE does not classify incidents, assess materiality or determine
-              whether an incident response process is compliant — it shows
+              whether an incident response process is compliant â€” it shows
               whether the submitted vendor evidence supports the stated
               incident-response claim.
             </p>
@@ -246,20 +246,20 @@ export default function TprmClient() {
             </p>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               This is not an audit, not legal advice, not a certification and
-              not a compliance determination. Coverage is not compliance — every
+              not a compliance determination. Coverage is not compliance â€” every
               finding carries <span className="font-mono text-xs">is_compliance_score: false</span>.
             </p>
             <p className="text-gray-400 text-sm leading-relaxed">
               EVE never decides for you. Verdicts that require judgement are
               flagged HUMAN REVIEW REQUIRED and routed to a named person on your
-              side. The workpaper records what the evidence shows — your team
+              side. The workpaper records what the evidence shows â€” your team
               decides what to do about it.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Design partner offer — 3 slots */}
+      {/* Design partner offer â€” 3 slots */}
       <section className="border-t border-slate-500/20 bg-[#0c0f15]">
         <div className="max-w-7xl mx-auto px-6 py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
@@ -270,8 +270,8 @@ export default function TprmClient() {
               </h2>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Pressure-test the workpaper format against real-world assessor
-                expectations. You run one full assessment — on your own vendor
-                package or our synthetic set — and tell us what an assessor
+                expectations. You run one full assessment â€” on your own vendor
+                package or our synthetic set â€” and tell us what an assessor
                 actually needs in it.
               </p>
             </div>
@@ -283,7 +283,7 @@ export default function TprmClient() {
                 </div>
                 <div className="flex justify-between gap-6">
                   <span className="text-gray-400">Fee</span>
-                  <span className="font-mono text-gray-200">5 000 SEK ex VAT</span>
+                  <span className="font-mono text-gray-200">5Â 000 SEK ex VAT</span>
                 </div>
                 <div className="flex justify-between gap-6">
                   <span className="text-gray-400">In return</span>
@@ -291,7 +291,7 @@ export default function TprmClient() {
                 </div>
                 <div className="flex justify-between gap-6">
                   <span className="text-gray-400">Slots</span>
-                  <span className="font-mono text-gray-200">3 · then full price applies</span>
+                  <span className="font-mono text-gray-200">3 Â· then full price applies</span>
                 </div>
               </div>
               <a
@@ -305,7 +305,7 @@ export default function TprmClient() {
         </div>
       </section>
 
-      {/* ── Final CTA ────────────────────────────────────────────────────── */}
+      {/* â”€â”€ Final CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="border-t border-slate-500/20">
         <div className="max-w-7xl mx-auto px-6 py-24 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">
@@ -329,3 +329,4 @@ export default function TprmClient() {
     </main>
   )
 }
+

@@ -5,9 +5,14 @@
 // Production run on grc.eveverified.com. Vendors are 100% fictitious
 // ("EVE Synthetic Vendor A/B" — names that cannot exist as real companies).
 // Every value below (verdicts, coverage, hashes, seal IDs, excerpts) is real
-// machine output from the sealed assessments assess_3ef8282a (A) and
-// assess_4456b338 (B), verified 16/16 content hashes against an independent
+// machine output from the sealed assessments assess_9757896f (A) and
+// assess_a053ccca (B), verified 16/16 content hashes against an independent
 // local resolver run.
+//
+// IMPORTANT: this run was made AFTER Trinity rule approval (2026-06-13). All four
+// source rules now read rule_provenance = VERIFIED (decisions EVE-2026-000002 /
+// 000010 / 000011 / 000012). The assessment therefore runs against APPROVED
+// source rules. Resolver authority remains blocked_pending_sme (SME gate, ADR-004).
 //
 // If the demo vendors are ever re-run, regenerate this file from the new
 // live_run artefacts — never edit values by hand.
@@ -29,6 +34,8 @@ export interface DemoFinding {
   epCounts: string // strong/supporting/missing
   findingSeal: string
   contentHash: string
+  provenance: 'VERIFIED' | 'NO_ANSWER'
+  decisionId: string
   note: string | null
   excerpt?: { term: string; text: string; doc: string } // verbatim from matched_excerpts
 }
@@ -53,9 +60,9 @@ export const DEMO_VENDORS: DemoVendor[] = [
     name: 'EVE Synthetic Vendor A',
     tagline: 'Strong evidence package (fictitious)',
     profileId: 'tprm_vendor_eve_synthetic_vendor_a_synthetic_demo_service_a',
-    assessmentId: 'assess_3ef8282a',
-    manifestSeal: 'EVE-TPRM-00004516',
-    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004516',
+    assessmentId: 'assess_9757896f',
+    manifestSeal: 'EVE-TPRM-00004556',
+    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004556',
     workpaperUrl: '/demo/EVE_TPRM_Workpaper_SyntheticVendorA.xlsx',
     summary: '4/4 SUPPORTED',
     documents: [
@@ -72,12 +79,14 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004512',
+        findingSeal: 'EVE-TPRM-00004552',
         contentHash: '0ec5f3f46e1729d00294e62909f0a3380e3a32616bb875af61d80ccd8e47046b',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000002',
         note: null,
         excerpt: {
-          term: 'privileged accounts are limited to',
-          text: 'privileged accounts are limited to personnel with a documented business need.',
+          term: 'privileged access is restricted',
+          text: 'Privileged access is restricted to named roles within the Platform Engineering and Site Reliability teams.',
           doc: 'sva_information_security_policy.txt',
         },
       },
@@ -89,12 +98,14 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '5/0/0',
-        findingSeal: 'EVE-TPRM-00004513',
-        contentHash: 'f328f63250bb3d70dc9da44fbb5cbacadf964839695f65f70f62e496ce9ab0c3',
+        findingSeal: 'EVE-TPRM-00004553',
+        contentHash: 'e4f6b502b21cb13714076c11c245b1a4612d323ac774382188174969b9f08af9',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000010',
         note: null,
         excerpt: {
-          term: 'change requests are logged',
-          text: 'change requests are logged with a unique identifier. No change without a ticket.',
+          term: 'all changes require prior approval',
+          text: 'All changes require prior approval. No change is implemented without approval from an authorized reviewer.',
           doc: 'sva_change_management_policy.txt',
         },
       },
@@ -106,12 +117,14 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004514',
-        contentHash: 'c268a1b020f3d7b7063144b7d564a3b72cc22d4e287de83025f05cf53cf460de',
+        findingSeal: 'EVE-TPRM-00004554',
+        contentHash: '3fff5df36626fb470f36d8f44f0ec86caea58e66a74528c7b12b76fa4498686d',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000011',
         note: null,
         excerpt: {
-          term: 'third-party risk management process',
-          text: 'The company operates a documented third-party risk management process, supported by a vendor risk management policy approved by executive management.',
+          term: 'due diligence is performed before',
+          text: 'Due diligence is performed before any new supplier is engaged. Vendors are assessed before onboarding using a tiered risk model.',
           doc: 'sva_vendor_risk_policy.txt',
         },
       },
@@ -123,8 +136,10 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '100',
         strength: null,
         epCounts: '3/0/0',
-        findingSeal: 'EVE-TPRM-00004515',
-        contentHash: 'b596da0c44c436a41fa395782f9b3871eb4ade1aa7dfb88c46cc8f534c71a117',
+        findingSeal: 'EVE-TPRM-00004555',
+        contentHash: 'ae75930661e55fcd99da618e14224b1fc7a46440d9e3591ea65b679e92ff3890',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000012',
         note: null,
         excerpt: {
           term: 'documented incident response plan',
@@ -139,9 +154,9 @@ export const DEMO_VENDORS: DemoVendor[] = [
     name: 'EVE Synthetic Vendor B',
     tagline: 'Weak / partial evidence package (fictitious)',
     profileId: 'tprm_vendor_eve_synthetic_vendor_b_synthetic_demo_service_b',
-    assessmentId: 'assess_4456b338',
-    manifestSeal: 'EVE-TPRM-00004521',
-    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004521',
+    assessmentId: 'assess_a053ccca',
+    manifestSeal: 'EVE-TPRM-00004561',
+    verifyUrl: 'https://verify.eveverified.com/?id=EVE-TPRM-00004561',
     workpaperUrl: '/demo/EVE_TPRM_Workpaper_SyntheticVendorB.xlsx',
     summary: '2 PARTIAL · 2 NO_ANSWER',
     documents: [
@@ -157,8 +172,10 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '—',
         strength: null,
         epCounts: '0/0/3',
-        findingSeal: 'EVE-TPRM-00004517',
+        findingSeal: 'EVE-TPRM-00004557',
         contentHash: '833a5d65edd6bf6f1865b4f380506829e78408edb568443c46c606e14e6f40a0',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000002',
         note: '6 negated findings: "MFA is available", "MFA enrollment is encouraged", "rollout is planned" — negated mentions are never counted as evidence.',
       },
       {
@@ -169,8 +186,10 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '40',
         strength: 'Medium',
         epCounts: '1/1/3',
-        findingSeal: 'EVE-TPRM-00004518',
-        contentHash: 'bc2703947c833c24d688153f5bca83ef127e7e5a50356e4283fc816fb7cf51bc',
+        findingSeal: 'EVE-TPRM-00004558',
+        contentHash: 'ea1a12e4fa448e9115e12ecac3141b3b36cf125f931fb7f8f9eb50bad7d27f39',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000010',
         note: 'Change tracking strong; approval keyword-level only; pre-production testing absent. Combination "authorization AND testing" unsatisfied.',
         excerpt: {
           term: 'all changes are tracked in',
@@ -186,9 +205,16 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '0',
         strength: 'Low',
         epCounts: '1/0/2',
-        findingSeal: 'EVE-TPRM-00004519',
-        contentHash: 'ff9f94be0e4a47343eecdfb37614d84a0095c9dc244865cfecf95477d85d34a2',
+        findingSeal: 'EVE-TPRM-00004559',
+        contentHash: 'ddecc61109f0ec571d87caaeefb2d82a6b34ff321c4e3c241a7167b132e2a94f',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000011',
         note: 'A vendor risk process exists, but due diligence is "planned for the 2027 roadmap" — negating language detected, score capped.',
+        excerpt: {
+          term: 'vendor risk management process',
+          text: 'The company maintains a vendor risk management process for key suppliers.',
+          doc: 'svb_operations_handbook.txt',
+        },
       },
       {
         ruleId: 'TPRM_INCIDENT_001',
@@ -198,8 +224,10 @@ export const DEMO_VENDORS: DemoVendor[] = [
         coverage: '—',
         strength: null,
         epCounts: '0/0/3',
-        findingSeal: 'EVE-TPRM-00004520',
-        contentHash: '9a1cbbcaf10aa8c12d39d6ad6f6f3b3215ab94d204ca86164b65ecaf8408d765',
+        findingSeal: 'EVE-TPRM-00004560',
+        contentHash: 'f3a42e152862e36ebbc7c0b86ab03e13612b64b8207af59b7a9ae47ba65fa50d',
+        provenance: 'VERIFIED',
+        decisionId: 'EVE-2026-000012',
         note: 'No incident-response evidence anywhere in the submitted package. EVE never guesses.',
       },
     ],
