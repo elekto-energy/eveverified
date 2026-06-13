@@ -95,10 +95,9 @@ const ENERGY_STORY: Story = {
   verifyLabel: 'Verify record',
   liveDemoUrl: '/control-chain/energy',
   liveDemoLabel: 'See it run live',
-  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-ENERGY-000014',
-  verifyPlaceholder: null,
-  verifyExplain:
-    'A VALID result proves the sealed HELD verdict and its basis (reserve_breach, snapshot_ttl_expired) are unchanged since sealing.',
+  verifyUrl: null,
+  verifyPlaceholder: 'Control-chain records are sealed in the local verify-adapter (BUILD_SPEC §10). Public Bridge seal lands at M9.',
+  verifyExplain: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
@@ -129,10 +128,9 @@ const AGV_STORY: Story = {
   verifyLabel: 'Verify record',
   liveDemoUrl: '/control-chain/agv',
   liveDemoLabel: 'See it run live',
-  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-000010',
-  verifyPlaceholder: null,
-  verifyExplain:
-    'A VALID result proves the sealed DENIED verdict, its basis (human_proximity_unsafe), and action_applied: false are unchanged since sealing.',
+  verifyUrl: null,
+  verifyPlaceholder: 'Control-chain records are sealed in the local verify-adapter (BUILD_SPEC §10). Public Bridge seal lands at M9.',
+  verifyExplain: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
