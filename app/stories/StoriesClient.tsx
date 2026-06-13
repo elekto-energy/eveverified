@@ -128,9 +128,10 @@ const AGV_STORY: Story = {
   verifyLabel: 'Verify record',
   liveDemoUrl: '/control-chain/agv',
   liveDemoLabel: 'See it run live',
-  verifyUrl: null,
-  verifyPlaceholder: 'Control-chain records are sealed in the local verify-adapter (BUILD_SPEC §10). Public Bridge seal lands at M9.',
-  verifyExplain: null,
+  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658',
+  verifyPlaceholder: null,
+  verifyExplain:
+    'A VALID result proves the sealed DENIED verdict, its basis (human_proximity_unsafe), and action_applied: false are unchanged since sealing.',
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 

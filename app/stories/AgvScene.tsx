@@ -6,11 +6,11 @@
 //   mission_start → route_assigned (FULL_SPEED) → human_detected @ 2.4 m
 //   → continue_at_full_speed (unsafe intent recorded FIRST) → DENIED (action_applied: false, HTTP 409, MISSION_HELD)
 // No WebGL, no canvas, no three.js. Pure SVG + requestAnimationFrame. prefers-reduced-motion aware.
-// Scene = visual explanation. The live demo is verify-adapter v0 (BUILD_SPEC §10, §13.7).
-// Bridge direct (verify.eveverified.com URL) lands at M9 — not yet done.
+// Scene = visual explanation. Verify button links to the real Bridge-sealed record.
+// EVE-CTRL-AGV-00004658 sealed 2026-06-13, bridges ctrl-poc record EVE-CTRL-AGV-000013, DENIED, action_applied: false.
 import { useEffect, useRef, useState } from 'react'
 
-const DEMO_URL = 'https://eveverified.com/control-chain/agv'
+const VERIFY_URL = 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658'
 
 const GREEN = '#00ff88' // FULL_SPEED
 const AMBER = '#f59e0b' // unsafe intent
@@ -226,13 +226,13 @@ export default function AgvScene() {
         </button>
         <a
           ref={verifyRef}
-          href={DEMO_URL}
+          href={VERIFY_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
           style={{ opacity: 0, pointerEvents: 'none', color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}
         >
-          See live demo →
+          Verify record →
         </a>
       </div>
     </div>
