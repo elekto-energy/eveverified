@@ -31,13 +31,6 @@ const STEPS: StepDef[] = [
   { n: 'VERDICT', cap: 'EVE evaluates the governed conditions — and denies.', sub: '', ev: { t: 'unsafe_action_denied', c: RED } },
 ]
 
-function fakeHash(): string {
-  const c = '0123456789abcdef'
-  let h = '0x'
-  for (let i = 0; i < 6; i++) h += c[Math.floor(Math.random() * 16)]
-  return `${h}…${c[Math.floor(Math.random() * 16)]}${c[Math.floor(Math.random() * 16)]}`
-}
-
 export default function AgvScene() {
   const svgRef = useRef<SVGSVGElement | null>(null)
   const playRef = useRef<(() => void) | null>(null)
@@ -75,7 +68,7 @@ export default function AgvScene() {
       row.setAttribute('x', '40'); row.setAttribute('y', String(evY))
       row.setAttribute('fill', ev.c); row.setAttribute('font-family', 'monospace'); row.setAttribute('font-size', '11')
       row.style.opacity = '0'
-      row.innerHTML = `#${seq}  ${ev.t}   <tspan fill="#4b5563">${fakeHash()}</tspan>`
+      row.innerHTML = `#${seq}  ${ev.t}   <tspan fill="#4b5563">event_hash: see sealed record</tspan>`
       eventsG.appendChild(row)
       requestAnimationFrame(() => { row.style.transition = 'opacity .4s'; row.style.opacity = '1' })
       evY += 16
