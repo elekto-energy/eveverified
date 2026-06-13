@@ -22,9 +22,12 @@ interface Story {
   headline: string
   tags: string[]
   sections: { q: string; a: string }[]
+  liveDemoUrl: string | null
+  liveDemoLabel: string | null
   verifyLabel: string
   verifyUrl: string | null
   verifyPlaceholder: string | null
+  verifyExplain: string | null
   boundaryNote: string
 }
 
@@ -38,7 +41,7 @@ const GOVERNANCE_STORY: Story = {
   sections: [
     {
       q: 'What went wrong?',
-      a: 'An AI model change was approved months ago. Since then the facts changed — the data, the risk profile, the scope the model was approved for. The approval is still on record. But it is no longer clear that it still applies to the current state. Nobody can reconstruct who owns it now, what evidence it rested on, or whether the approving authority is still valid.',
+      a: 'A fraud-scoring model was approved for production after a documented bias review. Eight months later the model was retrained on a new data vendor and its decision threshold was lowered to cut false negatives — a change pushed by an engineer who has since left. The original approval is still on file. But the data it rested on, the risk profile it cleared, and the threshold it was granted for no longer match the model now running. When a regulator asks “who approved the model that is live today, and on what evidence,” nobody can answer: the approving manager moved teams, the bias review points at a dataset that was replaced, and the approval record links to a model version that is no longer deployed.',
     },
     {
       q: 'What did EVE observe?',
@@ -54,8 +57,12 @@ const GOVERNANCE_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
+  liveDemoUrl: 'https://grc.eveverified.com/iso42001/accountability-checkpoint',
+  liveDemoLabel: 'See it run live',
   verifyUrl: 'https://verify.eveverified.com/?id=EVE-ISO42001-00004652',
   verifyPlaceholder: null,
+  verifyExplain:
+    'Clicking Verify recomputes the hash chain over the sealed record. A VALID result proves the sealed detector output was not changed after sealing — the gap EVE surfaced, and the human re-confirmation, are exactly as recorded.',
   boundaryNote:
     'EVE surfaces the signal. A named human owner decides. Human approval is necessary, but not always sufficient.',
 }
@@ -85,8 +92,12 @@ const ENERGY_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
+  liveDemoUrl: '/control-chain/energy',
+  liveDemoLabel: 'See it run live',
   verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-ENERGY-000014',
   verifyPlaceholder: null,
+  verifyExplain:
+    'A VALID result proves the sealed HELD verdict and its basis (reserve_breach, snapshot_ttl_expired) are unchanged since sealing.',
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
@@ -115,8 +126,12 @@ const AGV_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
+  liveDemoUrl: '/control-chain/agv',
+  liveDemoLabel: 'See it run live',
   verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-000010',
   verifyPlaceholder: null,
+  verifyExplain:
+    'A VALID result proves the sealed DENIED verdict, its basis (human_proximity_unsafe), and action_applied: false are unchanged since sealing.',
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 
@@ -177,6 +192,28 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
           </div>
         ))}
 
+        {/* Live demo */}
+        {story.liveDemoUrl ? (
+          <div className="pt-2">
+            <a
+              href={story.liveDemoUrl}
+              target={story.liveDemoUrl.startsWith('http') ? '_blank' : undefined}
+              rel={story.liveDemoUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full transition-all hover:bg-white/10"
+              style={{
+                color: '#fff',
+                background: `${story.trackColor}20`,
+                border: `1px solid ${story.trackColor}50`,
+              }}
+            >
+              {story.liveDemoLabel ?? 'See it run live'}
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7M5 12h14" />
+              </svg>
+            </a>
+          </div>
+        ) : null}
+
         {/* Verify */}
         <div className="pt-4 border-t border-white/5">
           <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-2">
@@ -206,6 +243,11 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
           ) : (
             <p className="text-gray-600 text-xs italic">{story.verifyPlaceholder}</p>
           )}
+          {story.verifyExplain ? (
+            <p className="text-gray-500 text-[11px] leading-relaxed mt-3 max-w-xl">
+              {story.verifyExplain}
+            </p>
+          ) : null}
         </div>
 
         {/* Boundary note */}
