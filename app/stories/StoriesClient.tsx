@@ -2,6 +2,7 @@
 
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import AgvScene from './AgvScene'
 
 // ── Track boundary copy (locked — mirrors AGV/energy page constants) ──────────
 const TRACK_NOTE =
@@ -183,6 +184,16 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
 
       {/* Five-question body */}
       <div className="px-8 py-6 space-y-6">
+        {/* AGV scene — proof-of-concept narrative, hook above the five questions */}
+        {story.track === 'EVE Control Chain — AGV' && (
+          <div className="mb-2">
+            <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">
+              Watch it run
+            </div>
+            <AgvScene />
+          </div>
+        )}
+
         {story.sections.map((s, i) => (
           <div key={i}>
             <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-2">
