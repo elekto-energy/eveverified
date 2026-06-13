@@ -155,6 +155,7 @@ export default function AgvControlClient() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [showRaw, setShowRaw] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
   const [retryCount, setRetryCount] = useState(0)
 
   // ── Health check ──────────────────────────────────────────────────────────
@@ -278,6 +279,52 @@ export default function AgvControlClient() {
           {MODE_BADGES.map((b) => (
             <span key={b} className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">{b}</span>
           ))}
+        </div>
+      </section>
+
+      {/* How to read this chain — collapsible reading guide */}
+      <section className="px-6 max-w-3xl mx-auto mb-8">
+        <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
+          <button
+            onClick={() => setShowGuide((v) => !v)}
+            className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-white/[0.02] transition-colors"
+            aria-expanded={showGuide}
+          >
+            <span className="text-sm text-white/80">How to read this chain</span>
+            <span className="text-gray-500 text-xs font-mono">{showGuide ? '−' : '+'}</span>
+          </button>
+          {showGuide && (
+            <div className="px-5 pb-5 pt-1 border-t border-white/5">
+              <p className="text-gray-500 text-xs leading-relaxed mb-4">
+                Every panel below is one link in a single proof chain. Read them top to bottom:
+                each step is observed, recorded, evaluated, and sealed — so the whole decision can be
+                re-checked later by anyone, with no login.
+              </p>
+              <ol className="space-y-2">
+                {[
+                  ['1', 'Observe state', 'Robot state + Telemetry — what the sensors report (human, distance, obstacle).'],
+                  ['2', 'Record event', 'Event chain — each observation is hashed and appended, in order.'],
+                  ['3', 'Evaluate rule', 'The deterministic rule fires: speed reduction is mandatory when a human is present.'],
+                  ['4', 'Produce verdict', 'Execution verdict — ALLOWED / HELD / DENIED. Here: DENIED.'],
+                  ['5', 'Apply adapter result', 'action_applied: false — EVE records and denies; it does not actuate the robot.'],
+                  ['6', 'Seal record', 'Adapter-sealed record — the full run is hash-sealed into one record ID.'],
+                  ['7', 'Verify record', 'Verify adapter: VALID — proof the sealed record is unchanged since it was sealed.'],
+                ].map(([n, title, desc]) => (
+                  <li key={n} className="flex gap-3">
+                    <span className="shrink-0 w-5 h-5 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green text-[10px] font-mono flex items-center justify-center mt-0.5">{n}</span>
+                    <div>
+                      <span className="text-white/80 text-xs font-mono">{title}</span>
+                      <span className="text-gray-500 text-xs"> — {desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p className="text-gray-600 text-[11px] leading-relaxed mt-4 border-t border-white/5 pt-3">
+                The same shape — observe → record → evaluate → verdict → seal → verify — is what every
+                EVE track shares, whether the verdict is DENIED (AGV), HELD (Energy), or a governance GAP.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
