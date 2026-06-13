@@ -85,7 +85,7 @@ const ENERGY_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: 'https://verify.eveverified.com',
+  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-ENERGY-000014',
   verifyPlaceholder: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
@@ -115,7 +115,7 @@ const AGV_STORY: Story = {
     },
   ],
   verifyLabel: 'Verify record',
-  verifyUrl: 'https://verify.eveverified.com',
+  verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-000010',
   verifyPlaceholder: null,
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
