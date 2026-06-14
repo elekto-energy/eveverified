@@ -10,6 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.10",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.90.1",
     "framer-motion": "^11.15.0",
@@ -17,9 +19,11 @@
     "next": "14.2.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "resend": "^6.12.4"
+    "resend": "^6.12.4",
+    "three": "^0.169.0"
   },
   "devDependencies": {
+    "@types/three": "^0.169.0",
     "@types/node": "^22.10.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
