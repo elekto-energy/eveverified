@@ -7,7 +7,7 @@
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
-import AgvScene from '@/app/stories/AgvScene'
+import AgvSceneLive from './AgvSceneLive'
 
 // ── Backend status ────────────────────────────────────────────────────────────
 type BackendStatus = 'checking' | 'online' | 'offline'
@@ -329,12 +329,25 @@ export default function AgvControlClient() {
         </div>
       </section>
 
-      {/* Visual proof timeline — the same chain, played step by step (scenarios A + B) */}
+      {/* Visual proof layer — reflects the REAL live session, event by event */}
       <section className="px-6 max-w-3xl mx-auto mb-8">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">
           Watch the proof chain
         </div>
-        <AgvScene hideFullChainLink scenarioId={scenario} onScenarioChange={setScenario} />
+        <AgvSceneLive
+          events={session?.events ?? []}
+          state={session?.state ?? null}
+          lastVerdict={session?.last_verdict ?? null}
+          seal={seal ? {
+            record_id: seal.record.record_id,
+            execution_verdict: seal.record.execution_verdict,
+            action_applied: seal.record.action_applied,
+            seal_hash: seal.record.seal_hash,
+            final_mission_mode: seal.record.final_mission_mode,
+            final_robot_motion: seal.record.final_robot_motion,
+          } : null}
+          verifyVerdict={seal?.verify.verdict ?? null}
+        />
       </section>
 
       {/* Boundary + safety disclaimer */}
