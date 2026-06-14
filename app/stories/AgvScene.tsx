@@ -121,7 +121,7 @@ const SCENARIOS: Record<'A' | 'B', Scenario> = { A: SCENARIO_A, B: SCENARIO_B }
 
 function phaseColor(p: Phase) { return p === 'green' ? GREEN : p === 'amber' ? AMBER : RED }
 
-export default function AgvScene() {
+export default function AgvScene({ hideFullChainLink = false }: { hideFullChainLink?: boolean }) {
   const [scenarioId, setScenarioId] = useState<'A' | 'B'>('B')
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(true)
@@ -360,9 +360,11 @@ export default function AgvScene() {
           </div>
 
           <div className="flex items-center gap-2 transition-opacity duration-500" style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
-            <a href={CHAIN_URL} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
-              style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>See full chain →</a>
+            {!hideFullChainLink && (
+              <a href={CHAIN_URL} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
+                style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>See full chain →</a>
+            )}
             <a href={VERIFY_URL(scenario.eveId)} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
               style={{ color: scenario.outcome === 'ALLOWED' ? '#86efac' : '#fca5a5', borderColor: scenario.outcome === 'ALLOWED' ? '#00ff8855' : '#ef444466', background: scenario.outcome === 'ALLOWED' ? '#00ff8814' : '#ef44441a' }}>

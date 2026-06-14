@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import AgvScene from '@/app/stories/AgvScene'
 
 // ── Backend status ────────────────────────────────────────────────────────────
 type BackendStatus = 'checking' | 'online' | 'offline'
@@ -326,6 +327,14 @@ export default function AgvControlClient() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Visual proof timeline — the same chain, played step by step (scenarios A + B) */}
+      <section className="px-6 max-w-3xl mx-auto mb-8">
+        <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">
+          Watch the proof chain
+        </div>
+        <AgvScene hideFullChainLink />
       </section>
 
       {/* Boundary + safety disclaimer */}
