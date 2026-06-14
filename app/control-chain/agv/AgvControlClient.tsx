@@ -289,365 +289,252 @@ export default function AgvControlClient() {
         </div>
       </section>
 
-      {/* How to read this chain — collapsible reading guide */}
-      <section className="px-6 max-w-3xl mx-auto mb-8">
-        <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
-          <button
-            onClick={() => setShowGuide((v) => !v)}
-            className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-white/[0.02] transition-colors"
-            aria-expanded={showGuide}
-          >
-            <span className="text-sm text-white/80">How to read this chain</span>
-            <span className="text-gray-500 text-xs font-mono">{showGuide ? '−' : '+'}</span>
-          </button>
-          {showGuide && (
-            <div className="px-5 pb-5 pt-1 border-t border-white/5">
-              <p className="text-gray-500 text-xs leading-relaxed mb-4">
-                Every panel below is one link in a single proof chain. Read them top to bottom:
-                each step is observed, recorded, evaluated, and sealed — so the whole decision can be
-                re-checked later by anyone, with no login.
-              </p>
-              <ol className="space-y-2">
-                {[
-                  ['1', 'Observe state', 'Robot state + Telemetry — what the sensors report (human, distance, obstacle).'],
-                  ['2', 'Record event', 'Event chain — each observation is hashed and appended, in order.'],
-                  ['3', 'Evaluate rule', 'The deterministic rule fires: speed reduction is mandatory when a human is present.'],
-                  ['4', 'Produce verdict', 'Execution verdict — ALLOWED / HELD / DENIED. Here: DENIED.'],
-                  ['5', 'Apply adapter result', 'action_applied: false — EVE records and denies; it does not actuate the robot.'],
-                  ['6', 'Seal record', 'Adapter-sealed record — the full run is hash-sealed into one record ID.'],
-                  ['7', 'Verify record', 'Verify adapter: VALID — proof the sealed record is unchanged since it was sealed.'],
-                ].map(([n, title, desc]) => (
-                  <li key={n} className="flex gap-3">
-                    <span className="shrink-0 w-5 h-5 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green text-[10px] font-mono flex items-center justify-center mt-0.5">{n}</span>
-                    <div>
-                      <span className="text-white/80 text-xs font-mono">{title}</span>
-                      <span className="text-gray-500 text-xs"> — {desc}</span>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-              <p className="text-gray-600 text-[11px] leading-relaxed mt-4 border-t border-white/5 pt-3">
-                The same shape — observe → record → evaluate → verdict → seal → verify — is what every
-                EVE track shares, whether the verdict is DENIED (AGV), HELD (Energy), or a governance GAP.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* MAIN INTERACTIVE AREA — scen + kontroll i samma viewport */}
+      <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 scroll-mt-24">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
 
-      {/* Visual proof layer — reflects the REAL live session, event by event */}
-      <section className="px-6 max-w-3xl mx-auto mb-8">
-        <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">
-          Watch the proof chain
-        </div>
-        <AgvSceneLive
-          events={session?.events ?? []}
-          state={session?.state ?? null}
-          lastVerdict={session?.last_verdict ?? null}
-          seal={seal ? {
-            record_id: seal.record.record_id,
-            execution_verdict: seal.record.execution_verdict,
-            action_applied: seal.record.action_applied,
-            seal_hash: seal.record.seal_hash,
-            final_mission_mode: seal.record.final_mission_mode,
-            final_robot_motion: seal.record.final_robot_motion,
-          } : null}
-          verifyVerdict={seal?.verify.verdict ?? null}
-        />
-      </section>
-
-      {/* Boundary + safety disclaimer */}
-      <section className="px-6 max-w-3xl mx-auto mb-8 space-y-3">
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-eve-orange/25">
-          <p className="text-eve-orange text-xs font-mono mb-2">Not a functional safety system</p>
-          <p className="text-gray-400 text-xs leading-relaxed">{DISCLAIMER}</p>
-        </div>
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
-          <p className="text-gray-500 text-xs leading-relaxed">{AGV_SAFETY_BOUNDARY}</p>
-        </div>
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
-          <p className="text-gray-500 text-xs leading-relaxed">{BOUNDARY}</p>
-        </div>
-        <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-center">
-          <p className="text-gray-600 text-[11px] leading-relaxed">{TRACK_NOTE}</p>
-        </div>
-      </section>
-
-      {/* Backend status */}
-      <section className="px-6 max-w-3xl mx-auto mb-8">
-        {backendStatus === 'checking' && (
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
-            <p className="text-gray-400 text-sm font-mono">Checking live verification backend…</p>
+          {/* Left: scen — alltid synlig */}
+          <div>
+            <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">Watch the proof chain</div>
+            <AgvSceneLive
+              events={session?.events ?? []}
+              state={session?.state ?? null}
+              lastVerdict={session?.last_verdict ?? null}
+              seal={seal ? {
+                record_id: seal.record.record_id,
+                execution_verdict: seal.record.execution_verdict,
+                action_applied: seal.record.action_applied,
+                seal_hash: seal.record.seal_hash,
+                final_mission_mode: seal.record.final_mission_mode,
+                final_robot_motion: seal.record.final_robot_motion,
+              } : null}
+              verifyVerdict={seal?.verify.verdict ?? null}
+            />
           </div>
-        )}
-        {backendStatus === 'online' && (
-          <div className="p-4 rounded-xl border border-eve-green/20 bg-eve-green/5">
-            <div className="text-eve-green text-sm font-mono mb-2">Live verification backend connected</div>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[11px] font-mono text-gray-400">
-              <span>Real robot control: <span className="text-white/70">visual_only</span></span>
-              <span>Hardware attestation: <span className="text-white/70">pending M3</span></span>
-              <span>Bridge mode: <span className="text-white/70">{lastHealth?.upstream?.bridge_mode}</span></span>
-              <span>Verification chain: <span className="text-eve-green">active</span></span>
-            </div>
-          </div>
-        )}
-        {backendStatus === 'offline' && (
-          <div className="p-6 rounded-xl border text-center" style={{ borderColor: '#9ca3af40', background: '#9ca3af0d' }}>
-            <div className="text-2xl font-mono mb-2" style={{ color: '#9ca3af' }}>UNKNOWN / OFFLINE</div>
-            <p className="text-gray-500 text-sm mb-4">
-              The verification backend is unreachable. This page fails closed — it never shows
-              simulated results under a live label.
-            </p>
-            {lastError && <p className="text-red-400 text-xs font-mono mb-3">{lastError}</p>}
-            <button onClick={retry} className="px-4 py-2 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">
-              Retry connection
-            </button>
-          </div>
-        )}
-        {checkedAt && (
-          <div className="mt-3 p-3 rounded-lg bg-black/20 border border-white/5 text-[10px] font-mono text-gray-600">
-            <div className="text-gray-500 mb-1">Last health check</div>
-            <div>status: <span className="text-white/60">{backendStatus}</span></div>
-            <div>live: <span className="text-white/60">{String(lastHealth?.live)}</span></div>
-            <div>upstream.status: <span className="text-white/60">{lastHealth?.upstream?.status ?? '—'}</span></div>
-            <div>chain_valid: <span className="text-white/60">{String(lastHealth?.upstream?.chain_valid)}</span></div>
-            <div>checked_at: <span className="text-white/60">{checkedAt}</span></div>
-          </div>
-        )}
-      </section>
 
-      {/* Scenario selector + Create session */}
-      {isOnline && !session && (
-        <section id="live-chain" className="px-6 max-w-3xl mx-auto mb-8 scroll-mt-24">
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
-            <div className="text-xs text-gray-400">Select scenario</div>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setScenario('B')}
-                className={`p-3 rounded-lg border text-left transition-all ${scenario === 'B' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
-              >
-                <div className="text-xs font-mono mb-1" style={{ color: scenario === 'B' ? '#00ff88' : '#9ca3af' }}>
-                  Scenario B — default
-                </div>
-                <div className="text-[11px] text-gray-400">
-                  Unsafe continue attempt
-                </div>
-                <div className="text-[11px] font-mono mt-1" style={{ color: '#ef4444' }}>→ DENIED</div>
-              </button>
-              <button
-                onClick={() => setScenario('A')}
-                className={`p-3 rounded-lg border text-left transition-all ${scenario === 'A' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
-              >
-                <div className="text-xs font-mono mb-1" style={{ color: scenario === 'A' ? '#00ff88' : '#9ca3af' }}>
-                  Scenario A
-                </div>
-                <div className="text-[11px] text-gray-400">
-                  Safe reroute happy path
-                </div>
-                <div className="text-[11px] font-mono mt-1" style={{ color: '#00ff88' }}>→ ALLOWED</div>
-              </button>
-            </div>
-            <div className="text-center pt-2">
-              <button onClick={createSession} disabled={busy}
-                className="px-8 py-3 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm disabled:opacity-40">
-                {busy ? 'Creating…' : 'Create session'}
-              </button>
-              <p className="text-gray-600 text-xs mt-2 font-mono">
-                Creates a real session on the verification chain — first event hashed immediately.
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Main demo area */}
-      {isOnline && session && (
-        <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 grid lg:grid-cols-[1fr_360px] gap-6 scroll-mt-24">
-
-          {/* Left: robot state */}
+          {/* Right: kontrollpanel */}
           <div className="space-y-4">
 
-            {/* Robot status panel */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-              <div className="text-xs text-gray-400 mb-3">Robot state</div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Mission mode</div>
-                  <div className="text-xs font-mono" style={{ color: modeColor(session.state.mission_mode) }}>
-                    {session.state.mission_mode}
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Robot motion</div>
-                  <div className="text-xs font-mono" style={{ color: motionColor(session.state.robot_motion) }}>
-                    {session.state.robot_motion}
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Route</div>
-                  <div className="text-xs font-mono text-white/60">
-                    {session.state.current_route ?? '—'}
-                  </div>
-                </div>
+            {/* Backend-status — kompakt, ingen scroll-separator */}
+            {backendStatus === 'checking' && (
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+                <p className="text-gray-400 text-xs font-mono">Checking backend…</p>
               </div>
-            </div>
+            )}
+            {backendStatus === 'offline' && (
+              <div className="p-4 rounded-xl border text-center" style={{ borderColor: '#9ca3af40', background: '#9ca3af0d' }}>
+                <div className="text-lg font-mono mb-1" style={{ color: '#9ca3af' }}>OFFLINE</div>
+                <p className="text-gray-500 text-xs mb-3">Verification backend unreachable — fails closed.</p>
+                {lastError && <p className="text-red-400 text-xs font-mono mb-2">{lastError}</p>}
+                <button onClick={retry} className="px-4 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">Retry</button>
+              </div>
+            )}
 
-            {/* Telemetry */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-              <div className="text-xs text-gray-400 mb-3">Telemetry (declared · pending M3)</div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Human detected</div>
-                  <div className="text-sm font-mono" style={{ color: session.state.telemetry.human_detected ? '#ef4444' : '#00ff88' }}>
-                    {String(session.state.telemetry.human_detected)}
-                  </div>
+            {/* Scenario-val + Create session (ingen aktiv session) */}
+            {isOnline && !session && (
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
+                <div className="text-xs text-gray-400">Select scenario</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setScenario('B')}
+                    className={`p-3 rounded-lg border text-left transition-all ${scenario === 'B' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
+                  >
+                    <div className="text-xs font-mono mb-1" style={{ color: scenario === 'B' ? '#00ff88' : '#9ca3af' }}>Scenario B — default</div>
+                    <div className="text-[11px] text-gray-400">Unsafe continue attempt</div>
+                    <div className="text-[11px] font-mono mt-1" style={{ color: '#ef4444' }}>→ DENIED</div>
+                  </button>
+                  <button
+                    onClick={() => setScenario('A')}
+                    className={`p-3 rounded-lg border text-left transition-all ${scenario === 'A' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
+                  >
+                    <div className="text-xs font-mono mb-1" style={{ color: scenario === 'A' ? '#00ff88' : '#9ca3af' }}>Scenario A</div>
+                    <div className="text-[11px] text-gray-400">Safe reroute happy path</div>
+                    <div className="text-[11px] font-mono mt-1" style={{ color: '#00ff88' }}>→ ALLOWED</div>
+                  </button>
                 </div>
-                <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Distance (m)</div>
-                  <div className="text-sm font-mono text-white/70">
-                    {session.state.telemetry.distance_to_human_m}
-                  </div>
-                </div>
-                <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
-                  <div className="text-[10px] text-gray-500 mb-1">Obstacle</div>
-                  <div className="text-sm font-mono" style={{ color: session.state.telemetry.obstacle_detected ? '#f59e0b' : '#00ff88' }}>
-                    {String(session.state.telemetry.obstacle_detected)}
-                  </div>
+                <div className="text-center pt-1">
+                  <button onClick={createSession} disabled={busy}
+                    className="px-8 py-3 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm disabled:opacity-40">
+                    {busy ? 'Creating…' : 'Create session'}
+                  </button>
+                  <p className="text-gray-600 text-xs mt-2 font-mono">Real session — first event hashed immediately.</p>
                 </div>
               </div>
-              {session.state.domain_signals.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {session.state.domain_signals.map((d, i) => (
-                    <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded border border-eve-orange/30 text-eve-orange bg-eve-orange/5">{d}</span>
-                  ))}
+            )}
+
+            {/* Aktiv session — kontrollpanel */}
+            {isOnline && session && (
+              <>
+                {/* Robot state */}
+                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                  <div className="text-xs text-gray-400 mb-3">Robot state</div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Mission mode</div>
+                      <div className="text-xs font-mono" style={{ color: modeColor(session.state.mission_mode) }}>{session.state.mission_mode}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Robot motion</div>
+                      <div className="text-xs font-mono" style={{ color: motionColor(session.state.robot_motion) }}>{session.state.robot_motion}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Route</div>
+                      <div className="text-xs font-mono text-white/60">{session.state.current_route ?? '—'}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Telemetry */}
+                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                  <div className="text-xs text-gray-400 mb-3">Telemetry (declared · pending M3)</div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Human detected</div>
+                      <div className="text-sm font-mono" style={{ color: session.state.telemetry.human_detected ? '#ef4444' : '#00ff88' }}>{String(session.state.telemetry.human_detected)}</div>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Distance (m)</div>
+                      <div className="text-sm font-mono text-white/70">{session.state.telemetry.distance_to_human_m}</div>
+                    </div>
+                    <div className="p-2 rounded-lg bg-white/[0.02] border border-white/5 text-center">
+                      <div className="text-[10px] text-gray-500 mb-1">Obstacle</div>
+                      <div className="text-sm font-mono" style={{ color: session.state.telemetry.obstacle_detected ? '#f59e0b' : '#00ff88' }}>{String(session.state.telemetry.obstacle_detected)}</div>
+                    </div>
+                  </div>
+                  {session.state.domain_signals.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {session.state.domain_signals.map((d, idx) => (
+                        <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded border border-eve-orange/30 text-eve-orange bg-eve-orange/5">{d}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* DENIED-panel */}
+                {deniedResponse && (
+                  <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5">
+                    <div className="text-xs text-gray-400 mb-2">Unsafe action recorded + denied</div>
+                    <div className="grid grid-cols-2 gap-3 text-[11px] font-mono mb-3">
+                      <div><span className="text-gray-500">Execution verdict: </span><span style={{ color: verdictColor(deniedResponse.execution_verdict) }}>{deniedResponse.execution_verdict}</span></div>
+                      <div><span className="text-gray-500">Action applied: </span><span className="text-red-400">false</span></div>
+                      <div><span className="text-gray-500">HTTP result: </span><span className="text-red-400">409 Conflict</span></div>
+                      <div><span className="text-gray-500">Event recorded: </span><span className="text-eve-green">true</span></div>
+                    </div>
+                    <div className="text-[11px] font-mono text-gray-500 mb-2">basis: {deniedResponse.verdict_basis.join(' · ')}</div>
+                    <p className="text-[11px] text-gray-500 leading-relaxed border-t border-white/5 pt-2 mt-2">{deniedResponse.boundary_note}</p>
+                  </div>
+                )}
+
+                {/* Event chain */}
+                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                  <div className="text-xs text-gray-400 mb-3">Event chain (hashed, append-only)</div>
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {session.events.map((e) => (
+                      <div key={e.seq} className="flex items-baseline gap-3 text-[11px] font-mono">
+                        <span className="text-gray-600 w-8">#{e.seq}</span>
+                        <span className={`flex-1 ${e.type === 'unsafe_action_requested' ? 'text-red-400' : e.type === 'unsafe_action_denied' ? 'text-red-300' : 'text-white/80'}`}>{e.type}</span>
+                        <span className="text-gray-500">{short(e.hash)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Steg-kontroll */}
+                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+                  <div className="text-xs text-gray-400">Scenario {scenario} · session <span className="font-mono text-white/60">{session.session_id}</span></div>
+                  {sealed ? (
+                    <div className="p-3 rounded-lg bg-eve-green/5 border border-eve-green/20 text-center">
+                      <div className="text-eve-green text-sm font-mono">Session sealed</div>
+                      <div className="text-gray-500 text-xs mt-1">Reset to start a new run.</div>
+                    </div>
+                  ) : guidedComplete ? (
+                    <div className="space-y-2">
+                      <div className="p-3 rounded-lg bg-white/[0.03] border border-eve-green/20 text-center">
+                        <div className="text-eve-green text-xs font-mono">All steps complete — ready to seal</div>
+                      </div>
+                      <button onClick={sealAndVerify} disabled={busy}
+                        className="w-full px-4 py-2 rounded-lg text-sm border bg-eve-green/10 border-eve-green/30 text-eve-green hover:bg-eve-green/20 disabled:opacity-40">
+                        {busy ? 'Sealing…' : 'Seal + verify'}
+                      </button>
+                    </div>
+                  ) : nextStep ? (
+                    <div className="space-y-2">
+                      <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                        <div className="text-[11px] text-eve-green font-mono mb-1">Step {guidedIndex + 1}/{currentScenarioSteps.length}: {nextStep.label}</div>
+                        <div className="text-[11px] text-gray-400 leading-relaxed">{nextStep.narrative}</div>
+                        {nextStep.stepId === 'continue_at_full_speed' && (
+                          <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20 text-[10px] text-red-300 font-mono">
+                            EVE will record the unsafe intent FIRST, then return DENIED. action_applied will be false. HTTP 409.
+                          </div>
+                        )}
+                      </div>
+                      <button onClick={() => runStep(nextStep.stepId)} disabled={busy}
+                        className={`w-full px-4 py-2 rounded-lg text-sm border transition-all disabled:opacity-40 ${nextStep.stepId === 'continue_at_full_speed' ? 'bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20' : 'bg-white/[0.03] border-eve-green/30 text-eve-green hover:bg-eve-green/10'}`}>
+                        {busy ? 'Running…' : `→ ${nextStep.label}`}
+                      </button>
+                    </div>
+                  ) : null}
+                  <button onClick={reset} disabled={busy}
+                    className="w-full px-4 py-2 rounded-lg text-sm border bg-white/[0.02] border-white/10 text-gray-500 hover:bg-white/5 disabled:opacity-30">
+                    Reset
+                  </button>
+                </div>
+
+                {/* Verdict */}
+                {session.last_verdict && (
+                  <div className="p-4 rounded-xl border" style={{ borderColor: `${verdictColor(session.last_verdict.verdict)}40`, background: `${verdictColor(session.last_verdict.verdict)}0d` }}>
+                    <div className="text-xs text-gray-400 mb-1">Execution verdict</div>
+                    <div className="text-xl font-mono" style={{ color: verdictColor(session.last_verdict.verdict) }}>{session.last_verdict.verdict}</div>
+                    <div className="text-[11px] font-mono text-gray-500 mt-2">{session.last_verdict.basis.join(' · ')}</div>
+                    {session.last_verdict.verdict === 'DENIED' && (
+                      <p className="text-[11px] text-gray-400 mt-2">EVE does not operate the robot. The control adapter must enforce the DENIED verdict.</p>
+                    )}
+                  </div>
+                )}
+
+                {error && (
+                  <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-xs font-mono">{error}</div>
+                )}
+              </>
+            )}
+
+            {/* How to read — collapsible, längst ner i panelen */}
+            <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
+              <button
+                onClick={() => setShowGuide((v) => !v)}
+                className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-white/[0.02] transition-colors"
+                aria-expanded={showGuide}
+              >
+                <span className="text-xs text-white/60">How to read this chain</span>
+                <span className="text-gray-500 text-xs font-mono">{showGuide ? '−' : '+'}</span>
+              </button>
+              {showGuide && (
+                <div className="px-5 pb-5 pt-1 border-t border-white/5">
+                  <ol className="space-y-2">
+                    {[
+                      ['1', 'Observe state', 'Robot state + Telemetry.'],
+                      ['2', 'Record event', 'Each observation hashed and appended.'],
+                      ['3', 'Evaluate rule', 'Speed reduction mandatory when human present.'],
+                      ['4', 'Produce verdict', 'ALLOWED / HELD / DENIED.'],
+                      ['5', 'Apply adapter result', 'action_applied: false — EVE records, does not actuate.'],
+                      ['6', 'Seal record', 'Full run hash-sealed into one record ID.'],
+                      ['7', 'Verify record', 'VALID — proof the sealed record is unchanged.'],
+                    ].map(([n, title, desc]) => (
+                      <li key={n} className="flex gap-2">
+                        <span className="shrink-0 w-4 h-4 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green text-[9px] font-mono flex items-center justify-center mt-0.5">{n}</span>
+                        <div>
+                          <span className="text-white/70 text-xs font-mono">{title}</span>
+                          <span className="text-gray-600 text-xs"> — {desc}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               )}
             </div>
-
-            {/* DENIED panel — ADR-002 Scenario B */}
-            {deniedResponse && (
-              <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/5">
-                <div className="text-xs text-gray-400 mb-2">Unsafe action recorded + denied</div>
-                <div className="grid grid-cols-2 gap-3 text-[11px] font-mono mb-3">
-                  <div>
-                    <span className="text-gray-500">Execution verdict: </span>
-                    <span style={{ color: verdictColor(deniedResponse.execution_verdict) }}>{deniedResponse.execution_verdict}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Action applied: </span>
-                    <span className="text-red-400">false</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">HTTP result: </span>
-                    <span className="text-red-400">409 Conflict</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Event recorded: </span>
-                    <span className="text-eve-green">true</span>
-                  </div>
-                </div>
-                <div className="text-[11px] font-mono text-gray-500 mb-2">
-                  basis: {deniedResponse.verdict_basis.join(' · ')}
-                </div>
-                <p className="text-[11px] text-gray-500 leading-relaxed border-t border-white/5 pt-2 mt-2">
-                  {deniedResponse.boundary_note}
-                </p>
-              </div>
-            )}
-
-            {/* Event chain */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-              <div className="text-xs text-gray-400 mb-3">Event chain (hashed, append-only)</div>
-              <div className="space-y-1 max-h-48 overflow-y-auto">
-                {session.events.map((e) => (
-                  <div key={e.seq} className="flex items-baseline gap-3 text-[11px] font-mono">
-                    <span className="text-gray-600 w-8">#{e.seq}</span>
-                    <span className={`flex-1 ${e.type === 'unsafe_action_requested' ? 'text-red-400' : e.type === 'unsafe_action_denied' ? 'text-red-300' : 'text-white/80'}`}>
-                      {e.type}
-                    </span>
-                    <span className="text-gray-500">{short(e.hash)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
-
-          {/* Right: control panel */}
-          <div className="space-y-3">
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
-              <div className="text-xs text-gray-400">
-                Scenario {scenario} · session <span className="font-mono text-white/60">{session.session_id}</span>
-              </div>
-
-              {sealed ? (
-                <div className="p-3 rounded-lg bg-eve-green/5 border border-eve-green/20 text-center">
-                  <div className="text-eve-green text-sm font-mono">Session sealed</div>
-                  <div className="text-gray-500 text-xs mt-1">Reset to start a new run.</div>
-                </div>
-              ) : guidedComplete ? (
-                <div className="space-y-2">
-                  <div className="p-3 rounded-lg bg-white/[0.03] border border-eve-green/20 text-center">
-                    <div className="text-eve-green text-xs font-mono">All steps complete — ready to seal</div>
-                  </div>
-                  <button onClick={sealAndVerify} disabled={busy}
-                    className="w-full px-4 py-2 rounded-lg text-sm border bg-eve-green/10 border-eve-green/30 text-eve-green hover:bg-eve-green/20 disabled:opacity-40">
-                    {busy ? 'Sealing…' : 'Seal + verify'}
-                  </button>
-                </div>
-              ) : nextStep ? (
-                <div className="space-y-2">
-                  <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
-                    <div className="text-[11px] text-eve-green font-mono mb-1">
-                      Step {guidedIndex + 1}/{currentScenarioSteps.length}: {nextStep.label}
-                    </div>
-                    <div className="text-[11px] text-gray-400 leading-relaxed">
-                      {nextStep.narrative}
-                    </div>
-                    {nextStep.stepId === 'continue_at_full_speed' && (
-                      <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20 text-[10px] text-red-300 font-mono">
-                        EVE will record the unsafe intent FIRST, then return DENIED.
-                        action_applied will be false. HTTP 409.
-                      </div>
-                    )}
-                  </div>
-                  <button onClick={() => runStep(nextStep.stepId)} disabled={busy}
-                    className={`w-full px-4 py-2 rounded-lg text-sm border transition-all disabled:opacity-40 ${nextStep.stepId === 'continue_at_full_speed' ? 'bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20' : 'bg-white/[0.03] border-eve-green/30 text-eve-green hover:bg-eve-green/10'}`}>
-                    {busy ? 'Running…' : `→ ${nextStep.label}`}
-                  </button>
-                </div>
-              ) : null}
-
-              <button onClick={reset} disabled={busy}
-                className="w-full px-4 py-2 rounded-lg text-sm border bg-white/[0.02] border-white/10 text-gray-500 hover:bg-white/5 disabled:opacity-30">
-                Reset
-              </button>
-            </div>
-
-            {/* Verdict panel */}
-            {session.last_verdict && (
-              <div className="p-4 rounded-xl border"
-                style={{ borderColor: `${verdictColor(session.last_verdict.verdict)}40`, background: `${verdictColor(session.last_verdict.verdict)}0d` }}>
-                <div className="text-xs text-gray-400 mb-1">Execution verdict</div>
-                <div className="text-xl font-mono" style={{ color: verdictColor(session.last_verdict.verdict) }}>
-                  {session.last_verdict.verdict}
-                </div>
-                <div className="text-[11px] font-mono text-gray-500 mt-2">
-                  {session.last_verdict.basis.join(' · ')}
-                </div>
-                {session.last_verdict.verdict === 'DENIED' && (
-                  <p className="text-[11px] text-gray-400 mt-2">
-                    EVE does not operate the robot. The control adapter must enforce the DENIED verdict.
-                  </p>
-                )}
-              </div>
-            )}
-
-            {error && (
-              <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-xs font-mono">{error}</div>
-            )}
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Sealed record */}
       {seal && (
