@@ -74,60 +74,88 @@ interface Frame {
   liveKind?: LiveKind
 }
 
+// Synthetic scenario badge note — shown on steps 1–6
+// "Synthetic scenario — not a real organisation.
+//  Based on a common regulated-finance governance pattern."
+
 const FRAMES: Frame[] = [
 
-  // ── SCENARIO PREMISE ──────────────────────────────────────────────────────
+  // ── SYNTHETIC SCENARIO (steps 1–6) ───────────────────────────────────────
+  // Regulated-finance chain: five individually-approved systems.
+  // No individual owner sees the full chain.
+  // NOT a real organisation.
 
   {
-    logLabel: '✓ AI Risk Assessment approved',
-    signal: 'risk_assessment_approved',
-    headline: 'AI Risk Assessment approved.',
-    detail: ['Owner: AI Governance Lead', 'Approved: Jan 10 2025', 'Scope: Vendor A · one business unit'],
-    event: 'risk_assessment_approved',
+    logLabel: '\u2713 Customer interaction captured',
+    signal: 'system_approval_recorded',
+    headline: 'Customer interaction captured.',
+    detail: [
+      'System: Customer Interaction Layer',
+      'Owner: CRM Operations Lead',
+      'Approved: Feb 2024 \u00b7 scope: interaction logging',
+    ],
+    event: 'customer_interaction_approved',
     phase: 'green', links: 1, broken: false, human: false, isPremise: true,
   },
 
   {
-    logLabel: '✓ Vendor received production access',
-    signal: 'vendor_integration_recorded',
-    headline: 'Vendor received production access.',
-    detail: ['Vendor B granted access to production environment.', 'Original approval references Vendor A only.'],
-    event: 'vendor_integrated',
+    logLabel: '\u2713 CRM AI classifies interaction',
+    signal: 'system_approval_recorded',
+    headline: 'CRM AI classifies interaction.',
+    detail: [
+      'System: CRM Classification Model',
+      'Owner: Data Science Lead',
+      'Approved: Mar 2024 \u00b7 scope: interaction classification',
+    ],
+    event: 'crm_classification_approved',
     phase: 'green', links: 2, broken: false, human: false, isPremise: true,
   },
 
   {
-    logLabel: '✓ Model retrained',
-    signal: 'approval_scope_mismatch',
-    headline: 'Model retrained.',
-    detail: ['Version: v1.0 -> v2.3', 'Training data and decision threshold changed.', 'No re-assessment triggered.'],
-    event: 'model_retrained',
-    phase: 'amber', links: 3, broken: false, human: false, isPremise: true,
+    logLabel: '\u2713 AI summary generated',
+    signal: 'system_approval_recorded',
+    headline: 'AI summary generated.',
+    detail: [
+      'System: AI Summarisation Engine',
+      'Owner: AI Governance Lead',
+      'Approved: Apr 2024 \u00b7 scope: portfolio summarisation',
+    ],
+    event: 'ai_summary_approved',
+    phase: 'green', links: 3, broken: false, human: false, isPremise: true,
   },
 
   {
-    logLabel: '✓ New data source connected',
-    signal: 'accountable_owner_unconfirmed',
-    headline: 'New data source connected.',
-    detail: ['Customer behavioural data added.', 'Risk profile materially changed.', 'AI Governance Lead: moved to new division.'],
-    event: 'data_source_added',
+    logLabel: '\u2713 Portfolio risk indicator updated',
+    signal: 'system_approval_recorded',
+    headline: 'Portfolio risk indicator updated.',
+    detail: [
+      'System: Portfolio Risk Engine',
+      'Owner: Risk Modelling Lead',
+      'Approved: May 2024 \u00b7 scope: risk scoring',
+    ],
+    event: 'risk_indicator_approved',
     phase: 'amber', links: 4, broken: false, human: false, isPremise: true,
   },
 
   {
-    logLabel: '⚠ No review performed',
-    signal: 'last_human_review_stale',
-    headline: 'No review performed.',
-    detail: ['8 months since the original approval.', 'System has changed 4 times since.', 'Approval still on file. Still marked: APPROVED.'],
-    event: 'review_overdue',
+    logLabel: '\u26a0 Credit committee uses indicator',
+    signal: 'collective_outcome_unverified',
+    headline: 'Credit committee uses indicator.',
+    detail: [
+      'System: Credit Decision Layer',
+      'Owner: Credit Committee Chair',
+      'Each system passed its own assessment.',
+      'No owner sees the full chain.',
+    ],
+    event: 'credit_decision_recorded',
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
   },
 
   {
-    // THE FREEZE — auditor's question + "Nobody knows."
+    // THE FREEZE — a credit decision is challenged. No answer yet.
     logLabel: '',
-    headline: 'Does the approval\nstill apply?',
-    subtext: 'Nobody knows.',
+    headline: 'A credit decision\nis challenged.',
+    subtext: 'Who approved what, based on which evidence?',
     subtextColor: AMBER,
     detail: [],
     event: null,
@@ -385,7 +413,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           {f.isPremise && !f.isConsequence && (
             <span className="text-[9px] font-mono px-2 py-0.5 rounded"
               style={{ color: GREY, background: '#ffffff07', border: '1px solid #ffffff0e' }}>
-              Scenario premise — illustrative
+              Synthetic scenario — not a real organisation
             </span>
           )}
           {f.isConsequence && (
@@ -479,9 +507,16 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
 
         {/* Underlying signal (steps 1-5) */}
         {f.signal && f.isPremise && !isBig && (
-          <div>
-            <span className="text-[10px] font-mono text-gray-600">Underlying signal: </span>
-            <span className="text-[10px] font-mono" style={{ color: GREY }}>{f.signal}</span>
+          <div className="space-y-1">
+            <div>
+              <span className="text-[10px] font-mono text-gray-600">Underlying signal: </span>
+              <span className="text-[10px] font-mono" style={{ color: GREY }}>{f.signal}</span>
+            </div>
+            {f.links === 5 && (
+              <div className="text-[10px] font-mono text-gray-700 italic">
+                Based on a common regulated-finance governance pattern.
+              </div>
+            )}
           </div>
         )}
 
@@ -534,7 +569,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           {i >= 5 && (
             <div className="border-t border-white/5 pt-1 mt-1">
               <div className="text-[10px] font-mono text-gray-700 italic pl-1">
-                Auditor: "Does the approval still apply?"
+                Auditor: "Who approved what, based on which evidence?"
               </div>
             </div>
           )}
