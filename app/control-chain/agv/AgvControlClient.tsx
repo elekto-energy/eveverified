@@ -334,7 +334,7 @@ export default function AgvControlClient() {
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">
           Watch the proof chain
         </div>
-        <AgvScene hideFullChainLink />
+        <AgvScene hideFullChainLink scenarioId={scenario} onScenarioChange={setScenario} />
       </section>
 
       {/* Boundary + safety disclaimer */}

@@ -123,8 +123,17 @@ const SCENARIOS: Record<'A' | 'B', Scenario> = { A: SCENARIO_A, B: SCENARIO_B }
 
 function phaseColor(p: Phase) { return p === 'green' ? GREEN : p === 'amber' ? AMBER : RED }
 
-export default function AgvScene({ hideFullChainLink = false }: { hideFullChainLink?: boolean }) {
-  const [scenarioId, setScenarioId] = useState<'A' | 'B'>('B')
+export default function AgvScene({
+  hideFullChainLink = false,
+  scenarioId: controlledId,
+  onScenarioChange,
+}: {
+  hideFullChainLink?: boolean
+  scenarioId?: 'A' | 'B'
+  onScenarioChange?: (id: 'A' | 'B') => void
+}) {
+  const [internalId, setInternalId] = useState<'A' | 'B'>('B')
+  const scenarioId = controlledId ?? internalId
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [started, setStarted] = useState(false)
@@ -156,6 +165,9 @@ export default function AgvScene({ hideFullChainLink = false }: { hideFullChainL
     if (reduceRef.current) { setPlaying(false); setStarted(true) }
   }, [])
 
+  // When the scenario changes (from here or the parent), restart the timeline.
+  useEffect(() => { setI(0); setStarted(false); setPlaying(true) }, [scenarioId])
+
   useEffect(() => {
     if (!playing) return
     if (i >= TOTAL - 1) { setPlaying(false); return }
@@ -169,7 +181,11 @@ export default function AgvScene({ hideFullChainLink = false }: { hideFullChainL
     if (i >= TOTAL - 1) { setI(0); setPlaying(true); return }
     setPlaying((p) => !p)
   }, [i, TOTAL])
-  const switchScenario = useCallback((id: 'A' | 'B') => { setScenarioId(id); setI(0); setPlaying(true); setStarted(false) }, [])
+  const switchScenario = useCallback((id: 'A' | 'B') => {
+    if (onScenarioChange) onScenarioChange(id)
+    else setInternalId(id)
+    setI(0); setPlaying(true); setStarted(false)
+  }, [onScenarioChange])
 
   const f = scenario.frames[Math.min(i, TOTAL - 1)]!
   const isLast = i === TOTAL - 1
