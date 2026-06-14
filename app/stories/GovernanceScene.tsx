@@ -1,14 +1,16 @@
 'use client'
 
-// EVE Governance — proof timeline v8
-// Story-first. 10 steps.
-// Steps 1–6 = SCENARIO PREMISE (illustrative, synthetic, no real orgs/persons).
-// Steps 7–10 = LIVE from EVE-ISO42001-00004652.
+// EVE Governance — proof timeline v9
+// 12 steps. Steps 1–9 = SCENARIO PREMISE (illustrative, synthetic).
+// Steps 10–12 = LIVE from EVE-ISO42001-00004652.
 //
-// v8 changes:
-// - Premise steps use audit-realistic language (not "Approval granted" but "AI Risk Assessment approved")
-// - Step 6: nothing in event log — just the question, then silence
-// - Step 7: gapSentence + consequence panel: what is now unclear and why it matters
+// Dramaturgy:
+//   1–5:  The chain builds. Everything looks fine.
+//   6:    THE FREEZE. Auditor asks. Nobody knows.
+//   7–9:  Three unanswered questions. Each one lands alone. UNKNOWN / NO.
+//   10:   ACCOUNTABILITY_CONTINUITY_GAP — the conclusion, not the opening.
+//   11:   Human confirmation required (live).
+//   12:   Cryptographic verification (live).
 import { useEffect, useRef, useState, useCallback } from 'react'
 
 const EVE_ID     = 'EVE-ISO42001-00004652'
@@ -16,7 +18,8 @@ const VERIFY_API = `https://api.eveverified.com/eve/verify/${EVE_ID}`
 const VERIFY_URL = `https://verify.eveverified.com/?id=${EVE_ID}`
 
 const STEP_MS   = 1800
-const FREEZE_MS = 4200
+const FREEZE_MS = 4500
+const UNKNOWN_MS = 2800  // pause on each UNKNOWN question
 
 const GREEN = '#00ff88'
 const AMBER = '#f59e0b'
@@ -25,7 +28,7 @@ const GREY  = '#9ca3af'
 
 type Phase    = 'green' | 'amber' | 'red'
 type Row      = { k: string; v: string; c?: string }
-type LiveKind = 'basis' | 'result' | 'confirm' | 'verify'
+type LiveKind = 'gap' | 'confirm' | 'verify'
 
 interface VerifyData {
   valid: boolean
@@ -34,7 +37,6 @@ interface VerifyData {
   chain_seal: string
   payload: {
     data: {
-      case_id: string
       result: string
       trigger_basis: string[]
       required_human_confirmation: string[]
@@ -49,27 +51,25 @@ type VerifyState =
   | { status: 'ok'; d: VerifyData }
   | { status: 'error'; reason: string }
 
-function short(h: string) { return h && h.length > 16 ? `${h.slice(0, 8)}…${h.slice(-8)}` : h }
+function short(h: string) { return h && h.length > 16 ? `${h.slice(0, 8)}...${h.slice(-8)}` : h }
 function phaseColor(p: Phase) { return p === 'green' ? GREEN : p === 'amber' ? AMBER : RED }
 
 interface Frame {
   logLabel: string
-  signal?: string
-  headline: string
-  gapSentence?: boolean
-  // Show consequence panel (step 7)
-  consequence?: boolean
+  signal?: string           // shown as "Underlying signal:" on steps 1-5
+  headline: string          // shown in SVG, split on \n
+  subtext?: string          // large answer text (UNKNOWN / NO) shown below headline
+  subtextColor?: string
   detail: string[]
   event: string | null
-  eventNote?: string
   phase: Phase
   links: number
   broken: boolean
   human: boolean
   isPremise: boolean
-  freeze?: boolean
-  // Hide from event log entirely (step 6)
-  hideFromLog?: boolean
+  hideFromLog?: boolean     // step 6: not numbered in the log
+  freeze?: boolean          // step 6: FREEZE_MS
+  unknown?: boolean         // steps 7-9: UNKNOWN_MS
   liveKind?: LiveKind
 }
 
@@ -81,13 +81,8 @@ const FRAMES: Frame[] = [
     logLabel: '✓ AI Risk Assessment approved',
     signal: 'risk_assessment_approved',
     headline: 'AI Risk Assessment approved.',
-    detail: [
-      'Owner: AI Governance Lead',
-      'Approved: Jan 10 2025',
-      'Scope: Vendor A · one business unit',
-    ],
+    detail: ['Owner: AI Governance Lead', 'Approved: Jan 10 2025', 'Scope: Vendor A · one business unit'],
     event: 'risk_assessment_approved',
-    eventNote: 'scenario premise',
     phase: 'green', links: 1, broken: false, human: false, isPremise: true,
   },
 
@@ -95,12 +90,8 @@ const FRAMES: Frame[] = [
     logLabel: '✓ Vendor received production access',
     signal: 'vendor_integration_recorded',
     headline: 'Vendor received production access.',
-    detail: [
-      'Vendor B granted access to production environment.',
-      'Original approval references Vendor A only.',
-    ],
+    detail: ['Vendor B granted access to production environment.', 'Original approval references Vendor A only.'],
     event: 'vendor_integrated',
-    eventNote: 'scenario premise',
     phase: 'green', links: 2, broken: false, human: false, isPremise: true,
   },
 
@@ -108,13 +99,8 @@ const FRAMES: Frame[] = [
     logLabel: '✓ Model retrained',
     signal: 'approval_scope_mismatch',
     headline: 'Model retrained.',
-    detail: [
-      'Version: v1.0 → v2.3',
-      'Training data and decision threshold changed.',
-      'No re-assessment triggered.',
-    ],
+    detail: ['Version: v1.0 -> v2.3', 'Training data and decision threshold changed.', 'No re-assessment triggered.'],
     event: 'model_retrained',
-    eventNote: 'scenario premise',
     phase: 'amber', links: 3, broken: false, human: false, isPremise: true,
   },
 
@@ -122,13 +108,8 @@ const FRAMES: Frame[] = [
     logLabel: '✓ New data source connected',
     signal: 'accountable_owner_unconfirmed',
     headline: 'New data source connected.',
-    detail: [
-      'Customer behavioural data added.',
-      'Risk profile materially changed.',
-      'AI Governance Lead: moved to new division.',
-    ],
+    detail: ['Customer behavioural data added.', 'Risk profile materially changed.', 'AI Governance Lead: moved to new division.'],
     event: 'data_source_added',
-    eventNote: 'scenario premise',
     phase: 'amber', links: 4, broken: false, human: false, isPremise: true,
   },
 
@@ -136,50 +117,68 @@ const FRAMES: Frame[] = [
     logLabel: '⚠ No review performed',
     signal: 'last_human_review_stale',
     headline: 'No review performed.',
-    detail: [
-      '8 months since the original approval.',
-      'System has changed 4 times since.',
-      'Approval still on file. Still marked: APPROVED.',
-    ],
+    detail: ['8 months since the original approval.', 'System has changed 4 times since.', 'Approval still on file. Still marked: APPROVED.'],
     event: 'review_overdue',
-    eventNote: 'scenario premise',
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
   },
 
   {
-    // THE FREEZE — nothing in log, nothing explained. Just the question.
+    // THE FREEZE — auditor's question + "Nobody knows."
     logLabel: '',
     headline: 'Does the approval\nstill apply?',
+    subtext: 'Nobody knows.',
+    subtextColor: AMBER,
     detail: [],
     event: null,
-    eventNote: undefined,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
-    freeze: true,
-    hideFromLog: true,
+    freeze: true, hideFromLog: true,
+  },
+
+  {
+    // Q1 — alone, large, no chain movement
+    logLabel: '— Who owns the next decision?',
+    headline: 'Who owns the\nnext decision?',
+    subtext: 'UNKNOWN',
+    subtextColor: RED,
+    detail: [],
+    event: null,
+    phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
+    unknown: true,
+  },
+
+  {
+    // Q2
+    logLabel: '— Does the approval still cover what is running?',
+    headline: 'Does the approval still\ncover what is running?',
+    subtext: 'UNKNOWN',
+    subtextColor: RED,
+    detail: [],
+    event: null,
+    phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
+    unknown: true,
+  },
+
+  {
+    // Q3
+    logLabel: '— Can anyone demonstrate the chain is intact?',
+    headline: 'Can anyone demonstrate\nthe chain is intact?',
+    subtext: 'NO',
+    subtextColor: RED,
+    detail: [],
+    event: null,
+    phase: 'red', links: 5, broken: true, human: false, isPremise: true,
+    unknown: true,
   },
 
   // ── LIVE FROM RECORD ──────────────────────────────────────────────────────
 
   {
-    logLabel: '✕ Nobody confirmed responsibility',
-    headline: 'EVE names what broke.',
-    gapSentence: true,
-    consequence: true,
-    detail: [],
-    event: 'accountability_continuity_gap',
-    eventNote: 'recorded to decision chain',
-    phase: 'red', links: 5, broken: true, human: false, isPremise: false,
-    liveKind: 'basis',
-  },
-
-  {
     logLabel: 'ACCOUNTABILITY_CONTINUITY_GAP',
     headline: 'ACCOUNTABILITY_\nCONTINUITY_GAP',
     detail: [],
-    event: null,
-    eventNote: 'EVE surfaces — it does not decide',
+    event: 'accountability_continuity_gap',
     phase: 'red', links: 5, broken: true, human: false, isPremise: false,
-    liveKind: 'result',
+    liveKind: 'gap',
   },
 
   {
@@ -187,7 +186,6 @@ const FRAMES: Frame[] = [
     headline: 'Human confirmation\nrequired.',
     detail: [],
     event: null,
-    eventNote: 'EVE surfaces — it does not decide',
     phase: 'red', links: 5, broken: true, human: true, isPremise: false,
     liveKind: 'confirm',
   },
@@ -197,7 +195,6 @@ const FRAMES: Frame[] = [
     headline: 'Cryptographic verification.',
     detail: [],
     event: null,
-    eventNote: 'cryptographic integrity check',
     phase: 'red', links: 5, broken: true, human: true, isPremise: false,
     liveKind: 'verify',
   },
@@ -237,7 +234,9 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     if (!playing) return
     if (i >= TOTAL - 1) { setPlaying(false); return }
     const f  = FRAMES[i]!
-    const ms = started ? (f.freeze ? FREEZE_MS : STEP_MS) : STEP_MS * 0.5
+    const ms = started
+      ? f.freeze ? FREEZE_MS : f.unknown ? UNKNOWN_MS : STEP_MS
+      : STEP_MS * 0.5
     timerRef.current = window.setTimeout(
       () => { setStarted(true); setI(n => Math.min(n + 1, TOTAL - 1)) },
       ms,
@@ -261,6 +260,8 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   const col         = phaseColor(f.phase)
   const linkVisible = i >= TOTAL - 2
   const isFrozen    = Boolean(f.freeze)
+  const isUnknown   = Boolean(f.unknown)
+  const isBig       = isFrozen || isUnknown  // big text treatment
 
   function liveRows(): { rows: Row[]; pending: boolean; isLive: boolean } {
     if (!f.liveKind) return { rows: [], pending: false, isLive: false }
@@ -272,21 +273,15 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     const d   = verify.d.payload.data
     const has = (s: string) => d.trigger_basis.includes(s)
     switch (f.liveKind) {
-      case 'basis':
+      case 'gap':
         return {
           rows: [
+            { k: 'result', v: d.result, c: RED },
             { k: 'trigger_basis', v: 'approval_scope_mismatch',        c: has('approval_scope_mismatch')        ? RED : GREY },
             { k: 'trigger_basis', v: 'authority_invalid_after_changes', c: has('authority_invalid_after_changes') ? RED : GREY },
             { k: 'trigger_basis', v: 'accountable_owner_unconfirmed',   c: has('accountable_owner_unconfirmed')   ? RED : GREY },
             { k: 'trigger_basis', v: 'declared_authority_unconfirmed',  c: has('declared_authority_unconfirmed')  ? RED : GREY },
             { k: 'trigger_basis', v: 'last_human_review_stale',         c: has('last_human_review_stale')         ? RED : GREY },
-          ],
-          pending: false, isLive: true,
-        }
-      case 'result':
-        return {
-          rows: [
-            { k: 'result',                      v: d.result,                              c: RED   },
             { k: 'is_compliance_score',         v: String(d.is_compliance_score),         c: GREEN },
             { k: 'materiality_assessed_by_eve', v: String(d.materiality_assessed_by_eve), c: GREEN },
           ],
@@ -296,7 +291,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         return {
           rows: [
             ...d.required_human_confirmation.map((q, n) => ({ k: `confirm ${n + 1}`, v: q })),
-            { k: 'boundary_note', v: d.boundary_note.slice(0, 90) + '…', c: GREY },
+            { k: 'boundary_note', v: d.boundary_note.slice(0, 90) + '...', c: GREY },
           ],
           pending: false, isLive: true,
         }
@@ -314,14 +309,13 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   }
   const { rows, pending, isLive } = liveRows()
 
-  // Event log — skip step 6 (freeze/hideFromLog) and empty logLabels
   const builtEvents = FRAMES.slice(0, i + 1)
     .map((fr, idx) => ({ fr, idx }))
     .filter(x => !x.fr.hideFromLog && x.fr.logLabel)
 
   // Chain SVG
   const LINK_X: number[] = [64, 170, 276, 382, 488]
-  const LINK_Y = 162
+  const LINK_Y = 170
 
   function renderChain() {
     const nodes: React.ReactNode[] = []
@@ -333,11 +327,11 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         : f.phase === 'red' ? RED
         : f.phase === 'amber' ? AMBER
         : GREEN
-      const r = isFrozen ? 20 : 18
+      const r = isBig ? 20 : 18
       nodes.push(
         <g key={`node-${n}`}>
           <circle cx={LINK_X[n]} cy={LINK_Y} r={r} fill="none"
-            stroke={nc} strokeWidth={isFrozen ? 2.5 : 1.8}
+            stroke={nc} strokeWidth={isBig ? 2.5 : 1.8}
             opacity={active ? 1 : 0.18}
             style={{ transition: 'stroke .5s, opacity .5s' }} />
           <circle cx={LINK_X[n]} cy={LINK_Y} r="6" fill={nc}
@@ -351,14 +345,12 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         if (isBreak) {
           nodes.push(
             <g key={`conn-${n}`}>
-              <line x1={LINK_X[n] + 20} y1={LINK_Y - 6} x2={LINK_X[n] + 46} y2={LINK_Y - 14}
+              <line x1={LINK_X[n] + 20} y1={LINK_Y - 6}  x2={LINK_X[n] + 46}      y2={LINK_Y - 14}
                 stroke={RED} strokeWidth="2.5" strokeLinecap="round" />
-              <line x1={LINK_X[n + 1] - 20} y1={LINK_Y + 6} x2={LINK_X[n + 1] - 46} y2={LINK_Y + 14}
+              <line x1={LINK_X[n+1] - 20} y1={LINK_Y + 6} x2={LINK_X[n+1] - 46}   y2={LINK_Y + 14}
                 stroke={RED} strokeWidth="2.5" strokeLinecap="round" />
-              <text x={(LINK_X[n] + LINK_X[n + 1]) / 2} y={LINK_Y - 20}
-                textAnchor="middle" fill={RED} fontFamily="monospace" fontSize="9" opacity="0.9">
-                gap
-              </text>
+              <text x={(LINK_X[n] + LINK_X[n+1]) / 2} y={LINK_Y - 20}
+                textAnchor="middle" fill={RED} fontFamily="monospace" fontSize="9" opacity="0.9">gap</text>
             </g>
           )
         } else {
@@ -367,8 +359,8 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
             : '#1a2030'
           nodes.push(
             <line key={`conn-${n}`}
-              x1={LINK_X[n] + 20} y1={LINK_Y} x2={LINK_X[n + 1] - 20} y2={LINK_Y}
-              stroke={isFrozen ? AMBER : cc} strokeWidth={isFrozen ? 2.5 : 2}
+              x1={LINK_X[n] + 20} y1={LINK_Y} x2={LINK_X[n+1] - 20} y2={LINK_Y}
+              stroke={isBig ? AMBER : cc} strokeWidth={isBig ? 2.5 : 2}
               opacity={active && nextActive ? 1 : 0.12}
               style={{ transition: 'stroke .5s, opacity .5s' }} />
           )
@@ -379,7 +371,6 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   }
 
   const headlineLines = f.headline.split('\n')
-  const hasGapSentence = Boolean(f.gapSentence)
 
   return (
     <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: '#0a0e14' }}>
@@ -397,110 +388,81 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
             </span>
           )}
           <span className="text-[10px] font-mono tracking-[0.12em]" style={{ color: col }}>
-            {f.phase === 'green' ? 'APPROVED' : isFrozen ? '—' : f.phase === 'amber' ? 'DRIFTING' : 'GAP'}
+            {isFrozen ? '?' : isUnknown ? 'UNKNOWN' : f.phase === 'green' ? 'APPROVED' : f.phase === 'amber' ? 'DRIFTING' : 'GAP'}
           </span>
         </div>
       </div>
 
       {/* SVG */}
-      <svg viewBox="0 0 680 260" role="img" className="block w-full"
+      <svg viewBox="0 0 680 280" role="img" className="block w-full"
         aria-label={`Governance step ${i + 1} of ${TOTAL}: ${f.headline}`}>
-        <title>Governance proof timeline — step {i + 1} of {TOTAL}</title>
+        <title>Governance — step {i + 1} of {TOTAL}</title>
 
         <line x1="40" y1={LINK_Y} x2="640" y2={LINK_Y} stroke="#0d1118" strokeWidth="1" />
-        <text x="40"  y={LINK_Y + 30} fill="#374151" fontFamily="monospace" fontSize="9">prior approval</text>
-        <text x="512" y={LINK_Y + 30} fill="#374151" fontFamily="monospace" fontSize="9" textAnchor="end">current scope</text>
+        <text x="40"  y={LINK_Y + 32} fill="#374151" fontFamily="monospace" fontSize="9">prior approval</text>
+        <text x="512" y={LINK_Y + 32} fill="#374151" fontFamily="monospace" fontSize="9" textAnchor="end">current scope</text>
 
         {renderChain()}
 
-        {/* Named-human silhouette — steps 9–10 */}
+        {/* Human silhouette — steps 11-12 */}
         {f.human && (
           <g>
-            <line x1="512" y1={LINK_Y} x2="558" y2={LINK_Y} stroke={RED} strokeWidth="1" strokeDasharray="3 3" />
-            <circle cx="576" cy={LINK_Y - 16} r="10" fill="none" stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="576" y1={LINK_Y - 6}  x2="576" y2={LINK_Y + 18} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="576" y1={LINK_Y + 2}  x2="566" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="576" y1={LINK_Y + 2}  x2="586" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="576" y1={LINK_Y + 18} x2="568" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="576" y1={LINK_Y + 18} x2="584" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
-            <text x="576" y={LINK_Y + 46} textAnchor="middle" fill="#6b7280" fontFamily="monospace" fontSize="9">
+            <line x1="512" y1={LINK_Y} x2="556" y2={LINK_Y} stroke={RED} strokeWidth="1" strokeDasharray="3 3" />
+            <circle cx="574" cy={LINK_Y - 16} r="10" fill="none" stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="574" y1={LINK_Y - 6}  x2="574" y2={LINK_Y + 18} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="574" y1={LINK_Y + 2}  x2="564" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="574" y1={LINK_Y + 2}  x2="584" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="574" y1={LINK_Y + 18} x2="566" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="574" y1={LINK_Y + 18} x2="582" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
+            <text x="574" y={LINK_Y + 48} textAnchor="middle" fill="#6b7280" fontFamily="monospace" fontSize="9">
               AI Governance Lead
             </text>
           </g>
         )}
 
-        {/* GAP sentence */}
-        {hasGapSentence && (
-          <>
-            <text x="40" y="36" fill="#9ca3af" fontFamily="sans-serif" fontSize="12" fontWeight="300">
-              The approval still exists.
-            </text>
-            <text x="40" y="54" fill="#fca5a5" fontFamily="sans-serif" fontSize="12" fontWeight="300">
-              EVE cannot confirm that it still applies.
-            </text>
-          </>
-        )}
-
         {/* Headline */}
         {headlineLines.map((line, li) => (
-          <text key={li}
-            x="40"
-            y={(hasGapSentence ? 80 : 28) + li * (isFrozen ? 32 : 22)}
-            fill={f.phase === 'red' ? '#fca5a5' : isFrozen ? AMBER : '#e5e7eb'}
+          <text key={li} x="40" y={28 + li * (isBig ? 28 : 22)}
+            fill={f.phase === 'red' && !isUnknown ? '#fca5a5' : isFrozen ? AMBER : isUnknown ? '#e5e7eb' : '#e5e7eb'}
             fontFamily="sans-serif"
-            fontSize={isFrozen ? 22 : 16}
+            fontSize={isBig ? 20 : 16}
             fontWeight="300">
             {line}
           </text>
         ))}
 
-        {/* Detail lines (not on freeze or GAP-sentence frames) */}
-        {!isFrozen && !hasGapSentence && f.detail.map((line, di) => (
+        {/* Subtext — UNKNOWN / NO / "Nobody knows." */}
+        {f.subtext && (
+          <text x="40" y={(headlineLines.length * (isBig ? 28 : 22)) + 52}
+            fill={f.subtextColor ?? GREY}
+            fontFamily={isUnknown ? 'monospace' : 'sans-serif'}
+            fontSize={isUnknown ? 32 : 16}
+            fontWeight={isUnknown ? '200' : '300'}
+            letterSpacing={isUnknown ? '-0.02em' : '0'}>
+            {f.subtext}
+          </text>
+        )}
+
+        {/* Detail lines (steps 1-5 only) */}
+        {!isBig && f.detail.map((line, di) => (
           <text key={di} x="40"
-            y={(headlineLines.length * 22) + 38 + di * 17}
+            y={(headlineLines.length * 22) + 36 + di * 17}
             fill="#5b6475" fontFamily="monospace" fontSize="11">{line}</text>
         ))}
       </svg>
 
-      {/* Below SVG: signal, event note, consequence, live rows */}
+      {/* Below SVG */}
       <div className="px-4 pb-2 space-y-2">
 
-        {/* Underlying signal (steps 1–5) */}
-        {f.signal && f.isPremise && !isFrozen && (
+        {/* Underlying signal (steps 1-5) */}
+        {f.signal && f.isPremise && !isBig && (
           <div>
             <span className="text-[10px] font-mono text-gray-600">Underlying signal: </span>
             <span className="text-[10px] font-mono" style={{ color: GREY }}>{f.signal}</span>
           </div>
         )}
 
-        {/* Event note for null-event non-live frames */}
-        {!f.event && !f.liveKind && !isFrozen && f.eventNote && (
-          <div className="text-[12px] font-mono text-gray-500 italic">{f.eventNote}</div>
-        )}
-
-        {/* Consequence panel — step 7 */}
-        {f.consequence && (
-          <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 mt-1">
-            <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-2">
-              WHAT IS NOW UNCLEAR
-            </div>
-            <div className="space-y-1.5">
-              {[
-                'Who owns the next decision?',
-                'Does the approval still cover what is running?',
-                'Is the declared authority still valid?',
-                'Can anyone demonstrate the chain is intact?',
-              ].map((q, qi) => (
-                <div key={qi} className="flex items-start gap-2 text-[12px]">
-                  <span style={{ color: RED, flexShrink: 0 }}>·</span>
-                  <span className="text-gray-300">{q}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Live rows (steps 7–10) */}
+        {/* Live rows (steps 10-12) */}
         {f.liveKind && (
           <>
             <div className="flex items-center gap-2">
@@ -513,7 +475,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
               )}
             </div>
             {pending ? (
-              <div className="text-[12px] font-mono text-gray-500 italic">verifying…</div>
+              <div className="text-[12px] font-mono text-gray-500 italic">verifying...</div>
             ) : (
               <div className="space-y-0.5">
                 {rows.map((d, ri) => (
@@ -545,11 +507,11 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
               </span>
             </div>
           ))}
-          {/* Freeze step shows as a separator, not a numbered entry */}
+          {/* Freeze separator — shown after step 5 is past */}
           {i >= 5 && (
             <div className="border-t border-white/5 pt-1 mt-1">
-              <div className="text-[10px] font-mono text-gray-700 italic pl-8">
-                — Auditor asks: "Does the approval still apply?"
+              <div className="text-[10px] font-mono text-gray-700 italic pl-1">
+                Auditor: "Does the approval still apply?"
               </div>
             </div>
           )}
@@ -558,12 +520,12 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
 
       {/* Controls */}
       <div className="border-t border-white/10 px-4 py-3 space-y-3">
-        <div className="flex items-center justify-center gap-1.5 flex-wrap">
+        <div className="flex items-center justify-center gap-1 flex-wrap">
           {FRAMES.map((_, n) => (
             <button key={n} onClick={() => goto(n)} aria-label={`Go to step ${n + 1}`}
               className="h-2 rounded-full transition-all"
               style={{
-                width: n === i ? 18 : 8,
+                width: n === i ? 18 : 6,
                 background: n === i ? col : n < i ? '#374151' : '#1f2937',
               }} />
           ))}
@@ -571,13 +533,17 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
             <button onClick={() => goto(i - 1)} disabled={i === 0}
-              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">◀</button>
+              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">
+              ◀
+            </button>
             <button onClick={togglePlay}
               className="px-4 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-300 hover:bg-white/10 transition-colors">
               {isLast && !playing ? '↻ Replay' : playing ? '❚❚ Pause' : '▶ Play'}
             </button>
             <button onClick={() => goto(i + 1)} disabled={isLast}
-              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">▶</button>
+              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">
+              ▶
+            </button>
           </div>
           <div className="flex items-center gap-2 transition-opacity duration-500"
             style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
