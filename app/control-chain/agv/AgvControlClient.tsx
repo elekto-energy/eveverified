@@ -58,6 +58,9 @@ interface DeniedResponse {
   execution_verdict: 'DENIED'
   verdict_basis: string[]
   state: { mission_mode: string; robot_motion: string; human_detected: boolean }
+  events?: AgvEventRef[]
+  last_verdict?: { verdict: string; basis: string[] } | null
+  steps_executed?: string[]
   event_recorded: boolean
   boundary_note: string
 }
@@ -206,8 +209,10 @@ export default function AgvControlClient() {
       if (res.status === 503) { setBackendStatus('offline'); throw new Error('Backend OFFLINE — fail closed') }
       if (res.status === 409) {
         // DENIED — unsafe intent recorded, action blocked.
-        // State update: backend has already persisted the MISSION_HELD state.
-        // Reflect it in local session from the 409 response body.
+        // Backend appended unsafe_action_requested + unsafe_action_denied to the chain
+        // BEFORE denial. The 409 body now carries the full real event list — render it
+        // exactly as returned (no reconstruction). Fallback to the prior behaviour if an
+        // older backend omits events.
         const denied = json as DeniedResponse
         setDeniedResponse(denied)
         setSession((prev) => prev ? {
@@ -219,8 +224,9 @@ export default function AgvControlClient() {
             telemetry: { ...prev.state.telemetry, human_detected: denied.state.human_detected },
             denied_action_attempted: true,
           },
-          last_verdict: { verdict: denied.execution_verdict, basis: denied.verdict_basis },
-          steps_executed: [...prev.steps_executed, stepId],
+          events: denied.events ?? prev.events,
+          last_verdict: denied.last_verdict ?? { verdict: denied.execution_verdict, basis: denied.verdict_basis },
+          steps_executed: denied.steps_executed ?? [...prev.steps_executed, stepId],
         } : prev)
         return
       }
