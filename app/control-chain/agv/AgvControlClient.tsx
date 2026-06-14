@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import AgvSceneLive from './AgvSceneLive'
+import AgvScene from '@/app/stories/AgvScene'
 
 // ── Backend status ────────────────────────────────────────────────────────────
 type BackendStatus = 'checking' | 'online' | 'offline'
@@ -269,27 +270,42 @@ export default function AgvControlClient() {
     <main className="min-h-screen bg-eve-dark">
       <Navigation />
 
-      {/* Hero */}
-      <section className="pt-32 pb-10 px-6 max-w-4xl mx-auto text-center">
+      {/* Hero — kompakt */}
+      <section className="pt-28 pb-8 px-6 max-w-3xl mx-auto text-center">
         <span className="text-xs text-eve-green tracking-[0.3em] uppercase font-mono">
           EVE Control Chain · AGV Domain
         </span>
-        <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-4 mb-2">
-          Verified autonomous warehouse robot control-chain demo.
+        <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-3 mb-3">
+          Unsafe continue denied.
         </h1>
-        <p className="text-gray-400 text-base mb-4">
-          Visual robot model, real verification chain. Every critical control intent runs through
-          the EVE Control Chain: event chain, deterministic verdict, sealed record and
-          verify adapter.
+        <p className="text-gray-500 text-sm">
+          The AGV requested full speed. A human was detected at 2.4 m. EVE recorded the unsafe intent first, then denied. The decision is sealed and cryptographically verifiable.
         </p>
-        <div className="flex flex-wrap justify-center gap-2">
-          {MODE_BADGES.map((b) => (
-            <span key={b} className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">{b}</span>
-          ))}
+      </section>
+
+      {/* WHAT HAPPENED — autoplay story, no session needed */}
+      <section className="px-6 max-w-3xl mx-auto mb-4">
+        <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">What happened</div>
+        <AgvScene hideFullChainLink />
+        <div className="flex gap-3 mt-5 justify-center">
+          <button
+            onClick={() => document.getElementById('live-chain')?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-6 py-2.5 rounded-full text-sm font-mono border border-eve-green/40 bg-eve-green/10 text-eve-green hover:bg-eve-green/20 transition-all">
+            Run live session →
+          </button>
+          <a
+            href="https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658"
+            target="_blank" rel="noopener noreferrer"
+            className="px-6 py-2.5 rounded-full text-sm font-mono border border-white/15 bg-white/[0.03] text-gray-300 hover:bg-white/10 transition-all">
+            Verify sealed record →
+          </a>
         </div>
       </section>
 
-      {/* MAIN INTERACTIVE AREA — scen + kontroll i samma viewport */}
+      {/* PROVE IT — live interactive demo */}
+      <section className="px-6 max-w-3xl mx-auto mb-3">
+        <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono">Prove it — run live session</div>
+      </section>
       <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 scroll-mt-24">
         <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
 
