@@ -1,35 +1,31 @@
 'use client'
 
-// EVE Governance — proof timeline v5
-// 10 steps. Steps 1–6 = SCENARIO PREMISE (illustrative, synthetic, no real orgs/persons).
-// Steps 7–10 = LIVE from EVE-ISO42001-00004652, fetched at mount.
+// EVE Governance — proof timeline v6
+// Story-first: human language first, EVE signal terms underneath.
+// 10 steps. Steps 1–6 = SCENARIO PREMISE (illustrative, synthetic).
+// Steps 7–10 = LIVE from EVE-ISO42001-00004652.
 //
-// Story arc:
-//   1-5: Everything looked fine (green → amber as facts drift)
-//   6:   The question that cannot be answered (freeze — double pause)
-//   7:   EVE names what broke (live trigger_basis)
-//   8:   ACCOUNTABILITY_CONTINUITY_GAP (live result)
-//   9:   Human confirmation required (live confirmations)
-//  10:   Cryptographic verification (live VALID)
-//
-// Honesty: steps 1–6 labelled "Scenario premise — illustrative".
-//          Steps 7–10: only real fields from the record. Never hardcoded VALID.
+// Design principles (v6):
+// - Steps 1–5: checkmarks in plain English. EVE signal shown as "Underlying signal:" beneath.
+// - Step 6: THE FREEZE. Largest text, longest pause, nothing moves.
+// - Steps 7–10: chain visually broken, EVE terms shown as the answer to step 6's question.
+// - The broken link visual IS the story. Prior approval on left, current scope on right, gap between.
 import { useEffect, useRef, useState, useCallback } from 'react'
 
-const EVE_ID = 'EVE-ISO42001-00004652'
+const EVE_ID    = 'EVE-ISO42001-00004652'
 const VERIFY_API = `https://api.eveverified.com/eve/verify/${EVE_ID}`
 const VERIFY_URL = `https://verify.eveverified.com/?id=${EVE_ID}`
 
-const STEP_MS = 1800        // default ms per step
-const FREEZE_MS = 3600      // step 6 "does it still apply?" — double pause
+const STEP_MS   = 1800
+const FREEZE_MS = 4200   // step 6 — long pause, let it land
 
-const GREEN  = '#00ff88'
-const AMBER  = '#f59e0b'
-const RED    = '#ef4444'
-const GREY   = '#9ca3af'
+const GREEN = '#00ff88'
+const AMBER = '#f59e0b'
+const RED   = '#ef4444'
+const GREY  = '#9ca3af'
 
-type Phase = 'green' | 'amber' | 'red'
-type Row    = { k: string; v: string; c?: string }
+type Phase    = 'green' | 'amber' | 'red'
+type Row      = { k: string; v: string; c?: string }
 type LiveKind = 'basis' | 'result' | 'confirm' | 'verify'
 
 interface VerifyData {
@@ -58,49 +54,60 @@ function short(h: string) { return h && h.length > 16 ? `${h.slice(0, 8)}…${h.
 function phaseColor(p: Phase) { return p === 'green' ? GREEN : p === 'amber' ? AMBER : RED }
 
 interface Frame {
-  headline: string           // large human-readable step title
-  detail: string[]           // sub-lines shown in the scene
-  event: string | null       // event type logged to the chain (null = eval/verify/freeze)
+  // Human-readable label shown in the event log (replaces raw event type)
+  logLabel: string
+  // EVE signal term shown as "Underlying signal:" beneath — only for steps 1–5
+  signal?: string
+  // Shown large in the SVG
+  headline: string
+  // Sub-lines in the SVG
+  detail: string[]
+  // Internal event name (null = no hash)
+  event: string | null
   eventNote?: string
   phase: Phase
-  links: number              // how many chain nodes are lit (1–5)
-  broken: boolean            // whether the chain shows a visual break
-  human: boolean             // whether the named-human silhouette appears
-  isPremise: boolean         // badge: "Scenario premise — illustrative"
-  freeze?: boolean           // if true, use FREEZE_MS instead of STEP_MS
+  links: number
+  broken: boolean
+  human: boolean
+  isPremise: boolean
+  freeze?: boolean
   liveKind?: LiveKind
 }
 
-// ── FRAMES ────────────────────────────────────────────────────────────────────
 const FRAMES: Frame[] = [
 
   // ── SCENARIO PREMISE ──────────────────────────────────────────────────────
 
   {
-    headline: 'Approved.',
+    logLabel: '✓ Approval granted',
+    signal: 'risk_assessment_approved',
+    headline: 'Approval granted.',
     detail: [
       'AI Risk Assessment · Vendor Risk Assessment',
       'Owner: AI Governance Lead',
       'Approved: Jan 10 2025',
-      'STATUS: APPROVED',
     ],
     event: 'risk_assessment_approved',
-    eventNote: 'scenario premise — prior approval on record',
+    eventNote: 'scenario premise',
     phase: 'green', links: 1, broken: false, human: false, isPremise: true,
   },
 
   {
+    logLabel: '✓ New vendor integrated',
+    signal: 'vendor_integration_recorded',
     headline: 'New vendor integrated.',
     detail: [
       'Vendor B onboarded into the assessed system.',
       'Original approval references Vendor A only.',
     ],
     event: 'vendor_integrated',
-    eventNote: 'scenario premise — system composition changes',
+    eventNote: 'scenario premise',
     phase: 'green', links: 2, broken: false, human: false, isPremise: true,
   },
 
   {
+    logLabel: '✓ Scope expanded',
+    signal: 'approval_scope_mismatch',
     headline: 'Scope expanded.',
     detail: [
       'Three new business units added.',
@@ -108,40 +115,43 @@ const FRAMES: Frame[] = [
       'Approval not updated.',
     ],
     event: 'scope_expanded',
-    eventNote: 'scenario premise — scope changes',
+    eventNote: 'scenario premise',
     phase: 'amber', links: 3, broken: false, human: false, isPremise: true,
   },
 
   {
-    headline: 'Owner changed teams.',
+    logLabel: '✓ Owner moved teams',
+    signal: 'accountable_owner_unconfirmed',
+    headline: 'Owner moved teams.',
     detail: [
-      'AI Governance Lead moved to a new division.',
+      'AI Governance Lead: new division.',
       'No successor named.',
       'Accountability unclear.',
     ],
     event: 'owner_changed_teams',
-    eventNote: 'scenario premise — accountability gap opens',
+    eventNote: 'scenario premise',
     phase: 'amber', links: 4, broken: false, human: false, isPremise: true,
   },
 
   {
+    logLabel: '✕ Approval no longer clearly applies',
+    signal: 'last_human_review_stale',
     headline: 'Last review: 8 months ago.',
     detail: [
-      'The system has changed 4 times since approval.',
+      'System has changed 4 times since approval.',
       'No re-assessment has been triggered.',
-      'The approval is still on file. Still marked: APPROVED.',
+      'Approval still on file. Still marked: APPROVED.',
     ],
     event: 'review_overdue',
-    eventNote: 'scenario premise — stale review',
+    eventNote: 'scenario premise',
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
   },
 
   {
-    // THE FREEZE — no new node, no new event. The auditor's question.
-    headline: 'Does the approval still apply?',
-    detail: [
-      '— the auditor, 6 weeks after the incident',
-    ],
+    // THE FREEZE — no new node, no new event. The question.
+    logLabel: '— Auditor asks',
+    headline: 'Does the approval\nstill apply?',
+    detail: [],
     event: null,
     eventNote: 'scenario premise — the question that cannot be answered',
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
@@ -151,6 +161,7 @@ const FRAMES: Frame[] = [
   // ── LIVE FROM RECORD ──────────────────────────────────────────────────────
 
   {
+    logLabel: '✕ Nobody confirmed responsibility',
     headline: 'EVE names what broke.',
     detail: [],
     event: 'accountability_continuity_gap',
@@ -160,7 +171,8 @@ const FRAMES: Frame[] = [
   },
 
   {
-    headline: 'ACCOUNTABILITY_CONTINUITY_GAP',
+    logLabel: 'ACCOUNTABILITY_CONTINUITY_GAP',
+    headline: 'ACCOUNTABILITY_\nCONTINUITY_GAP',
     detail: [],
     event: null,
     eventNote: 'EVE surfaces — it does not decide',
@@ -169,7 +181,8 @@ const FRAMES: Frame[] = [
   },
 
   {
-    headline: 'Human confirmation required.',
+    logLabel: 'Human confirmation required',
+    headline: 'Human confirmation\nrequired.',
     detail: [],
     event: null,
     eventNote: 'EVE surfaces — it does not decide',
@@ -178,6 +191,7 @@ const FRAMES: Frame[] = [
   },
 
   {
+    logLabel: 'Record sealed · VALID',
     headline: 'Cryptographic verification.',
     detail: [],
     event: null,
@@ -189,16 +203,14 @@ const FRAMES: Frame[] = [
 
 const TOTAL = FRAMES.length
 
-// ── COMPONENT ─────────────────────────────────────────────────────────────────
 export default function GovernanceScene({ hideFullChainLink = false }: { hideFullChainLink?: boolean }) {
-  const [i, setI]           = useState(0)
+  const [i, setI]             = useState(0)
   const [playing, setPlaying] = useState(true)
   const [started, setStarted] = useState(false)
   const [verify, setVerify]   = useState<VerifyState>({ status: 'loading' })
   const reduceRef = useRef(false)
   const timerRef  = useRef<number | null>(null)
 
-  // Fetch live record once at mount
   useEffect(() => {
     let alive = true
     fetch(VERIFY_API, { cache: 'no-store' })
@@ -217,11 +229,10 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     if (reduceRef.current) { setPlaying(false); setStarted(true) }
   }, [])
 
-  // Autoplay — respects per-frame freeze duration
   useEffect(() => {
     if (!playing) return
     if (i >= TOTAL - 1) { setPlaying(false); return }
-    const f = FRAMES[i]!
+    const f  = FRAMES[i]!
     const ms = started ? (f.freeze ? FREEZE_MS : STEP_MS) : STEP_MS * 0.5
     timerRef.current = window.setTimeout(
       () => { setStarted(true); setI(n => Math.min(n + 1, TOTAL - 1)) },
@@ -241,12 +252,12 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     setPlaying(p => !p)
   }, [i])
 
-  const f         = FRAMES[i]!
-  const isLast    = i === TOTAL - 1
-  const col       = phaseColor(f.phase)
+  const f           = FRAMES[i]!
+  const isLast      = i === TOTAL - 1
+  const col         = phaseColor(f.phase)
   const linkVisible = i >= TOTAL - 2
 
-  // ── Live rows for steps 7–10 ───────────────────────────────────────────────
+  // ── Live rows ─────────────────────────────────────────────────────────────
   function liveRows(): { rows: Row[]; pending: boolean; isLive: boolean } {
     if (!f.liveKind) return { rows: [], pending: false, isLive: false }
     if (verify.status === 'loading') return { rows: [], pending: true, isLive: true }
@@ -256,25 +267,24 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     }
     const d   = verify.d.payload.data
     const has = (s: string) => d.trigger_basis.includes(s)
-
     switch (f.liveKind) {
       case 'basis':
         return {
           rows: [
-            { k: 'trigger_basis', v: 'approval_scope_mismatch',         c: has('approval_scope_mismatch')         ? RED : GREY },
-            { k: 'trigger_basis', v: 'authority_invalid_after_changes',  c: has('authority_invalid_after_changes')  ? RED : GREY },
-            { k: 'trigger_basis', v: 'accountable_owner_unconfirmed',    c: has('accountable_owner_unconfirmed')    ? RED : GREY },
-            { k: 'trigger_basis', v: 'declared_authority_unconfirmed',   c: has('declared_authority_unconfirmed')   ? RED : GREY },
-            { k: 'trigger_basis', v: 'last_human_review_stale',          c: has('last_human_review_stale')          ? RED : GREY },
+            { k: 'trigger_basis', v: 'approval_scope_mismatch',        c: has('approval_scope_mismatch')        ? RED : GREY },
+            { k: 'trigger_basis', v: 'authority_invalid_after_changes', c: has('authority_invalid_after_changes') ? RED : GREY },
+            { k: 'trigger_basis', v: 'accountable_owner_unconfirmed',   c: has('accountable_owner_unconfirmed')   ? RED : GREY },
+            { k: 'trigger_basis', v: 'declared_authority_unconfirmed',  c: has('declared_authority_unconfirmed')  ? RED : GREY },
+            { k: 'trigger_basis', v: 'last_human_review_stale',         c: has('last_human_review_stale')         ? RED : GREY },
           ],
           pending: false, isLive: true,
         }
       case 'result':
         return {
           rows: [
-            { k: 'result',                    v: d.result,                                c: RED   },
-            { k: 'is_compliance_score',       v: String(d.is_compliance_score),           c: GREEN },
-            { k: 'materiality_assessed_by_eve', v: String(d.materiality_assessed_by_eve), c: GREEN },
+            { k: 'result',                      v: d.result,                                 c: RED   },
+            { k: 'is_compliance_score',         v: String(d.is_compliance_score),            c: GREEN },
+            { k: 'materiality_assessed_by_eve', v: String(d.materiality_assessed_by_eve),    c: GREEN },
           ],
           pending: false, isLive: true,
         }
@@ -289,9 +299,9 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
       case 'verify':
         return {
           rows: [
-            { k: 'record',      v: verify.d.eve_id,                                        c: '#e5e7eb' },
-            { k: 'bridge seal', v: short(verify.d.seal)                                              },
-            { k: 'chain seal',  v: short(verify.d.chain_seal)                                        },
+            { k: 'record',      v: verify.d.eve_id,                                           c: '#e5e7eb' },
+            { k: 'bridge seal', v: short(verify.d.seal)                                                   },
+            { k: 'chain seal',  v: short(verify.d.chain_seal)                                             },
             { k: 'verify',      v: verify.d.valid ? 'VALID' : 'INVALID', c: verify.d.valid ? GREEN : RED },
           ],
           pending: false, isLive: true,
@@ -300,17 +310,20 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   }
   const { rows, pending, isLive } = liveRows()
 
-  // Accumulated event log — only frames with a real event type
+  // Event log — uses human logLabel, not raw event type
   const builtEvents = FRAMES.slice(0, i + 1)
     .map((fr, idx) => ({ fr, idx }))
-    .filter(x => x.fr.event !== null)
 
   // ── Chain SVG ─────────────────────────────────────────────────────────────
-  const LINK_X = [64, 170, 276, 382, 488]
-  const LINK_Y = 148
+  // Five nodes. Prior approval left, current scope right.
+  // When broken: left side stays, right side has no connection. Gap is visible.
+  const LINK_X: number[] = [64, 170, 276, 382, 488]
+  const LINK_Y  = 162
+  const isFrozen = f.freeze
 
   function renderChain() {
     const nodes: React.ReactNode[] = []
+
     for (let n = 0; n < 5; n++) {
       const active      = n < f.links
       const isBreakNode = f.broken && n === f.links - 1
@@ -318,19 +331,23 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         ? '#1a2030'
         : isBreakNode
           ? RED
-          : f.phase === 'amber'
-            ? AMBER
-            : f.phase === 'red'
-              ? RED
+          : f.phase === 'red'
+            ? RED
+            : f.phase === 'amber'
+              ? AMBER
               : GREEN
 
+      // Node ring — larger when frozen (step 6)
+      const r = isFrozen ? 20 : 18
       nodes.push(
-        <g key={`node-${n}`} style={{ transition: 'opacity .6s' }}>
-          <circle cx={LINK_X[n]} cy={LINK_Y} r="18" fill="none"
-            stroke={nc} strokeWidth="1.8" opacity={active ? 1 : 0.2}
-            style={{ transition: 'stroke .5s, opacity .5s' }} />
+        <g key={`node-${n}`}>
+          <circle cx={LINK_X[n]} cy={LINK_Y} r={r} fill="none"
+            stroke={nc} strokeWidth={isFrozen ? 2.5 : 1.8}
+            opacity={active ? 1 : 0.18}
+            style={{ transition: 'stroke .5s, opacity .5s, r .3s' }} />
           <circle cx={LINK_X[n]} cy={LINK_Y} r="6" fill={nc}
-            opacity={active ? 0.9 : 0.15} style={{ transition: 'fill .5s' }} />
+            opacity={active ? 0.9 : 0.12}
+            style={{ transition: 'fill .5s' }} />
         </g>
       )
 
@@ -339,13 +356,25 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         const isBreak    = f.broken && n === f.links - 2
 
         if (isBreak) {
-          // Snapped connector — two stubs with a visible gap
+          // Broken connector — two stubs pointing away, gap in middle
           nodes.push(
             <g key={`conn-${n}`}>
-              <line x1={LINK_X[n] + 20} y1={LINK_Y - 5} x2={LINK_X[n] + 44} y2={LINK_Y - 12}
-                stroke={RED} strokeWidth="2" strokeLinecap="round" />
-              <line x1={LINK_X[n + 1] - 20} y1={LINK_Y + 5} x2={LINK_X[n + 1] - 44} y2={LINK_Y + 12}
-                stroke={RED} strokeWidth="2" strokeLinecap="round" />
+              <line x1={LINK_X[n] + 20} y1={LINK_Y - 6} x2={LINK_X[n] + 46} y2={LINK_Y - 14}
+                stroke={RED} strokeWidth="2.5" strokeLinecap="round" />
+              <line x1={LINK_X[n + 1] - 20} y1={LINK_Y + 6} x2={LINK_X[n + 1] - 46} y2={LINK_Y + 14}
+                stroke={RED} strokeWidth="2.5" strokeLinecap="round" />
+              {/* Gap label */}
+              <text
+                x={(LINK_X[n] + LINK_X[n + 1]) / 2}
+                y={LINK_Y - 18}
+                textAnchor="middle"
+                fill={RED}
+                fontFamily="monospace"
+                fontSize="9"
+                opacity="0.8"
+              >
+                gap
+              </text>
             </g>
           )
         } else {
@@ -355,8 +384,8 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           nodes.push(
             <line key={`conn-${n}`}
               x1={LINK_X[n] + 20} y1={LINK_Y} x2={LINK_X[n + 1] - 20} y2={LINK_Y}
-              stroke={cc} strokeWidth="2"
-              opacity={active && nextActive ? 1 : 0.15}
+              stroke={isFrozen ? AMBER : cc} strokeWidth={isFrozen ? 2.5 : 2}
+              opacity={active && nextActive ? 1 : 0.12}
               style={{ transition: 'stroke .5s, opacity .5s' }} />
           )
         }
@@ -365,11 +394,13 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
     return nodes
   }
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // Multi-line headline (split on \n)
+  const headlineLines = f.headline.split('\n')
+
   return (
     <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: '#0a0e14' }}>
 
-      {/* Step counter + badges */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-1">
         <span className="text-[10px] font-mono tracking-[0.16em] text-gray-500">
           STEP {i + 1} OF {TOTAL}
@@ -377,71 +408,88 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         <div className="flex items-center gap-2">
           {f.isPremise && (
             <span className="text-[9px] font-mono px-2 py-0.5 rounded"
-              style={{ color: GREY, background: '#ffffff08', border: '1px solid #ffffff10' }}>
+              style={{ color: GREY, background: '#ffffff07', border: '1px solid #ffffff0e' }}>
               Scenario premise — illustrative
             </span>
           )}
           <span className="text-[10px] font-mono tracking-[0.12em]" style={{ color: col }}>
-            {f.phase === 'green' ? 'APPROVED' : f.phase === 'amber' ? f.freeze ? '— ?' : 'DRIFTING' : 'GAP'}
+            {f.phase === 'green' ? 'APPROVED'
+              : f.freeze ? '—'
+              : f.phase === 'amber' ? 'DRIFTING'
+              : 'GAP'}
           </span>
         </div>
       </div>
 
       {/* SVG scene */}
-      <svg viewBox="0 0 680 240" role="img" className="block w-full"
+      <svg viewBox="0 0 680 260" role="img" className="block w-full"
         aria-label={`Governance step ${i + 1} of ${TOTAL}: ${f.headline}`}>
         <title>Governance proof timeline — step {i + 1} of {TOTAL}</title>
 
-        {/* baseline */}
-        <line x1="40" y1={LINK_Y} x2="640" y2={LINK_Y} stroke="#0f1218" strokeWidth="1" />
+        {/* Baseline */}
+        <line x1="40" y1={LINK_Y} x2="640" y2={LINK_Y} stroke="#0d1118" strokeWidth="1" />
+
+        {/* Prior approval label */}
+        <text x="40" y={LINK_Y + 30} fill="#374151" fontFamily="monospace" fontSize="9">
+          prior approval
+        </text>
+
+        {/* Current scope label — right side */}
+        <text x="512" y={LINK_Y + 30} fill="#374151" fontFamily="monospace" fontSize="9"
+          textAnchor="end">
+          current scope
+        </text>
 
         {renderChain()}
 
         {/* Named-human silhouette — steps 9–10 */}
         {f.human && (
-          <g style={{ transition: 'opacity .6s' }}>
-            <line x1="510" y1={LINK_Y} x2="560" y2={LINK_Y}
+          <g>
+            <line x1="512" y1={LINK_Y} x2="558" y2={LINK_Y}
               stroke={RED} strokeWidth="1" strokeDasharray="3 3" />
-            <circle cx="578" cy={LINK_Y - 14} r="10" fill="none" stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="578" y1={LINK_Y - 4}  x2="578" y2={LINK_Y + 20} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="578" y1={LINK_Y + 4}  x2="568" y2={LINK_Y + 16} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="578" y1={LINK_Y + 4}  x2="588" y2={LINK_Y + 16} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="578" y1={LINK_Y + 20} x2="570" y2={LINK_Y + 32} stroke="#e5e7eb" strokeWidth="1.5" />
-            <line x1="578" y1={LINK_Y + 20} x2="586" y2={LINK_Y + 32} stroke="#e5e7eb" strokeWidth="1.5" />
-            <text x="578" y={LINK_Y + 48} textAnchor="middle"
+            <circle cx="576" cy={LINK_Y - 16} r="10" fill="none" stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="576" y1={LINK_Y - 6}  x2="576" y2={LINK_Y + 18} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="576" y1={LINK_Y + 2}  x2="566" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="576" y1={LINK_Y + 2}  x2="586" y2={LINK_Y + 14} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="576" y1={LINK_Y + 18} x2="568" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
+            <line x1="576" y1={LINK_Y + 18} x2="584" y2={LINK_Y + 30} stroke="#e5e7eb" strokeWidth="1.5" />
+            <text x="576" y={LINK_Y + 46} textAnchor="middle"
               fill="#6b7280" fontFamily="monospace" fontSize="9">AI Governance Lead</text>
           </g>
         )}
 
-        {/* Headline */}
-        <text x="40" y="40"
-          fill={f.phase === 'red' ? '#fca5a5' : f.freeze ? AMBER : '#e5e7eb'}
-          fontFamily="sans-serif" fontSize={f.freeze ? 20 : 16} fontWeight="300">
-          {f.headline}
-        </text>
-
-        {/* Detail lines */}
-        {f.detail.map((line, di) => (
-          <text key={di} x="40" y={64 + di * 18}
-            fill={f.freeze && di === 0 ? '#6b7280' : '#6b7280'}
-            fontFamily="monospace" fontSize="11">{line}</text>
+        {/* Headline — large on freeze, normal otherwise */}
+        {headlineLines.map((line, li) => (
+          <text key={li} x="40" y={28 + li * (isFrozen ? 32 : 22)}
+            fill={f.phase === 'red' ? '#fca5a5' : isFrozen ? AMBER : '#e5e7eb'}
+            fontFamily="sans-serif"
+            fontSize={isFrozen ? 22 : f.phase === 'red' && i === 7 ? 14 : 16}
+            fontWeight={isFrozen ? '300' : '300'}>
+            {line}
+          </text>
         ))}
 
-        {/* Chain labels */}
-        <text x="40"  y="230" fill="#374151" fontFamily="monospace" fontSize="9">prior approval</text>
-        <text x="510" y="230" fill="#374151" fontFamily="monospace" fontSize="9" textAnchor="end">current scope</text>
+        {/* Detail lines */}
+        {!isFrozen && f.detail.map((line, di) => (
+          <text key={di} x="40"
+            y={(headlineLines.length * 22) + 36 + di * 17}
+            fill="#5b6475" fontFamily="monospace" fontSize="11">{line}</text>
+        ))}
       </svg>
 
-      {/* Event section */}
-      <div className="px-4 pb-3">
-        <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-1">EVENT</div>
-        {f.event ? (
-          <div className="text-[12px] font-mono mb-3">
-            <span style={{ color: f.phase === 'red' ? '#fca5a5' : '#e5e7eb' }}>{f.event}</span>
-            <span className="text-gray-600"> recorded to decision chain</span>
-            {f.eventNote && <span className="text-gray-600"> · {f.eventNote}</span>}
+      {/* Event row */}
+      <div className="px-4 pb-2">
+
+        {/* Signal (steps 1–5 only) */}
+        {f.signal && f.isPremise && (
+          <div className="mb-3">
+            <span className="text-[10px] font-mono text-gray-600">Underlying signal: </span>
+            <span className="text-[10px] font-mono" style={{ color: GREY }}>{f.signal}</span>
           </div>
-        ) : (
+        )}
+
+        {/* Event note (for null-event frames) */}
+        {!f.event && !f.liveKind && (
           <div className="text-[12px] font-mono mb-3 text-gray-500 italic">
             {f.eventNote ?? 'no event recorded'}
           </div>
@@ -456,7 +504,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
               </span>
               {isLive && !pending && verify.status === 'ok' && (
                 <span className="text-[9px] font-mono px-1.5 py-0.5 rounded"
-                  style={{ color: GREEN, background: '#00ff8814' }}>
+                  style={{ color: GREEN, background: '#00ff8812' }}>
                   fetched · {EVE_ID}
                 </span>
               )}
@@ -477,34 +525,30 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         )}
       </div>
 
-      {/* Event log — builds up as the scene plays */}
-      {builtEvents.length > 0 && (
-        <div className="px-4 pb-3">
-          <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-2">
-            DECISION CHAIN — recorded events ({builtEvents.length})
-          </div>
-          <div className="rounded-lg bg-black/20 border border-white/5 p-3 space-y-1">
-            {builtEvents.map(({ fr, idx }) => (
-              <div key={idx} className="flex items-baseline gap-2 text-[11px] font-mono">
-                <span className="text-gray-700 w-6">#{idx + 1}</span>
-                <span style={{
-                  color: fr.phase === 'red' ? '#fca5a5'
-                       : fr.phase === 'amber' ? AMBER
-                       : '#d1d5db',
-                  flex: 1,
-                }}>
-                  {fr.event}
-                </span>
-                <span className="text-gray-700">recorded</span>
-              </div>
-            ))}
-          </div>
+      {/* Decision chain log — human labels, not raw event names */}
+      <div className="px-4 pb-3">
+        <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-2">
+          DECISION CHAIN — what happened ({builtEvents.length})
         </div>
-      )}
+        <div className="rounded-lg bg-black/20 border border-white/5 p-3 space-y-1">
+          {builtEvents.map(({ fr, idx }) => (
+            <div key={idx} className="flex items-baseline gap-2 text-[11px] font-mono">
+              <span className="text-gray-700 w-6">#{idx + 1}</span>
+              <span style={{
+                color: fr.phase === 'red' ? '#fca5a5'
+                     : fr.phase === 'amber' ? AMBER
+                     : GREEN,
+                flex: 1,
+              }}>
+                {fr.logLabel}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Controls */}
       <div className="border-t border-white/10 px-4 py-3 space-y-3">
-        {/* Step dots */}
         <div className="flex items-center justify-center gap-1.5 flex-wrap">
           {FRAMES.map((_, n) => (
             <button key={n} onClick={() => goto(n)} aria-label={`Go to step ${n + 1}`}
@@ -516,7 +560,6 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           ))}
         </div>
 
-        {/* Playback + links */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
             <button onClick={() => goto(i - 1)} disabled={i === 0}
