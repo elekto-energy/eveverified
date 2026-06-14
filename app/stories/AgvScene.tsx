@@ -208,6 +208,13 @@ export default function AgvScene() {
   }
   const { rows, pending, isLive } = liveRows()
 
+  // Accumulated chain: every event from step 0..i that has a real event type.
+  // Built up as the animation plays; stays visible. Stepping back trims it.
+  const builtEvents = scenario.frames
+    .slice(0, i + 1)
+    .map((fr, idx) => ({ fr, idx }))
+    .filter((x) => x.fr.event !== null)
+
   return (
     <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: '#0a0e14' }}>
       {/* Scenario switch */}
@@ -307,6 +314,27 @@ export default function AgvScene() {
             )}
           </>
         )}
+      </div>
+
+      {/* Accumulated chain — every event so far, stays visible as the scene plays */}
+      <div className="px-4 pb-3">
+        <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-2">
+          EVENT CHAIN — hashed, append-only ({builtEvents.length})
+        </div>
+        <div className="rounded-lg bg-black/20 border border-white/5 p-3 space-y-1">
+          {builtEvents.map(({ fr, idx }) => (
+            <div key={idx} className="flex items-baseline gap-2 text-[11px] font-mono">
+              <span className="text-gray-700 w-6">#{idx + 1}</span>
+              <span
+                className="flex-1"
+                style={{ color: fr.event === 'unsafe_action_requested' || fr.event === 'unsafe_action_denied' ? '#fca5a5' : '#d1d5db' }}
+              >
+                {fr.event}
+              </span>
+              <span className="text-gray-700">recorded</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Controls */}
