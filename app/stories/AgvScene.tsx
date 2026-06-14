@@ -360,7 +360,11 @@ export default function AgvScene({ hideFullChainLink = false }: { hideFullChainL
           </div>
 
           <div className="flex items-center gap-2 transition-opacity duration-500" style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
-            {!hideFullChainLink && (
+            {hideFullChainLink ? (
+              <a href="#live-chain"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
+                style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>Jump to live chain ↓</a>
+            ) : (
               <a href={CHAIN_URL} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
                 style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>See full chain →</a>

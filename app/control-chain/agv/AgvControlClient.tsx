@@ -399,7 +399,7 @@ export default function AgvControlClient() {
 
       {/* Scenario selector + Create session */}
       {isOnline && !session && (
-        <section className="px-6 max-w-3xl mx-auto mb-8">
+        <section id="live-chain" className="px-6 max-w-3xl mx-auto mb-8 scroll-mt-24">
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
             <div className="text-xs text-gray-400">Select scenario</div>
             <div className="grid grid-cols-2 gap-3">
@@ -443,7 +443,7 @@ export default function AgvControlClient() {
 
       {/* Main demo area */}
       {isOnline && session && (
-        <section className="px-6 max-w-6xl mx-auto mb-10 grid lg:grid-cols-[1fr_360px] gap-6">
+        <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 grid lg:grid-cols-[1fr_360px] gap-6 scroll-mt-24">
 
           {/* Left: robot state */}
           <div className="space-y-4">
