@@ -438,14 +438,13 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           </text>
         ))}
 
-        {/* Subtext — UNKNOWN / NO / "Nobody knows." */}
-        {f.subtext && (
+        {/* Subtext in SVG only for freeze step ("Nobody knows.") */}
+        {f.subtext && !isUnknown && (
           <text x="40" y={(headlineLines.length * (isBig ? 28 : 22)) + 52}
             fill={f.subtextColor ?? GREY}
-            fontFamily={isUnknown ? 'monospace' : 'sans-serif'}
-            fontSize={isUnknown ? 32 : 16}
-            fontWeight={isUnknown ? '200' : '300'}
-            letterSpacing={isUnknown ? '-0.02em' : '0'}>
+            fontFamily="sans-serif"
+            fontSize="16"
+            fontWeight="300">
             {f.subtext}
           </text>
         )}
@@ -458,7 +457,24 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
         ))}
       </svg>
 
-      {/* Below SVG */}
+      {/* UNKNOWN / NO — rendered as HTML for full visual impact */}
+      {isUnknown && f.subtext && (
+        <div className="px-4 pb-1">
+          <div
+            className="font-mono font-extralight tracking-tight"
+            style={{
+              fontSize: 'clamp(3.5rem, 10vw, 5.5rem)',
+              lineHeight: 1,
+              color: f.subtextColor ?? RED,
+              letterSpacing: '-0.03em',
+            }}
+          >
+            {f.subtext}
+          </div>
+        </div>
+      )}
+
+      {/* Below SVG: signal, event note, live rows */}
       <div className="px-4 pb-2 space-y-2">
 
         {/* Underlying signal (steps 1-5) */}
