@@ -306,32 +306,11 @@ export default function AgvControlClient() {
       <section className="px-6 max-w-3xl mx-auto mb-3">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono">Prove it — run live session</div>
       </section>
-      <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 scroll-mt-24">
-        <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
 
-          {/* Left: scen — alltid synlig */}
-          <div>
-            <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">Watch the proof chain</div>
-            <AgvSceneLive
-              events={session?.events ?? []}
-              state={session?.state ?? null}
-              lastVerdict={session?.last_verdict ?? null}
-              seal={seal ? {
-                record_id: seal.record.record_id,
-                execution_verdict: seal.record.execution_verdict,
-                action_applied: seal.record.action_applied,
-                seal_hash: seal.record.seal_hash,
-                final_mission_mode: seal.record.final_mission_mode,
-                final_robot_motion: seal.record.final_robot_motion,
-              } : null}
-              verifyVerdict={seal?.verify.verdict ?? null}
-            />
-          </div>
-
-          {/* Right: kontrollpanel */}
+      {/* Pre-session: kontroll ensamt, ingen idle-robot */}
+      {!session && (
+        <section id="live-chain" className="px-6 max-w-xl mx-auto mb-10 scroll-mt-24">
           <div className="space-y-4">
-
-            {/* Backend-status — kompakt, ingen scroll-separator */}
             {backendStatus === 'checking' && (
               <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 text-center">
                 <p className="text-gray-400 text-xs font-mono">Checking backend…</p>
@@ -345,24 +324,16 @@ export default function AgvControlClient() {
                 <button onClick={retry} className="px-4 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10">Retry</button>
               </div>
             )}
-
-            {/* Scenario-val + Create session (ingen aktiv session) */}
-            {isOnline && !session && (
+            {isOnline && (
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
                 <div className="text-xs text-gray-400">Select scenario</div>
                 <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setScenario('B')}
-                    className={`p-3 rounded-lg border text-left transition-all ${scenario === 'B' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
-                  >
+                  <button onClick={() => setScenario('B')} className={`p-3 rounded-lg border text-left transition-all ${scenario === 'B' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}>
                     <div className="text-xs font-mono mb-1" style={{ color: scenario === 'B' ? '#00ff88' : '#9ca3af' }}>Scenario B — default</div>
                     <div className="text-[11px] text-gray-400">Unsafe continue attempt</div>
                     <div className="text-[11px] font-mono mt-1" style={{ color: '#ef4444' }}>→ DENIED</div>
                   </button>
-                  <button
-                    onClick={() => setScenario('A')}
-                    className={`p-3 rounded-lg border text-left transition-all ${scenario === 'A' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}
-                  >
+                  <button onClick={() => setScenario('A')} className={`p-3 rounded-lg border text-left transition-all ${scenario === 'A' ? 'border-eve-green/40 bg-eve-green/5' : 'border-white/10 bg-white/[0.02]'}`}>
                     <div className="text-xs font-mono mb-1" style={{ color: scenario === 'A' ? '#00ff88' : '#9ca3af' }}>Scenario A</div>
                     <div className="text-[11px] text-gray-400">Safe reroute happy path</div>
                     <div className="text-[11px] font-mono mt-1" style={{ color: '#00ff88' }}>→ ALLOWED</div>
@@ -377,9 +348,36 @@ export default function AgvControlClient() {
                 </div>
               </div>
             )}
+          </div>
+        </section>
+      )}
 
-            {/* Aktiv session — kontrollpanel */}
-            {isOnline && session && (
+      {/* Active session: tvåkolumns-grid med live-scen + kontroll */}
+      <section id="live-chain" className="px-6 max-w-6xl mx-auto mb-10 scroll-mt-24">
+        {session && (
+        <div className="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
+
+          {/* Left: live-scen — bara synlig när session finns */}
+          <div>
+            <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">Watch the proof chain</div>
+            <AgvSceneLive
+              events={session.events}
+              state={session.state}
+              lastVerdict={session.last_verdict}
+              seal={seal ? {
+                record_id: seal.record.record_id,
+                execution_verdict: seal.record.execution_verdict,
+                action_applied: seal.record.action_applied,
+                seal_hash: seal.record.seal_hash,
+                final_mission_mode: seal.record.final_mission_mode,
+                final_robot_motion: seal.record.final_robot_motion,
+              } : null}
+              verifyVerdict={seal?.verify.verdict ?? null}
+            />
+          </div>
+
+          {/* Right: kontrollpanel (aktiv session) */}
+          <div className="space-y-4">
               <>
                 {/* Robot state */}
                 <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
@@ -512,44 +510,10 @@ export default function AgvControlClient() {
                   <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-xs font-mono">{error}</div>
                 )}
               </>
-            )}
 
-            {/* How to read — collapsible, längst ner i panelen */}
-            <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
-              <button
-                onClick={() => setShowGuide((v) => !v)}
-                className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-white/[0.02] transition-colors"
-                aria-expanded={showGuide}
-              >
-                <span className="text-xs text-white/60">How to read this chain</span>
-                <span className="text-gray-500 text-xs font-mono">{showGuide ? '−' : '+'}</span>
-              </button>
-              {showGuide && (
-                <div className="px-5 pb-5 pt-1 border-t border-white/5">
-                  <ol className="space-y-2">
-                    {[
-                      ['1', 'Observe state', 'Robot state + Telemetry.'],
-                      ['2', 'Record event', 'Each observation hashed and appended.'],
-                      ['3', 'Evaluate rule', 'Speed reduction mandatory when human present.'],
-                      ['4', 'Produce verdict', 'ALLOWED / HELD / DENIED.'],
-                      ['5', 'Apply adapter result', 'action_applied: false — EVE records, does not actuate.'],
-                      ['6', 'Seal record', 'Full run hash-sealed into one record ID.'],
-                      ['7', 'Verify record', 'VALID — proof the sealed record is unchanged.'],
-                    ].map(([n, title, desc]) => (
-                      <li key={n} className="flex gap-2">
-                        <span className="shrink-0 w-4 h-4 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green text-[9px] font-mono flex items-center justify-center mt-0.5">{n}</span>
-                        <div>
-                          <span className="text-white/70 text-xs font-mono">{title}</span>
-                          <span className="text-gray-600 text-xs"> — {desc}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Sealed record */}
