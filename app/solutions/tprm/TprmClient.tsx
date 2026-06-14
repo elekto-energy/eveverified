@@ -48,7 +48,7 @@ const ARTEFACTS = [
   },
   {
     title: 'Verification link',
-    desc: 'Anyone can verify the sealed record independently. No login. No trust in us required.',
+    desc: 'Anyone can verify the sealed record cryptographically. No login. No trust in us required.',
   },
   {
     title: 'Gap summary',
@@ -314,7 +314,7 @@ export default function TprmClient() {
           </h2>
           <p className="text-gray-400 mb-10 max-w-xl mx-auto">
             Fixed price, five business days from complete intake, sealed and
-            independently verifiable.
+            cryptographically verifiable.
           </p>
           <a
             href="/pilot"

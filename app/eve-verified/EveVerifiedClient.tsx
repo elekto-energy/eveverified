@@ -236,7 +236,7 @@ export default function EveVerifiedClient() {
               'Evidence is cryptographically signed',
               'The process is deterministic and reproducible',
               'A witness layer observed the operation',
-              'The result can be independently verified',
+              'The result can be cryptographically verified',
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.02] border border-white/5">
                 <span className="text-eve-green">✓</span>

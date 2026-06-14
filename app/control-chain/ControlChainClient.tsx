@@ -61,7 +61,7 @@ const LAYERS = [
   { name: 'EVE Signals',           color: '#a855f7', desc: 'Surfaces authority/accountability/approval-scope gaps before execution continues.' },
   { name: 'EVE Control Room',      color: '#00d4ff', desc: 'Records human authority and decision. EVE surfaces; humans decide.' },
   { name: 'Critical execution layer', color: '#ff6b00', desc: 'Attested control of critical execution, based on the ELEKTO-X lineage.' },
-  { name: 'EVE Bridge / Verify',   color: '#60a5fa', desc: 'Seals the resulting record and makes it independently verifiable.' },
+  { name: 'EVE Bridge / Verify',   color: '#60a5fa', desc: 'Seals the resulting record and makes it cryptographically verifiable.' },
 ]
 
 // ── Main component ───────────────────────────────────────────────────────────
