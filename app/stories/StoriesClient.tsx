@@ -123,7 +123,7 @@ const AGV_STORY: Story = {
     },
     {
       q: 'What was sealed?',
-      a: 'A tamper-evident record: observed state (human_detected: true, distance: 2.4 m), the requested "continue at full speed", the deterministic DENIED verdict, basis (human_proximity_unsafe), and action_applied: false.',
+      a: 'A tamper-evident record: observed state (human_detected: true, distance: 2.4 m), the requested "continue at full speed", the deterministic DENIED verdict, basis (speed_reduction_mandatory_when_human_present), and action_applied: false.',
     },
   ],
   verifyLabel: 'Verify record',
@@ -132,7 +132,7 @@ const AGV_STORY: Story = {
   verifyUrl: 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658',
   verifyPlaceholder: null,
   verifyExplain:
-    'A VALID result proves the sealed DENIED verdict, its basis (human_proximity_unsafe), and action_applied: false are unchanged since sealing.',
+    'A VALID result proves the sealed DENIED verdict, its basis (speed_reduction_mandatory_when_human_present), and action_applied: false are unchanged since sealing.',
   boundaryNote: CONTROL_CHAIN_DISCLAIMER,
 }
 

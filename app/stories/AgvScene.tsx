@@ -94,7 +94,7 @@ const SCENARIO_B: Scenario = {
     { label: 'Unsafe continuation denied.', event: 'unsafe_action_denied', phase: 'red', human: true, motion: false, x: 130, liveKind: 'verdict' },
     { label: 'Mission held — robot stopped.', event: null, eventNote: 'state recorded with the denial', phase: 'red', human: true, motion: false, x: 130, liveKind: 'mission' },
     { label: 'The full run is sealed into one record.', event: 'seal', phase: 'red', human: true, motion: false, x: 130, liveKind: 'seal' },
-    { label: 'Anyone can re-check the seal. No login.', event: null, eventNote: 'cryptographic integrity check', phase: 'red', human: true, motion: false, x: 130, liveKind: 'verify' },
+    { label: 'Anyone can re-check the cryptographic seal. No login.', event: null, eventNote: 'cryptographic integrity check', phase: 'red', human: true, motion: false, x: 130, liveKind: 'verify' },
   ],
 }
 
@@ -115,7 +115,7 @@ const SCENARIO_A: Scenario = {
     { label: 'Safe reroute approved by EVE.', event: 'safe_reroute_approved', phase: 'green', human: true, motion: true, x: 150 },
     { label: 'Mission complete — all steps verified.', event: 'mission_complete', phase: 'green', human: false, motion: false, x: 190, liveKind: 'verdict' },
     { label: 'The full run is sealed into one record.', event: 'seal', phase: 'green', human: false, motion: false, x: 190, liveKind: 'seal' },
-    { label: 'Anyone can re-check the seal. No login.', event: null, eventNote: 'cryptographic integrity check', phase: 'green', human: false, motion: false, x: 190, liveKind: 'verify' },
+    { label: 'Anyone can re-check the cryptographic seal. No login.', event: null, eventNote: 'cryptographic integrity check', phase: 'green', human: false, motion: false, x: 190, liveKind: 'verify' },
   ],
 }
 
