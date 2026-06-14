@@ -28,14 +28,16 @@ interface VerifyData {
   eve_id: string
   seal: string
   chain_seal: string
-  data: {
-    record_id: string
-    execution_verdict: string
-    verdict_basis: string[]
-    action_applied: boolean
-    mission_mode: string
-    robot_motion: string
-    seal_hash: string
+  payload: {
+    data: {
+      record_id: string
+      execution_verdict: string
+      verdict_basis: string[]
+      action_applied: boolean
+      mission_mode: string
+      robot_motion: string
+      seal_hash: string
+    }
   }
 }
 type VerifyState =
@@ -141,7 +143,7 @@ export default function AgvScene({ hideFullChainLink = false }: { hideFullChainL
     const load = (id: string, set: (s: VerifyState) => void) => {
       fetch(VERIFY_API(id), { cache: 'no-store' })
         .then((r) => r.json())
-        .then((j: VerifyData) => { if (alive) set(j?.valid === true && j?.data ? { status: 'ok', d: j } : { status: 'error', reason: 'record did not verify' }) })
+        .then((j: VerifyData) => { if (alive) set(j?.valid === true && j?.payload?.data ? { status: 'ok', d: j } : { status: 'error', reason: 'record did not verify' }) })
         .catch(() => { if (alive) set({ status: 'error', reason: 'verify backend unreachable' }) })
     }
     load(SCENARIO_B.eveId, setVerifyB)
@@ -182,22 +184,22 @@ export default function AgvScene({ hideFullChainLink = false }: { hideFullChainL
     const d = verify.d
     switch (f.liveKind) {
       case 'basis':
-        return { rows: [{ k: 'rule basis', v: d.data.verdict_basis[0] ?? '—', c: AMBER }], pending: false, isLive: true }
+        return { rows: [{ k: 'rule basis', v: d.payload.data.verdict_basis[0] ?? '—', c: AMBER }], pending: false, isLive: true }
       case 'verdict':
         return {
           rows: [
-            { k: 'execution_verdict', v: d.data.execution_verdict, c: verdictColor(d.data.execution_verdict) },
-            { k: 'action_applied', v: String(d.data.action_applied), c: d.data.action_applied ? GREEN : RED },
+            { k: 'execution_verdict', v: d.payload.data.execution_verdict, c: verdictColor(d.payload.data.execution_verdict) },
+            { k: 'action_applied', v: String(d.payload.data.action_applied), c: d.payload.data.action_applied ? GREEN : RED },
           ], pending: false, isLive: true,
         }
       case 'mission':
-        return { rows: [{ k: 'mission_mode', v: d.data.mission_mode, c: verdictColor(scenario.outcome) }, { k: 'robot_motion', v: d.data.robot_motion, c: GREY }], pending: false, isLive: true }
+        return { rows: [{ k: 'mission_mode', v: d.payload.data.mission_mode, c: verdictColor(scenario.outcome) }, { k: 'robot_motion', v: d.payload.data.robot_motion, c: GREY }], pending: false, isLive: true }
       case 'seal':
         return {
           rows: [
-            { k: 'adapter record', v: d.data.record_id },
+            { k: 'adapter record', v: d.payload.data.record_id },
             { k: 'bridge record', v: d.eve_id, c: '#e5e7eb' },
-            { k: 'adapter seal_hash', v: short(d.data.seal_hash) },
+            { k: 'adapter seal_hash', v: short(d.payload.data.seal_hash) },
             { k: 'bridge seal', v: short(d.seal) },
             { k: 'chain seal', v: short(d.chain_seal) },
           ], pending: false, isLive: true,
