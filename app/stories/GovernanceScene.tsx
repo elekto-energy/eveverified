@@ -67,6 +67,7 @@ interface Frame {
   broken: boolean
   human: boolean
   isPremise: boolean
+  isConsequence?: boolean   // steps 7-9: scenario consequence, not live data
   hideFromLog?: boolean     // step 6: not numbered in the log
   freeze?: boolean          // step 6: FREEZE_MS
   unknown?: boolean         // steps 7-9: UNKNOWN_MS
@@ -143,7 +144,7 @@ const FRAMES: Frame[] = [
     detail: [],
     event: null,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
-    unknown: true,
+    unknown: true, isConsequence: true,
   },
 
   {
@@ -155,7 +156,7 @@ const FRAMES: Frame[] = [
     detail: [],
     event: null,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
-    unknown: true,
+    unknown: true, isConsequence: true,
   },
 
   {
@@ -167,7 +168,7 @@ const FRAMES: Frame[] = [
     detail: [],
     event: null,
     phase: 'red', links: 5, broken: true, human: false, isPremise: true,
-    unknown: true,
+    unknown: true, isConsequence: true,
   },
 
   // ── LIVE FROM RECORD ──────────────────────────────────────────────────────
@@ -381,10 +382,16 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           STEP {i + 1} OF {TOTAL}
         </span>
         <div className="flex items-center gap-2">
-          {f.isPremise && (
+          {f.isPremise && !f.isConsequence && (
             <span className="text-[9px] font-mono px-2 py-0.5 rounded"
               style={{ color: GREY, background: '#ffffff07', border: '1px solid #ffffff0e' }}>
               Scenario premise — illustrative
+            </span>
+          )}
+          {f.isConsequence && (
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded"
+              style={{ color: AMBER, background: '#f59e0b08', border: '1px solid #f59e0b20' }}>
+              Scenario consequence — illustrative
             </span>
           )}
           <span className="text-[10px] font-mono tracking-[0.12em]" style={{ color: col }}>
