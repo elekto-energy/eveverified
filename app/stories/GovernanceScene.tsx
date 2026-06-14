@@ -463,7 +463,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           <div
             className="font-mono font-extralight tracking-tight"
             style={{
-              fontSize: 'clamp(3.5rem, 10vw, 5.5rem)',
+              fontSize: 'clamp(5rem, 14vw, 8rem)',
               lineHeight: 1,
               color: f.subtextColor ?? RED,
               letterSpacing: '-0.03em',
@@ -514,7 +514,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
       </div>
 
       {/* Decision chain log */}
-      <div className="px-4 pb-3">
+      <div className="px-4 pb-3" style={{ opacity: isUnknown ? 0.3 : 1, transition: 'opacity .4s' }}>
         <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-2">
           DECISION CHAIN — what happened ({builtEvents.length})
         </div>
