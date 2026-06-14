@@ -1,255 +1,346 @@
 'use client'
 
-// EVE Control Chain — AGV scene (proof-of-concept narrative)
-// Visual rendering of the AGV control-chain verdict for the warehouse-robot demo.
-// Steps mirror SCENARIO_B_STEPS in AgvControlClient.tsx exactly — nothing invented.
-//   mission_start → route_assigned (FULL_SPEED) → human_detected @ 2.4 m
-//   → continue_at_full_speed (unsafe intent recorded FIRST) → DENIED (action_applied: false, HTTP 409, MISSION_HELD)
-// No WebGL, no canvas, no three.js. Pure SVG + requestAnimationFrame. prefers-reduced-motion aware.
-// Scene = visual explanation. Verify button links to the real Bridge-sealed record.
-// EVE-CTRL-AGV-00004658 sealed 2026-06-13, bridges ctrl-poc record EVE-CTRL-AGV-000013, DENIED, action_applied: false.
-import { useEffect, useRef, useState } from 'react'
+// EVE Control Chain — AGV proof timeline (v3)
+// Renders the REAL backend chain. Two scenarios, each backed by a real sealed Bridge record:
+//   Scenario A (ALLOWED): EVE-CTRL-AGV-00004660  — safe reroute, action_applied: true
+//   Scenario B (DENIED):  EVE-CTRL-AGV-00004658  — unsafe continue, action_applied: false
+//
+// The event TYPES below are the stable Scenario A/B definitions (same every run — they are the
+// scenario). The verdict, action_applied, mission state, record IDs, hashes and the VALID badge
+// are fetched LIVE at mount from the verify endpoint for each scenario's Bridge record.
+// If a fetch fails or valid!=true, the verdict/record/verify rows show "verifying…" /
+// "could not verify" — never a hardcoded VALID. No per-event hashes are fabricated.
+import { useEffect, useRef, useState, useCallback } from 'react'
 
-const VERIFY_URL = 'https://verify.eveverified.com/?id=EVE-CTRL-AGV-00004658'
 const CHAIN_URL = '/control-chain/agv'
+const STEP_MS = 1500
 
-const GREEN = '#00ff88' // FULL_SPEED
-const AMBER = '#f59e0b' // unsafe intent
-const RED = '#ef4444' // DENIED
+const GREEN = '#00ff88'
+const AMBER = '#f59e0b'
+const RED = '#ef4444'
+const GREY = '#9ca3af'
 
-interface StepDef {
-  n: string
-  cap: string
-  sub: string
-  ev: { t: string; c: string } | null
+type Phase = 'green' | 'amber' | 'red'
+type Row = { k: string; v: string; c?: string }
+
+interface VerifyData {
+  valid: boolean
+  eve_id: string
+  seal: string
+  chain_seal: string
+  data: {
+    record_id: string
+    execution_verdict: string
+    verdict_basis: string[]
+    action_applied: boolean
+    mission_mode: string
+    robot_motion: string
+    seal_hash: string
+  }
+}
+type VerifyState =
+  | { status: 'loading' }
+  | { status: 'ok'; d: VerifyData }
+  | { status: 'error'; reason: string }
+
+function short(h: string) { return h && h.length > 16 ? `${h.slice(0, 8)}…${h.slice(-8)}` : h }
+function verdictColor(v: string) {
+  if (v === 'ALLOWED' || v === 'VALID') return GREEN
+  if (v === 'HELD') return AMBER
+  if (v === 'DENIED') return RED
+  return GREY
 }
 
-// Mirror of SCENARIO_B_STEPS + the 409/DENIED outcome.
-const STEPS: StepDef[] = [
-  { n: 'STEP 1 / 4', cap: 'Mission start — EVE opens a session.', sub: 'mission_mode: MISSION_ACTIVE', ev: null },
-  { n: 'STEP 2 / 4', cap: 'Route A assigned — motion begins at full speed.', sub: 'robot_motion: FULL_SPEED', ev: null },
-  { n: 'STEP 3 / 4', cap: 'Human worker detected at 2.4 m.', sub: 'human_detected: true · proximity event hashed', ev: { t: 'human_proximity_detected', c: '#fca5a5' } },
-  { n: 'STEP 4 / 4', cap: 'Operator requests: continue at full speed.', sub: 'unsafe intent recorded to chain FIRST, then evaluated', ev: { t: 'unsafe_action_requested', c: RED } },
-  { n: 'VERDICT', cap: 'EVE evaluates the governed conditions — and denies.', sub: '', ev: { t: 'unsafe_action_denied', c: RED } },
-]
+// ── Scenario step = one frame in the real chain ──────────────────────────────
+// `event` is the real event type recorded to the backend chain (stable per scenario).
+// Visual state (phase/human/motion/x) is how we render that frame.
+interface Frame {
+  label: string
+  event: string | null      // real event type, or null for evaluation/verify frames
+  eventNote?: string
+  phase: Phase
+  human: boolean
+  motion: boolean
+  x: number
+  // which live field(s) to show on this frame, if any (filled from verify at render)
+  liveKind?: 'verdict' | 'mission' | 'seal' | 'verify' | 'basis'
+}
+
+interface Scenario {
+  id: 'A' | 'B'
+  name: string
+  eveId: string
+  outcome: 'ALLOWED' | 'DENIED'
+  frames: Frame[]
+}
+
+const VERIFY_API = (id: string) => `https://api.eveverified.com/eve/verify/${id}`
+const VERIFY_URL = (id: string) => `https://verify.eveverified.com/?id=${id}`
+
+// Scenario B — unsafe continue → DENIED (EVE-CTRL-AGV-00004658)
+const SCENARIO_B: Scenario = {
+  id: 'B',
+  name: 'Unsafe continue',
+  eveId: 'EVE-CTRL-AGV-00004658',
+  outcome: 'DENIED',
+  frames: [
+    { label: 'Mission started — EVE opens a session.', event: 'mission_start', phase: 'green', human: false, motion: false, x: 0 },
+    { label: 'Route assigned — motion begins at full speed.', event: 'route_assigned', phase: 'green', human: false, motion: true, x: 60 },
+    { label: 'Human worker detected at 2.4 m.', event: 'human_detected', eventNote: '→ HUMAN_PROXIMITY_DETECTED', phase: 'green', human: true, motion: true, x: 130 },
+    { label: 'Operator requests: continue at full speed.', event: 'unsafe_action_requested', eventNote: 'intent recorded FIRST', phase: 'amber', human: true, motion: true, x: 130 },
+    { label: 'EVE evaluates the governed rule.', event: null, eventNote: 'evaluation · no event hash', phase: 'amber', human: true, motion: true, x: 130, liveKind: 'basis' },
+    { label: 'Unsafe continuation denied.', event: 'unsafe_action_denied', phase: 'red', human: true, motion: false, x: 130, liveKind: 'verdict' },
+    { label: 'Mission held — robot stopped.', event: null, eventNote: 'state recorded with the denial', phase: 'red', human: true, motion: false, x: 130, liveKind: 'mission' },
+    { label: 'The full run is sealed into one record.', event: 'seal', phase: 'red', human: true, motion: false, x: 130, liveKind: 'seal' },
+    { label: 'Anyone can re-check the seal. No login.', event: null, eventNote: 'independent integrity check', phase: 'red', human: true, motion: false, x: 130, liveKind: 'verify' },
+  ],
+}
+
+// Scenario A — safe reroute → ALLOWED (EVE-CTRL-AGV-00004660)
+const SCENARIO_A: Scenario = {
+  id: 'A',
+  name: 'Safe reroute',
+  eveId: 'EVE-CTRL-AGV-00004660',
+  outcome: 'ALLOWED',
+  frames: [
+    { label: 'Mission started — EVE opens a session.', event: 'mission_start', phase: 'green', human: false, motion: false, x: 0 },
+    { label: 'Route assigned — motion begins at full speed.', event: 'route_assigned', phase: 'green', human: false, motion: true, x: 50 },
+    { label: 'Human worker detected at 2.4 m.', event: 'human_detected', eventNote: '→ HUMAN_PROXIMITY_DETECTED', phase: 'green', human: true, motion: true, x: 110 },
+    { label: 'Speed reduced for human proximity.', event: 'speed_reduced', phase: 'amber', human: true, motion: true, x: 120 },
+    { label: 'Obstacle detected in current path.', event: 'obstacle_detected', phase: 'amber', human: true, motion: false, x: 130 },
+    { label: 'Reroute requested — mission held for authority check.', event: 'reroute_requested', phase: 'amber', human: true, motion: false, x: 130 },
+    { label: 'Authority confirmed.', event: 'authority_checked', phase: 'amber', human: true, motion: false, x: 130 },
+    { label: 'Safe reroute approved by EVE.', event: 'safe_reroute_approved', phase: 'green', human: true, motion: true, x: 150 },
+    { label: 'Mission complete — all steps verified.', event: 'mission_complete', phase: 'green', human: false, motion: false, x: 190, liveKind: 'verdict' },
+    { label: 'The full run is sealed into one record.', event: 'seal', phase: 'green', human: false, motion: false, x: 190, liveKind: 'seal' },
+    { label: 'Anyone can re-check the seal. No login.', event: null, eventNote: 'independent integrity check', phase: 'green', human: false, motion: false, x: 190, liveKind: 'verify' },
+  ],
+}
+
+const SCENARIOS: Record<'A' | 'B', Scenario> = { A: SCENARIO_A, B: SCENARIO_B }
+
+function phaseColor(p: Phase) { return p === 'green' ? GREEN : p === 'amber' ? AMBER : RED }
 
 export default function AgvScene() {
-  const svgRef = useRef<SVGSVGElement | null>(null)
-  const verifyRef = useRef<HTMLAnchorElement | null>(null)
-  const chainRef = useRef<HTMLAnchorElement | null>(null)
-  const playRef = useRef<(() => void) | null>(null)
-  const [hasPlayed, setHasPlayed] = useState(false)
+  const [scenarioId, setScenarioId] = useState<'A' | 'B'>('B')
+  const [i, setI] = useState(0)
+  const [playing, setPlaying] = useState(true)
+  const [started, setStarted] = useState(false)
+  const [verifyB, setVerifyB] = useState<VerifyState>({ status: 'loading' })
+  const [verifyA, setVerifyA] = useState<VerifyState>({ status: 'loading' })
+  const reduceRef = useRef(false)
+  const timerRef = useRef<number | null>(null)
 
+  const scenario = SCENARIOS[scenarioId]
+  const verify = scenarioId === 'B' ? verifyB : verifyA
+  const TOTAL = scenario.frames.length
+
+  // Live verify fetch for both records at mount
   useEffect(() => {
-    const svg = svgRef.current
-    if (!svg) return
-
-    const byId = (id: string) => svg.querySelector(`#${id}`)
-    const robot = byId('ag-robot') as SVGGElement | null
-    const motion = byId('ag-motion') as SVGGElement | null
-    const human = byId('ag-human') as SVGGElement | null
-    const dist = byId('ag-dist') as SVGGElement | null
-    const stepEl = byId('ag-step') as SVGTextElement | null
-    const capEl = byId('ag-cap') as SVGTextElement | null
-    const subEl = byId('ag-sub') as SVGTextElement | null
-    const eventsG = byId('ag-events') as SVGGElement | null
-    const verdict = byId('ag-verdict') as SVGGElement | null
-    const verifyLink = verifyRef.current
-    const chainLink = chainRef.current
-    const robotShell = robot ? robot.querySelector('rect') : null
-    const wheels = robot ? Array.from(robot.querySelectorAll('circle')) : []
-
-    if (!robot || !motion || !human || !dist || !stepEl || !capEl || !subEl || !eventsG || !verdict || !verifyLink || !chainLink || !robotShell) {
-      return
+    let alive = true
+    const load = (id: string, set: (s: VerifyState) => void) => {
+      fetch(VERIFY_API(id), { cache: 'no-store' })
+        .then((r) => r.json())
+        .then((j: VerifyData) => { if (alive) set(j?.valid === true && j?.data ? { status: 'ok', d: j } : { status: 'error', reason: 'record did not verify' }) })
+        .catch(() => { if (alive) set({ status: 'error', reason: 'verify backend unreachable' }) })
     }
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    let timers: number[] = []
-    let raf = 0
-    let curX = 0
-    let evY = 318
-
-    const clear = () => { timers.forEach((t) => window.clearTimeout(t)); timers = []; if (raf) cancelAnimationFrame(raf) }
-    const at = (ms: number, fn: () => void) => { timers.push(window.setTimeout(fn, ms)) }
-
-    const addEvent = (seq: number, ev: { t: string; c: string }) => {
-      const row = document.createElementNS('http://www.w3.org/2000/svg', 'text')
-      row.setAttribute('x', '40'); row.setAttribute('y', String(evY))
-      row.setAttribute('fill', ev.c); row.setAttribute('font-family', 'monospace'); row.setAttribute('font-size', '11')
-      row.style.opacity = '0'
-      row.innerHTML = `#${seq}  ${ev.t}   <tspan fill="#4b5563">recorded to control chain</tspan>`
-      eventsG.appendChild(row)
-      requestAnimationFrame(() => { row.style.transition = 'opacity .4s'; row.style.opacity = '1' })
-      evY += 16
-    }
-
-    const glideTo = (dx: number, dur: number) => {
-      if (reduce) { robot.setAttribute('transform', `translate(${dx},0)`); return }
-      const from = curX; const to = dx; let start: number | null = null
-      const frame = (ts: number) => {
-        if (start === null) start = ts
-        const p = Math.min((ts - start) / dur, 1)
-        const e = 1 - Math.pow(1 - p, 3)
-        const x = from + (to - from) * e
-        robot.setAttribute('transform', `translate(${x},0)`); curX = x
-        if (p < 1) raf = requestAnimationFrame(frame)
-      }
-      raf = requestAnimationFrame(frame)
-    }
-
-    const applyStep = (i: number) => {
-      const s = STEPS[i]!
-      stepEl.textContent = s.n; capEl.textContent = s.cap; subEl.textContent = s.sub
-      if (i === 1) { motion.style.transition = 'opacity .3s'; motion.style.opacity = '1' }
-      if (i === 2) {
-        dist.style.transition = 'opacity .4s'; dist.style.opacity = '1'
-        human.style.transition = 'opacity .4s'; human.style.opacity = '1'
-      }
-      if (i === 3) {
-        robotShell.setAttribute('stroke', AMBER)
-        wheels.forEach((w) => w.setAttribute('stroke', AMBER))
-      }
-      if (i === 4) {
-        robotShell.setAttribute('stroke', RED)
-        wheels.forEach((w) => w.setAttribute('stroke', RED))
-        motion.style.opacity = '0'
-        verdict.style.transition = 'opacity .5s'; verdict.style.opacity = '1'
-        verifyLink.style.transition = 'opacity .5s'; verifyLink.style.opacity = '1'; verifyLink.style.pointerEvents = 'auto'
-        chainLink.style.transition = 'opacity .5s'; chainLink.style.opacity = '1'; chainLink.style.pointerEvents = 'auto'
-      }
-      if (s.ev) addEvent(i + 1, s.ev)
-    }
-
-    const reset = () => {
-      clear()
-      stepEl.textContent = ''; capEl.textContent = ''; subEl.textContent = ''
-      eventsG.innerHTML = ''; evY = 318; curX = 0
-      motion.style.opacity = '0'; human.style.opacity = '0'; dist.style.opacity = '0'
-      verdict.style.opacity = '0'; verifyLink.style.opacity = '0'; verifyLink.style.pointerEvents = 'none'
-      chainLink.style.opacity = '0'; chainLink.style.pointerEvents = 'none'
-      robotShell.setAttribute('stroke', GREEN)
-      wheels.forEach((w) => w.setAttribute('stroke', GREEN))
-      robot.setAttribute('transform', 'translate(0,0)')
-    }
-
-    const play = () => {
-      reset()
-      if (reduce) {
-        for (let k = 0; k < STEPS.length; k++) { const s = STEPS[k]!; if (s.ev) addEvent(k + 1, s.ev) }
-        applyStep(4)
-        robot.setAttribute('transform', 'translate(140,0)')
-        return
-      }
-      at(150, () => applyStep(0))
-      at(1500, () => { applyStep(1); glideTo(70, 1400) })
-      at(3200, () => applyStep(2))
-      at(3300, () => glideTo(140, 1200))
-      at(4900, () => applyStep(3))
-      at(6300, () => applyStep(4))
-    }
-
-    playRef.current = play
-    // Render the initial (static) frame — STEP 1 setup, no motion. Do NOT autoplay.
-    reset()
-    applyStep(0)
-    return () => clear()
+    load(SCENARIO_B.eveId, setVerifyB)
+    load(SCENARIO_A.eveId, setVerifyA)
+    return () => { alive = false }
   }, [])
 
-  const startPlay = () => {
-    setHasPlayed(true)
-    playRef.current?.()
+  useEffect(() => {
+    reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceRef.current) { setPlaying(false); setStarted(true) }
+  }, [])
+
+  useEffect(() => {
+    if (!playing) return
+    if (i >= TOTAL - 1) { setPlaying(false); return }
+    timerRef.current = window.setTimeout(() => { setStarted(true); setI((n) => Math.min(n + 1, TOTAL - 1)) }, started ? STEP_MS : STEP_MS * 0.5)
+    return () => { if (timerRef.current) window.clearTimeout(timerRef.current) }
+  }, [playing, i, started, TOTAL])
+
+  const goto = useCallback((n: number) => { setPlaying(false); setStarted(true); setI(Math.max(0, Math.min(n, TOTAL - 1))) }, [TOTAL])
+  const togglePlay = useCallback(() => {
+    setStarted(true)
+    if (i >= TOTAL - 1) { setI(0); setPlaying(true); return }
+    setPlaying((p) => !p)
+  }, [i, TOTAL])
+  const switchScenario = useCallback((id: 'A' | 'B') => { setScenarioId(id); setI(0); setPlaying(true); setStarted(false) }, [])
+
+  const f = scenario.frames[Math.min(i, TOTAL - 1)]!
+  const isLast = i === TOTAL - 1
+  const robotColor = phaseColor(f.phase)
+  const linkVisible = i >= TOTAL - 2 // last two frames
+
+  // Build live rows for the current frame from the scenario's verify record
+  function liveRows(): { rows: Row[]; pending: boolean; isLive: boolean } {
+    if (!f.liveKind) return { rows: [], pending: false, isLive: false }
+    if (verify.status === 'loading') return { rows: [], pending: true, isLive: true }
+    if (verify.status === 'error') return { rows: [{ k: 'verify', v: `could not verify — ${verify.reason}`, c: GREY }], pending: false, isLive: true }
+    const d = verify.d
+    switch (f.liveKind) {
+      case 'basis':
+        return { rows: [{ k: 'rule basis', v: d.data.verdict_basis[0] ?? '—', c: AMBER }], pending: false, isLive: true }
+      case 'verdict':
+        return {
+          rows: [
+            { k: 'execution_verdict', v: d.data.execution_verdict, c: verdictColor(d.data.execution_verdict) },
+            { k: 'action_applied', v: String(d.data.action_applied), c: d.data.action_applied ? GREEN : RED },
+          ], pending: false, isLive: true,
+        }
+      case 'mission':
+        return { rows: [{ k: 'mission_mode', v: d.data.mission_mode, c: verdictColor(scenario.outcome) }, { k: 'robot_motion', v: d.data.robot_motion, c: GREY }], pending: false, isLive: true }
+      case 'seal':
+        return {
+          rows: [
+            { k: 'adapter record', v: d.data.record_id },
+            { k: 'bridge record', v: d.eve_id, c: '#e5e7eb' },
+            { k: 'adapter seal_hash', v: short(d.data.seal_hash) },
+            { k: 'bridge seal', v: short(d.seal) },
+            { k: 'chain seal', v: short(d.chain_seal) },
+          ], pending: false, isLive: true,
+        }
+      case 'verify':
+        return { rows: [{ k: 'verify', v: d.valid ? 'VALID' : 'INVALID', c: d.valid ? GREEN : RED }], pending: false, isLive: true }
+    }
   }
+  const { rows, pending, isLive } = liveRows()
 
   return (
     <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: '#0a0e14' }}>
-      <svg viewBox="0 0 680 360" role="img" ref={svgRef} className="block w-full" aria-label="Animated scene: an autonomous warehouse robot requests full speed with a human detected at 2.4 m; the unsafe command is recorded to the chain, then EVE returns a DENIED verdict with action_applied false.">
-        <title>AGV unsafe continue denied — verdict chain</title>
-        <desc>Robot moving along an aisle, human detected at 2.4 metres, full-speed command recorded then denied.</desc>
+      {/* Scenario switch */}
+      <div className="flex items-center gap-2 px-4 pt-3">
+        {(['B', 'A'] as const).map((id) => {
+          const sc = SCENARIOS[id]
+          const active = scenarioId === id
+          const col = sc.outcome === 'ALLOWED' ? GREEN : RED
+          return (
+            <button key={id} onClick={() => switchScenario(id)}
+              className="text-[11px] font-mono px-3 py-1.5 rounded-full border transition-colors"
+              style={{ color: active ? col : GREY, borderColor: active ? `${col}55` : '#ffffff14', background: active ? `${col}12` : '#ffffff05' }}>
+              {sc.name} → {sc.outcome}
+            </button>
+          )
+        })}
+      </div>
 
-        <line x1="40" y1="250" x2="640" y2="250" stroke="#1f2630" strokeWidth="1" />
-        <line x1="40" y1="190" x2="640" y2="190" stroke="#1f2630" strokeWidth="0.5" strokeDasharray="4 6" />
+      {/* Step counter */}
+      <div className="flex items-center justify-between px-4 pt-3">
+        <span className="text-[10px] font-mono tracking-[0.16em] text-gray-500">STEP {i + 1} OF {TOTAL}</span>
+        <span className="text-[10px] font-mono tracking-[0.12em]" style={{ color: robotColor }}>
+          {f.phase === 'green' ? 'SAFE' : f.phase === 'amber' ? 'CAUTION' : 'DENIED'}
+        </span>
+      </div>
 
-        <g id="ag-dist" opacity="0">
-          <line x1="250" y1="222" x2="430" y2="222" stroke={RED} strokeWidth="0.5" strokeDasharray="3 3" />
-          <line x1="250" y1="216" x2="250" y2="228" stroke={RED} strokeWidth="0.5" />
-          <line x1="430" y1="216" x2="430" y2="228" stroke={RED} strokeWidth="0.5" />
-          <text x="340" y="214" textAnchor="middle" fill={RED} fontFamily="monospace" fontSize="11">2.4 m</text>
-        </g>
+      {/* SVG scene */}
+      <svg viewBox="0 0 680 240" role="img" className="block w-full" aria-label={`Scenario ${scenarioId}, step ${i + 1} of ${TOTAL}: ${f.label}`}>
+        <title>AGV proof timeline — scenario {scenarioId}, step {i + 1} of {TOTAL}</title>
+        <line x1="40" y1="180" x2="640" y2="180" stroke="#1f2630" strokeWidth="1" />
+        <line x1="40" y1="132" x2="640" y2="132" stroke="#1f2630" strokeWidth="0.5" strokeDasharray="4 6" />
 
-        <g id="ag-human" opacity="0">
-          <circle cx="445" cy="208" r="9" fill="none" stroke={RED} strokeWidth="1.5" />
-          <line x1="445" y1="217" x2="445" y2="240" stroke={RED} strokeWidth="1.5" />
-          <line x1="445" y1="224" x2="436" y2="234" stroke={RED} strokeWidth="1.5" />
-          <line x1="445" y1="224" x2="454" y2="234" stroke={RED} strokeWidth="1.5" />
-          <line x1="445" y1="240" x2="437" y2="250" stroke={RED} strokeWidth="1.5" />
-          <line x1="445" y1="240" x2="453" y2="250" stroke={RED} strokeWidth="1.5" />
-        </g>
-
-        <g id="ag-robot">
-          <rect x="190" y="212" width="44" height="30" rx="4" fill="#0f1620" stroke={GREEN} strokeWidth="1.2" />
-          <rect x="198" y="219" width="12" height="8" rx="2" fill={GREEN} opacity="0.85" />
-          <circle cx="200" cy="246" r="4.5" fill="none" stroke={GREEN} strokeWidth="1.2" />
-          <circle cx="224" cy="246" r="4.5" fill="none" stroke={GREEN} strokeWidth="1.2" />
-          <g id="ag-motion" opacity="0">
-            <line x1="176" y1="220" x2="186" y2="220" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="172" y1="227" x2="184" y2="227" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="176" y1="234" x2="186" y2="234" stroke={GREEN} strokeWidth="1.5" strokeLinecap="round" />
-          </g>
-        </g>
-
-        <text id="ag-step" x="40" y="40" fill="#9ca3af" fontFamily="monospace" fontSize="11" letterSpacing="0.12em">STEP 1 / 4</text>
-        <text id="ag-cap" x="40" y="64" fill="#e5e7eb" fontFamily="sans-serif" fontSize="15">Mission start — EVE opens a session.</text>
-        <text id="ag-sub" x="40" y="86" fill="#6b7280" fontFamily="monospace" fontSize="11"></text>
-
-        <text x="40" y="300" fill="#4b5563" fontFamily="monospace" fontSize="10" letterSpacing="0.12em">EVENT CHAIN — hashed, append-only</text>
-        <g id="ag-events" fontFamily="monospace" fontSize="11"></g>
-
-        <g id="ag-verdict" opacity="0">
-          <rect x="40" y="110" width="600" height="92" rx="10" fill="#ef44440f" stroke="#ef444455" strokeWidth="0.5" />
-          <text x="60" y="140" fill={RED} fontFamily="monospace" fontSize="22" fontWeight="500">DENIED</text>
-          <text x="60" y="164" fill="#9ca3af" fontFamily="monospace" fontSize="11">basis: human_proximity_unsafe</text>
-          <text x="60" y="184" fill="#9ca3af" fontFamily="monospace" fontSize="11">action_applied: <tspan fill={RED}>false</tspan>  ·  HTTP 409  ·  mission: <tspan fill={RED}>HELD</tspan></text>
-        </g>
-
-        {!hasPlayed && (
-          <g onClick={startPlay} style={{ cursor: 'pointer' }} role="button" aria-label="Play scene">
-            <rect x="0" y="0" width="680" height="360" fill="#0a0e14" opacity="0.55" />
-            <circle cx="340" cy="180" r="34" fill="#0f1620" stroke={GREEN} strokeWidth="1.5" />
-            <path d="M331 165 L331 195 L356 180 Z" fill={GREEN} />
-            <text x="340" y="238" textAnchor="middle" fill="#e5e7eb" fontFamily="monospace" fontSize="12" letterSpacing="0.12em">PLAY SCENE</text>
+        {f.human && (
+          <g>
+            <line x1="250" y1="154" x2="430" y2="154" stroke={RED} strokeWidth="0.5" strokeDasharray="3 3" />
+            <text x="340" y="146" textAnchor="middle" fill={RED} fontFamily="monospace" fontSize="11">2.4 m</text>
+            <circle cx="445" cy="140" r="9" fill="none" stroke={RED} strokeWidth="1.5" />
+            <line x1="445" y1="149" x2="445" y2="172" stroke={RED} strokeWidth="1.5" />
+            <line x1="445" y1="156" x2="436" y2="166" stroke={RED} strokeWidth="1.5" />
+            <line x1="445" y1="156" x2="454" y2="166" stroke={RED} strokeWidth="1.5" />
+            <line x1="445" y1="172" x2="437" y2="182" stroke={RED} strokeWidth="1.5" />
+            <line x1="445" y1="172" x2="453" y2="182" stroke={RED} strokeWidth="1.5" />
           </g>
         )}
+
+        <g style={{ transform: `translateX(${f.x}px)`, transition: reduceRef.current ? 'none' : 'transform .9s ease-out' }}>
+          <rect x="190" y="142" width="44" height="30" rx="4" fill="#0f1620" stroke={robotColor} strokeWidth="1.4" style={{ transition: 'stroke .4s' }} />
+          <rect x="198" y="149" width="12" height="8" rx="2" fill={robotColor} opacity="0.85" style={{ transition: 'fill .4s' }} />
+          <circle cx="200" cy="176" r="4.5" fill="none" stroke={robotColor} strokeWidth="1.2" style={{ transition: 'stroke .4s' }} />
+          <circle cx="224" cy="176" r="4.5" fill="none" stroke={robotColor} strokeWidth="1.2" style={{ transition: 'stroke .4s' }} />
+          {f.motion && (
+            <g>
+              <line x1="176" y1="150" x2="186" y2="150" stroke={robotColor} strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="172" y1="157" x2="184" y2="157" stroke={robotColor} strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="176" y1="164" x2="186" y2="164" stroke={robotColor} strokeWidth="1.5" strokeLinecap="round" />
+            </g>
+          )}
+        </g>
+
+        <text x="40" y="40" fill="#e5e7eb" fontFamily="sans-serif" fontSize="15">{f.label}</text>
       </svg>
 
-      <div className="flex items-center justify-between gap-3 px-4 py-3 border-t border-white/10">
-        <button
-          onClick={startPlay}
-          className="inline-flex items-center gap-2 text-xs font-mono px-4 py-2 rounded-full border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 transition-colors"
-        >
-          <span aria-hidden="true">{hasPlayed ? '↻' : '▶'}</span> {hasPlayed ? 'Replay' : 'Play scene'}
-        </button>
-        <div className="flex items-center gap-2">
-          <a
-            ref={chainRef}
-            href={CHAIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
-            style={{ opacity: 0, pointerEvents: 'none', color: '#9ca3af', borderColor: '#ffffff20', background: '#ffffff08' }}
-          >
-            See full chain →
-          </a>
-          <a
-            ref={verifyRef}
-            href={VERIFY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
-            style={{ opacity: 0, pointerEvents: 'none', color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}
-          >
-            Verify record →
-          </a>
+      {/* Detail rows */}
+      <div className="px-4 pb-2">
+        <div className="text-[10px] font-mono tracking-[0.12em] text-gray-600 mb-1">EVENT</div>
+        {f.event ? (
+          <div className="text-[12px] font-mono mb-3">
+            <span style={{ color: f.phase === 'red' ? '#fca5a5' : '#e5e7eb' }}>{f.event}</span>
+            <span className="text-gray-600"> recorded to control chain</span>
+            {f.eventNote && <span className="text-gray-600"> · {f.eventNote}</span>}
+          </div>
+        ) : (
+          <div className="text-[12px] font-mono mb-3 text-gray-500 italic">{f.eventNote ?? 'no event recorded'}</div>
+        )}
+
+        {f.liveKind && (
+          <>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono tracking-[0.12em] text-gray-600">LIVE FROM VERIFY</span>
+              {isLive && !pending && verify.status === 'ok' && (
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded" style={{ color: GREEN, background: '#00ff8814' }}>
+                  fetched · {scenario.eveId}
+                </span>
+              )}
+            </div>
+            {pending ? (
+              <div className="text-[12px] font-mono mb-2 text-gray-500 italic">verifying…</div>
+            ) : (
+              <div className="space-y-0.5 mb-2">
+                {rows.map((d) => (
+                  <div key={d.k} className="flex items-baseline gap-2 text-[12px] font-mono">
+                    <span className="text-gray-500">{d.k}:</span>
+                    <span style={{ color: d.c ?? '#d1d5db' }}>{d.v}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Controls */}
+      <div className="border-t border-white/10 px-4 py-3 space-y-3">
+        <div className="flex items-center justify-center gap-1.5">
+          {scenario.frames.map((_, n) => (
+            <button key={n} onClick={() => goto(n)} aria-label={`Go to step ${n + 1}`}
+              className="h-2 rounded-full transition-all"
+              style={{ width: n === i ? 18 : 8, background: n === i ? phaseColor(f.phase) : n < i ? '#4b5563' : '#252c38' }} />
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <button onClick={() => goto(i - 1)} disabled={i === 0} aria-label="Previous step"
+              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">◀</button>
+            <button onClick={togglePlay}
+              className="px-4 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-300 hover:bg-white/10 transition-colors">
+              {isLast && !playing ? '↻ Replay' : playing ? '❚❚ Pause' : '▶ Play'}
+            </button>
+            <button onClick={() => goto(i + 1)} disabled={isLast} aria-label="Next step"
+              className="px-3 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/[0.03] text-gray-400 hover:bg-white/10 disabled:opacity-30 transition-colors">▶</button>
+          </div>
+
+          <div className="flex items-center gap-2 transition-opacity duration-500" style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
+            <a href={CHAIN_URL} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
+              style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>See full chain →</a>
+            <a href={VERIFY_URL(scenario.eveId)} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
+              style={{ color: scenario.outcome === 'ALLOWED' ? '#86efac' : '#fca5a5', borderColor: scenario.outcome === 'ALLOWED' ? '#00ff8855' : '#ef444466', background: scenario.outcome === 'ALLOWED' ? '#00ff8814' : '#ef44441a' }}>
+              Verify record →
+            </a>
+          </div>
         </div>
       </div>
     </div>
