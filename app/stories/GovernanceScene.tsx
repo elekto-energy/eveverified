@@ -136,7 +136,7 @@ const FRAMES: Frame[] = [
   },
 
   {
-    logLabel: '✕ Approval no longer clearly applies',
+    logLabel: '⚠ Review overdue',
     signal: 'last_human_review_stale',
     headline: 'Approval not re-reviewed.',
     detail: [
@@ -155,7 +155,7 @@ const FRAMES: Frame[] = [
     headline: 'Does the approval\nstill apply?',
     detail: [],
     event: null,
-    eventNote: 'scenario premise — the question that cannot be answered',
+    eventNote: undefined,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
     freeze: true,
   },
