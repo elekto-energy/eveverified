@@ -60,6 +60,8 @@ interface Frame {
   signal?: string
   // Shown large in the SVG
   headline: string
+  // Show the key EVE sentence on the GAP step
+  gapSentence?: boolean
   // Sub-lines in the SVG
   detail: string[]
   // Internal event name (null = no hash)
@@ -136,10 +138,10 @@ const FRAMES: Frame[] = [
   {
     logLabel: '✕ Approval no longer clearly applies',
     signal: 'last_human_review_stale',
-    headline: 'Last review: 8 months ago.',
+    headline: 'Approval not re-reviewed.',
     detail: [
+      '8 months since the last review.',
       'System has changed 4 times since approval.',
-      'No re-assessment has been triggered.',
       'Approval still on file. Still marked: APPROVED.',
     ],
     event: 'review_overdue',
@@ -161,11 +163,13 @@ const FRAMES: Frame[] = [
   // ── LIVE FROM RECORD ──────────────────────────────────────────────────────
 
   {
-    logLabel: '✕ Nobody confirmed responsibility',
-    headline: 'EVE names what broke.',
-    detail: [],
-    event: 'accountability_continuity_gap',
-    eventNote: 'recorded to decision chain',
+  logLabel: '✕ Nobody confirmed responsibility',
+  headline: 'EVE names what broke.',
+  // The key sentence — shown large in the SVG for this step
+  gapSentence: true,
+  detail: [],
+  event: 'accountability_continuity_gap',
+  eventNote: 'recorded to decision chain',
     phase: 'red', links: 5, broken: true, human: false, isPremise: false,
     liveKind: 'basis',
   },
@@ -205,7 +209,7 @@ const TOTAL = FRAMES.length
 
 export default function GovernanceScene({ hideFullChainLink = false }: { hideFullChainLink?: boolean }) {
   const [i, setI]             = useState(0)
-  const [playing, setPlaying] = useState(true)
+  const [playing, setPlaying] = useState(false)  // start paused; autoplay begins after mount
   const [started, setStarted] = useState(false)
   const [verify, setVerify]   = useState<VerifyState>({ status: 'loading' })
   const reduceRef = useRef(false)
@@ -226,7 +230,10 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
 
   useEffect(() => {
     reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceRef.current) { setPlaying(false); setStarted(true) }
+    if (reduceRef.current) { setStarted(true); return }
+    // Small delay so the first frame is visible before autoplay begins
+    const t = window.setTimeout(() => setPlaying(true), 900)
+    return () => window.clearTimeout(t)
   }, [])
 
   useEffect(() => {
@@ -458,9 +465,21 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           </g>
         )}
 
+        {/* GAP step key sentence */}
+        {'gapSentence' in f && f.gapSentence && (
+          <>
+            <text x="40" y="48" fill="#9ca3af" fontFamily="sans-serif" fontSize="13" fontWeight="300">
+              The approval still exists.
+            </text>
+            <text x="40" y="68" fill="#fca5a5" fontFamily="sans-serif" fontSize="13" fontWeight="300">
+              EVE cannot confirm that it still applies.
+            </text>
+          </>
+        )}
+
         {/* Headline — large on freeze, normal otherwise */}
         {headlineLines.map((line, li) => (
-          <text key={li} x="40" y={28 + li * (isFrozen ? 32 : 22)}
+          <text key={li} x="40" y={('gapSentence' in f && f.gapSentence ? 96 : 28) + li * (isFrozen ? 32 : 22)}
             fill={f.phase === 'red' ? '#fca5a5' : isFrozen ? AMBER : '#e5e7eb'}
             fontFamily="sans-serif"
             fontSize={isFrozen ? 22 : f.phase === 'red' && i === 7 ? 14 : 16}
