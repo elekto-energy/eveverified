@@ -286,7 +286,11 @@ export default function AgvControlClient() {
       {/* WHAT HAPPENED — autoplay story, no session needed */}
       <section className="px-6 max-w-3xl mx-auto mb-4">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-3">What happened</div>
-        <AgvScene hideFullChainLink />
+        <AgvScene
+          hideFullChainLink
+          scenarioId={scenario}
+          onScenarioChange={(id) => setScenario(id)}
+        />
         <div className="flex gap-3 mt-5 justify-center">
           <button
             onClick={() => document.getElementById('live-chain')?.scrollIntoView({ behavior: 'smooth' })}
