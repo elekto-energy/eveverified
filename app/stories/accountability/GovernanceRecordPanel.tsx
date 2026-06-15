@@ -16,6 +16,8 @@ const AMBER = '#f59e0b'
 interface VerifyData {
   valid: boolean
   eve_id: string
+  seal: string
+  chain_seal: string
   payload: {
     data: {
       result: string
@@ -43,6 +45,8 @@ function verdictColor(v: string) {
   if (v.includes('GAP')) return RED
   return '#9ca3af'
 }
+
+function shortHash(h: string) { return h && h.length > 16 ? `${h.slice(0, 8)}...${h.slice(-8)}` : h }
 
 export default function GovernanceRecordPanel() {
   const [v, setV] = useState<VS>({ status: 'loading' })
@@ -98,7 +102,7 @@ export default function GovernanceRecordPanel() {
               <span style={{ color: RED, flexShrink: 0, marginTop: 2 }}>·</span>
               <div>
                 <div className="text-gray-300 text-sm">{WHY_UNANSWERABLE[b] ?? b}</div>
-                <div className="text-gray-600 text-[10px] font-mono mt-0.5">{b}</div>
+                <div className="text-gray-600 text-[10px] font-mono mt-0.5">technical basis: {b}</div>
               </div>
             </div>
           ))}
@@ -131,6 +135,22 @@ export default function GovernanceRecordPanel() {
             materiality_assessed_by_eve: {String(d.materiality_assessed_by_eve)}
           </span>
         </div>
+        {(v.d.seal || v.d.chain_seal) && (
+          <div className="font-mono text-[11px] text-gray-500 space-y-0.5 mb-4 border-t border-white/5 pt-3">
+            {v.d.seal && (
+              <div className="flex gap-2">
+                <span className="text-gray-600">bridge seal:</span>
+                <span className="text-gray-400">{shortHash(v.d.seal)}</span>
+              </div>
+            )}
+            {v.d.chain_seal && (
+              <div className="flex gap-2">
+                <span className="text-gray-600">chain seal:</span>
+                <span className="text-gray-400">{shortHash(v.d.chain_seal)}</span>
+              </div>
+            )}
+          </div>
+        )}
         <a href={VERIFY_URL} target="_blank" rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
           style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}>

@@ -217,12 +217,13 @@ const FRAMES: Frame[] = [
   },
 
   {
-    logLabel: 'Record sealed · VALID',
-    headline: 'Cryptographic verification.',
+    logLabel: 'The approval still exists — the chain no longer proves it',
+    headline: 'The chain breaks here.',
+    subtext: 'The approval still exists. The chain no longer proves it.',
+    subtextColor: '#fca5a5',
     detail: [],
     event: null,
     phase: 'red', links: 5, broken: true, human: true, isPremise: false,
-    liveKind: 'verify',
   },
 ]
 

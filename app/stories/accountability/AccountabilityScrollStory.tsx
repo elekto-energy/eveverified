@@ -35,17 +35,10 @@ export default function AccountabilityScrollStory() {
           What happened
         </div>
         <GovernanceScene hideFullChainLink />
-        <div className="flex gap-3 mt-5 justify-center">
-          <button
-            onClick={() => document.getElementById('prove-it')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-6 py-2.5 rounded-full text-sm font-mono border border-purple-500/40 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-all">
-            See the sealed record ↓
-          </button>
-        </div>
       </section>
 
       {/* THE FAILURE STORY — prose, before any technical detail */}
-      <section className="px-6 max-w-2xl mx-auto mb-10 mt-6">
+      <section className="px-6 max-w-2xl mx-auto mb-8 mt-6">
         <div className="space-y-5 text-gray-300 leading-relaxed">
           <p className="text-lg font-light text-white">A credit decision was issued.</p>
           <p>But the decision did not begin in the credit committee.</p>
@@ -70,6 +63,13 @@ export default function AccountabilityScrollStory() {
               can no longer be proven.
             </p>
           </div>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => document.getElementById('prove-it')?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-6 py-2.5 rounded-full text-sm font-mono border border-purple-500/40 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-all">
+            See the sealed record ↓
+          </button>
         </div>
       </section>
 
