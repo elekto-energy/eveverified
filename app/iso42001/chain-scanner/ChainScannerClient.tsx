@@ -378,7 +378,7 @@ export default function ChainScannerClient() {
       {/* Top 10 requiring review */}
       <section className="px-6 max-w-4xl mx-auto mb-6">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-4">
-          Top 10 chains requiring human review
+          Top 10 chains flagged for human review
         </div>
         <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
           <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] font-mono uppercase tracking-wide text-gray-600 border-b border-white/5">
@@ -408,27 +408,9 @@ export default function ChainScannerClient() {
         {selected && <ChainDetail resolved={selected} onClose={() => setSelected(null)} />}
       </section>
 
-      {/* CTA to the representative sealed example */}
+      {/* Disclaimer */}
       <section className="px-6 max-w-4xl mx-auto mb-16">
-        <div className="rounded-xl border p-5 flex flex-wrap items-center justify-between gap-4"
-          style={{ borderColor: '#a855f730', background: '#a855f708' }}>
-          <div>
-            <div className="text-white text-sm font-light mb-1">
-              One representative chain is sealed and independently verifiable.
-            </div>
-            <div className="text-gray-500 text-xs font-mono">
-              EVE-ISO42001-00004652 — the one sealed example behind this pattern.
-            </div>
-          </div>
-          <a
-            href={STORY_URL}
-            className="shrink-0 px-5 py-2.5 rounded-full text-sm font-mono border transition-colors"
-            style={{ color: '#c4b5fd', borderColor: '#a855f740', background: '#a855f712' }}
-          >
-            Open detailed accountability story →
-          </a>
-        </div>
-        <p className="text-[11px] text-gray-600 font-mono mt-4">
+        <p className="text-[11px] text-gray-600 font-mono">
           Synthetic fixture data — not a real organisation. Not an ISO 42001 compliance assessment.
           EVE does not produce a compliance score and does not assess materiality.
         </p>
