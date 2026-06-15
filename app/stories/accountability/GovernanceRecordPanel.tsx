@@ -92,13 +92,13 @@ export default function GovernanceRecordPanel() {
         <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-4">
           Without a continuous record, nobody can — because
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {d.trigger_basis.map((b) => (
             <div key={b} className="flex items-start gap-3">
               <span style={{ color: RED, flexShrink: 0, marginTop: 2 }}>·</span>
               <div>
-                <span className="text-gray-300 text-sm">{WHY_UNANSWERABLE[b] ?? b}</span>
-                <span className="text-gray-600 text-[10px] font-mono ml-2">{b}</span>
+                <div className="text-gray-300 text-sm">{WHY_UNANSWERABLE[b] ?? b}</div>
+                <div className="text-gray-600 text-[10px] font-mono mt-0.5">{b}</div>
               </div>
             </div>
           ))}

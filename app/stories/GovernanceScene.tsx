@@ -151,13 +151,13 @@ const FRAMES: Frame[] = [
 
   {
     // THE FREEZE — large centred question. Nothing else.
-    logLabel: '',
+    logLabel: '— System facts changed after approval',
     headline: 'WHO APPROVED WHAT,\nBASED ON WHICH EVIDENCE?',
     subtext: undefined,
     detail: [],
     event: null,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
-    freeze: true, hideFromLog: true,
+    freeze: true,
   },
 
   {
@@ -574,14 +574,6 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
               </span>
             </div>
           ))}
-          {/* Freeze separator — shown after step 5 is past */}
-          {i >= 5 && (
-            <div className="border-t border-white/5 pt-1 mt-1">
-              <div className="text-[10px] font-mono text-gray-700 italic pl-1">
-                "Who approved what, based on which evidence?"
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
