@@ -23,8 +23,9 @@ export default function AccountabilityScrollStory() {
           <span className="text-white/50">The accountability chain did not.</span>
         </h1>
         <p className="text-gray-500 text-sm max-w-xl mx-auto leading-relaxed">
-          A risk decision was approved. The system changed. Nobody could prove the approval
-          still applied. EVE detected the gap and sealed a tamper-evident record.
+          A risk decision had been approved. The system changed. Nobody could prove that the
+          prior approval still applied to what the system was now doing. EVE detected the
+          accountability-continuity gap and sealed a tamper-evident record.
         </p>
       </section>
 
@@ -40,19 +41,42 @@ export default function AccountabilityScrollStory() {
             className="px-6 py-2.5 rounded-full text-sm font-mono border border-purple-500/40 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-all">
             See the sealed record ↓
           </button>
-          <a
-            href="https://verify.eveverified.com/?id=EVE-ISO42001-00004652"
-            target="_blank" rel="noopener noreferrer"
-            className="px-6 py-2.5 rounded-full text-sm font-mono border border-white/15 bg-white/[0.03] text-gray-300 hover:bg-white/10 transition-all">
-            Verify record →
-          </a>
+        </div>
+      </section>
+
+      {/* THE FAILURE STORY — prose, before any technical detail */}
+      <section className="px-6 max-w-2xl mx-auto mb-10 mt-6">
+        <div className="space-y-5 text-gray-300 leading-relaxed">
+          <p className="text-lg font-light text-white">A credit decision was issued.</p>
+          <p>But the decision did not begin in the credit committee.</p>
+          <p>
+            It began several AI transformations earlier: a customer interaction was captured,
+            a CRM AI classified it, an AI summary was generated, a portfolio risk indicator was
+            updated, and the lending decision was made using that changed context.
+          </p>
+          <div className="py-2 space-y-1">
+            <p className="text-white">The approval still existed.</p>
+            <p className="text-white">But the system had changed.</p>
+            <p className="text-gray-300">
+              Nobody could prove that the approval which covered the original risk decision
+              still applied to what the system was now doing.
+            </p>
+          </div>
+          <p className="text-white">That is the accountability-continuity gap.</p>
+          <div className="py-2 border-t border-white/5 pt-5">
+            <p>EVE does not decide whether the loan decision was right or wrong.</p>
+            <p className="text-gray-400">
+              EVE records the moment where the chain of ownership, authority and evidence
+              can no longer be proven.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* PROVE IT */}
       <section id="prove-it" className="px-6 max-w-3xl mx-auto mb-10 scroll-mt-24">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-6">
-          Prove it — sealed record
+          Prove the chain — sealed record
         </div>
         <GovernanceRecordPanel />
       </section>
