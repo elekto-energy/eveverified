@@ -239,6 +239,14 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   const reduceRef = useRef(false)
   const timerRef  = useRef<number | null>(null)
 
+  // Force reset to step 1 on every mount — prevents landing on last step
+  // after Vercel static prerender or browser back-navigation.
+  useEffect(() => {
+    setI(0)
+    setPlaying(false)
+    setStarted(false)
+  }, [])
+
   useEffect(() => {
     let alive = true
     fetch(VERIFY_API, { cache: 'no-store' })
@@ -255,8 +263,15 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
   useEffect(() => {
     reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceRef.current) { setStarted(true); return }
-    const t = window.setTimeout(() => setPlaying(true), 900)
-    return () => window.clearTimeout(t)
+    // Wait for tab to be visible before starting autoplay
+    const start = () => {
+      const t = window.setTimeout(() => setPlaying(true), 1400)
+      return () => window.clearTimeout(t)
+    }
+    if (document.visibilityState === 'visible') return start()
+    const onVisible = () => { if (document.visibilityState === 'visible') { start(); document.removeEventListener('visibilitychange', onVisible) } }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
   }, [])
 
   useEffect(() => {
