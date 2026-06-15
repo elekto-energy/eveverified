@@ -1,7 +1,9 @@
 'use client'
 
 // Live record panel for EVE-ISO42001-00004652
-// Fetches verify endpoint and renders: result, trigger_basis, required_human_confirmation, VALID
+// Structured per Maxim's feedback: lead with the single human question, then show EVE's
+// answer as a tamper-evident record of that exact moment. The trigger_basis items are
+// framed as WHY the question could not be answered without EVE — not as EVE's output.
 import { useEffect, useState } from 'react'
 
 const EVE_ID = 'EVE-ISO42001-00004652'
@@ -27,12 +29,13 @@ interface VerifyData {
 }
 type VS = { status: 'loading' } | { status: 'ok'; d: VerifyData } | { status: 'error'; reason: string }
 
-const BASIS_GLOSS: Record<string, string> = {
-  approval_scope_mismatch: 'approval no longer covers the running system',
-  authority_invalid_after_changes: 'the facts it rested on were replaced',
-  declared_authority_unconfirmed: 'the authority it was granted under is unconfirmed',
-  accountable_owner_unconfirmed: 'no named owner currently stands behind it',
-  last_human_review_stale: 'the last human review is stale',
+// Each trigger reframed as a reason the human question can't be answered manually.
+const WHY_UNANSWERABLE: Record<string, string> = {
+  approval_scope_mismatch: 'the approval on file no longer covers the system that is running',
+  authority_invalid_after_changes: 'the facts the approval rested on have since been replaced',
+  declared_authority_unconfirmed: 'the authority it was granted under is no longer confirmed',
+  accountable_owner_unconfirmed: 'no named owner currently stands behind the decision',
+  last_human_review_stale: 'the last human review is too old to rely on',
 }
 
 function verdictColor(v: string) {
@@ -72,12 +75,46 @@ export default function GovernanceRecordPanel() {
 
   return (
     <div className="space-y-4">
-      {/* Record header */}
+
+      {/* THE HUMAN QUESTION — the thing a person actually needs answered */}
+      <div className="p-6 rounded-xl border" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
+        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-3">
+          The question a human actually needs answered
+        </div>
+        <p className="text-lg md:text-xl font-light text-white leading-relaxed">
+          Can you prove the approval that covered this system
+          still applies to what the system is doing now?
+        </p>
+      </div>
+
+      {/* WHY IT CANNOT BE ANSWERED MANUALLY — the trigger items, reframed */}
       <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-4">
+          Without a continuous record, nobody can — because
+        </div>
+        <div className="space-y-3">
+          {d.trigger_basis.map((b) => (
+            <div key={b} className="flex items-start gap-3">
+              <span style={{ color: RED, flexShrink: 0, marginTop: 2 }}>·</span>
+              <div>
+                <span className="text-gray-300 text-sm">{WHY_UNANSWERABLE[b] ?? b}</span>
+                <span className="text-gray-600 text-[10px] font-mono ml-2">{b}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* EVE'S ANSWER — a tamper-evident record of that exact moment */}
+      <div className="p-5 rounded-xl border" style={{ borderColor: `${GREEN}20`, background: `${GREEN}06` }}>
+        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-4">
+          EVE's answer — a tamper-evident record of that exact moment
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
             <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">Sealed record</div>
-            <div className="text-white font-mono">{v.d.eve_id}</div>
+            <div className="text-white font-mono text-sm">{v.d.eve_id}</div>
+            <div className="font-mono text-sm mt-2" style={{ color: verdictColor(d.result) }}>{d.result}</div>
           </div>
           <div className="text-right">
             <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">Verify</div>
@@ -86,18 +123,7 @@ export default function GovernanceRecordPanel() {
             </div>
           </div>
         </div>
-        <a href={VERIFY_URL} target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 mt-4 text-xs px-4 py-2 rounded-full border transition-colors"
-          style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}>
-          Verify record →
-        </a>
-      </div>
-
-      {/* Result */}
-      <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10">
-        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-3">Result</div>
-        <div className="font-mono text-lg" style={{ color: verdictColor(d.result) }}>{d.result}</div>
-        <div className="flex flex-wrap gap-4 mt-3">
+        <div className="flex flex-wrap gap-2 mb-4">
           <span className="text-[11px] font-mono px-2.5 py-1 rounded border" style={{ color: GREEN, borderColor: `${GREEN}25`, background: `${GREEN}08` }}>
             is_compliance_score: {String(d.is_compliance_score)}
           </span>
@@ -105,27 +131,17 @@ export default function GovernanceRecordPanel() {
             materiality_assessed_by_eve: {String(d.materiality_assessed_by_eve)}
           </span>
         </div>
+        <a href={VERIFY_URL} target="_blank" rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full border transition-colors"
+          style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}>
+          Verify record →
+        </a>
       </div>
 
-      {/* Trigger basis */}
+      {/* What EVE asks the human to confirm — not what EVE decides */}
       <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10">
         <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-4">
-          Trigger basis — why the chain broke
-        </div>
-        <div className="space-y-3">
-          {d.trigger_basis.map((b) => (
-            <div key={b}>
-              <div className="text-sm font-mono" style={{ color: RED }}>{b}</div>
-              <div className="text-xs text-gray-500 mt-0.5">{BASIS_GLOSS[b] ?? b}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Required human confirmation */}
-      <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10">
-        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-4">
-          Required human confirmation
+          What a named human must confirm next
         </div>
         <div className="space-y-3">
           {d.required_human_confirmation.map((q, i) => (
