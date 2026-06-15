@@ -10,7 +10,7 @@
 // Sealed-record honesty: we do NOT fabricate sealed records for 1,000 chains.
 // EVE-ISO42001-00004652 is used only as the one representative sealed example,
 // linked via the accountability story.
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
@@ -171,9 +171,36 @@ const CARD_ORDER = [
 ]
 
 const STORY_URL = '/stories/accountability'
+const SEALED_EXAMPLE = 'EVE-ISO42001-00004652'
+const RESOLVER_VERSION = 'accountability_continuity_v0.1'
+
+// Human-readable reason per primary trigger (for the detail panel)
+const TRIGGER_REASON: Record<string, string> = {
+  approval_scope_mismatch:
+    'The prior approval exists, but the approval scope no longer matches the current system.',
+  last_human_review_stale:
+    'The prior approval exists, but the last human review is too old to rely on.',
+  accountable_owner_unconfirmed:
+    'The prior approval exists, but no named owner currently stands behind the decision.',
+  declared_authority_unconfirmed:
+    'The prior approval exists, but the authority it was granted under is unconfirmed.',
+  authority_invalid_after_changes:
+    'The prior approval exists, but the facts it rested on have since been replaced.',
+}
+
+type ScanPhase = 'idle' | 'scanning' | 'done'
+
+const SCAN_STEPS = [
+  'Validating input fields…',
+  'Running deterministic resolver…',
+  'Evaluating accountability triggers…',
+  'Creating human review queue…',
+]
 
 export default function ChainScannerClient() {
   const [selected, setSelected] = useState<Resolved | null>(null)
+  const [phase, setPhase] = useState<ScanPhase>('idle')
+  const [scanStep, setScanStep] = useState(0)
 
   const { gaps, scanMs, summary, dist } = useMemo(() => {
     const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now()
@@ -205,6 +232,25 @@ export default function ChainScannerClient() {
     [gaps],
   )
 
+  // Run scan — short production-style status sequence (not an animation/gimmick).
+  // The resolver itself already ran in the useMemo above; this sequence only
+  // surfaces the work as discrete status lines. Resolver time stays honest.
+  function runScan() {
+    setSelected(null)
+    setScanStep(0)
+    setPhase('scanning')
+  }
+
+  useEffect(() => {
+    if (phase !== 'scanning') return
+    if (scanStep >= SCAN_STEPS.length) {
+      const t = window.setTimeout(() => setPhase('done'), 280)
+      return () => window.clearTimeout(t)
+    }
+    const t = window.setTimeout(() => setScanStep(s => s + 1), 380)
+    return () => window.clearTimeout(t)
+  }, [phase, scanStep])
+
   return (
     <main className="min-h-screen bg-eve-dark">
       <Navigation />
@@ -223,11 +269,68 @@ export default function ChainScannerClient() {
         </p>
       </section>
 
+      {/* SCAN CONTROL — idle / scanning */}
+      {phase !== 'done' && (
+        <section className="px-6 max-w-4xl mx-auto mb-10">
+          <div className="rounded-xl bg-white/[0.02] border border-white/10 p-6">
+            <div className="grid md:grid-cols-3 gap-4 mb-6 text-[12px] font-mono">
+              <div>
+                <div className="text-gray-600 uppercase tracking-wide text-[10px] mb-1">Dataset</div>
+                <div className="text-gray-300">{N_CHAINS.toLocaleString()} synthetic governance chains</div>
+              </div>
+              <div>
+                <div className="text-gray-600 uppercase tracking-wide text-[10px] mb-1">Resolver</div>
+                <div className="text-gray-300">{RESOLVER_VERSION}</div>
+              </div>
+              <div>
+                <div className="text-gray-600 uppercase tracking-wide text-[10px] mb-1">Mode</div>
+                <div className="text-gray-300">No LLM judgement · no compliance score · no materiality</div>
+              </div>
+            </div>
+
+            {phase === 'idle' && (
+              <button
+                onClick={runScan}
+                className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors"
+                style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}
+              >
+                Run scan →
+              </button>
+            )}
+
+            {phase === 'scanning' && (
+              <div className="font-mono text-[12px] space-y-1.5">
+                {SCAN_STEPS.map((step, n) => (
+                  <div
+                    key={step}
+                    className="flex items-center gap-2"
+                    style={{ opacity: n < scanStep ? 1 : n === scanStep ? 0.7 : 0.25, transition: 'opacity .2s' }}
+                  >
+                    <span style={{ color: n < scanStep ? GREEN : GREY }}>
+                      {n < scanStep ? '✓' : '·'}
+                    </span>
+                    <span className={n < scanStep ? 'text-gray-300' : 'text-gray-500'}>{step}</span>
+                  </div>
+                ))}
+                <div className="flex items-center gap-2 pt-1" style={{ opacity: scanStep >= SCAN_STEPS.length ? 1 : 0.25 }}>
+                  <span style={{ color: GREEN }}>{scanStep >= SCAN_STEPS.length ? '✓' : '·'}</span>
+                  <span className="text-gray-300">
+                    {N_CHAINS.toLocaleString()} / {N_CHAINS.toLocaleString()} chains scanned
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* RESULTS — only after scan */}
+      {phase === 'done' && (
+        <>
       {/* Summary line */}
-      <section className="px-6 max-w-4xl mx-auto mb-8">
+      <section className="px-6 max-w-4xl mx-auto mb-3">
         <div className="rounded-xl bg-white/[0.02] border border-white/10 divide-y divide-white/5">
           <SummaryRow label="Decision chains scanned" value={summary.total.toLocaleString()} color="#e5e7eb" />
-          <SummaryRow label="Scanned in" value={`${scanMs} ms`} color={GREY} />
           <SummaryRow label="No checkpoint required" value={summary.clear.toLocaleString()} color={GREEN} />
           <SummaryRow
             label="Flagged for human review before continuity can be proven"
@@ -235,6 +338,18 @@ export default function ChainScannerClient() {
             color={RED}
           />
           <SummaryRow label="Compliance decisions made by EVE" value="0" color={GREY} />
+        </div>
+        <div className="flex items-center justify-between flex-wrap gap-2 mt-3">
+          <p className="text-[11px] text-gray-600 font-mono">
+            Deterministic resolver completed in {scanMs} ms. Status sequence shown for demo clarity.
+          </p>
+          <button
+            onClick={runScan}
+            className="text-[11px] font-mono px-3 py-1 rounded-full border transition-colors"
+            style={{ color: GREY, borderColor: '#ffffff18', background: 'transparent' }}
+          >
+            ↻ Replay scan
+          </button>
         </div>
       </section>
 
@@ -288,6 +403,9 @@ export default function ChainScannerClient() {
         <p className="text-[11px] text-gray-600 font-mono mt-3">
           Showing 10 of {summary.gap} flagged chains. Click a chain for detail.
         </p>
+
+        {/* Inline selected-chain detail panel (below the table) */}
+        {selected && <ChainDetail resolved={selected} onClose={() => setSelected(null)} />}
       </section>
 
       {/* CTA to the representative sealed example */}
@@ -315,8 +433,8 @@ export default function ChainScannerClient() {
           EVE does not produce a compliance score and does not assess materiality.
         </p>
       </section>
-
-      {selected && <ChainDetail resolved={selected} onClose={() => setSelected(null)} />}
+        </>
+      )}
 
       <Footer />
     </main>
@@ -333,58 +451,102 @@ function SummaryRow({ label, value, color }: { label: string; value: string; col
   )
 }
 
-// ── Chain detail ────────────────────────────────────────────────────────────────
+// ── Chain detail (inline panel below the table) ─────────────────────────────────
 function ChainDetail({ resolved, onClose }: { resolved: Resolved; onClose: () => void }) {
-  const { chain, triggers } = resolved
+  const { chain, triggers, result } = resolved
+  const primary = triggers[0]!
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-4" onClick={onClose}>
-      <div
-        className="w-full max-w-lg max-h-[88vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0e14] p-6"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="flex items-start justify-between mb-5">
+    <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-5">
+        <div>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">
+            Selected chain · {chain.domain}
+          </div>
+          <div className="text-white font-mono text-sm">{chain.chain_id}</div>
+          <div className="text-gray-400 font-mono text-[12px] mt-0.5">{chain.system_name}</div>
+        </div>
+        <button onClick={onClose} className="text-gray-500 hover:text-gray-300 text-xl leading-none px-2" aria-label="Close detail">×</button>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Input fields */}
+        <div>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">Input fields</div>
+          <div className="rounded-lg bg-black/20 border border-white/5 p-3 space-y-1 font-mono text-[12px]">
+            <Field k="prior_approval_exists" v="true" c={GREEN} />
+            <Field k="owner_confirmed" v={String(chain.owner_confirmed)} c={chain.owner_confirmed ? GREEN : RED} />
+            <Field k="authority_confirmed" v={String(chain.authority_confirmed)} c={chain.authority_confirmed ? GREEN : RED} />
+            <Field k="facts_changed_after_approval" v={String(chain.facts_changed_after_approval)} c={chain.facts_changed_after_approval ? RED : GREEN} />
+            <Field k="last_human_review_days" v={String(chain.last_human_review_days)} c={chain.last_human_review_days > 180 ? RED : GREEN} />
+            <Field k="approval_scope_matches_current_system" v={String(chain.approval_scope_matches_current_system)} c={chain.approval_scope_matches_current_system ? GREEN : RED} />
+          </div>
+        </div>
+
+        {/* Resolver output + reason */}
+        <div className="space-y-4">
           <div>
-            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">
-              {chain.domain} · {chain.chain_id}
+            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">Resolver output</div>
+            <div className="rounded-lg border p-3" style={{ borderColor: `${RED}25`, background: `${RED}06` }}>
+              <div className="font-mono text-sm" style={{ color: RED }}>{result}</div>
+              <div className="text-[11px] text-gray-500 mt-2">
+                technical basis: <span className="font-mono" style={{ color: GREY }}>{primary}</span>
+              </div>
             </div>
-            <div className="text-white font-mono">{chain.system_name}</div>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-300 text-xl leading-none px-2" aria-label="Close">×</button>
-        </div>
-
-        {/* Detected triggers */}
-        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-          Detected triggers ({triggers.length})
-        </div>
-        <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5 space-y-2">
-          {triggers.map(t => (
-            <div key={t}>
-              <div className="text-[12px] font-mono" style={{ color: RED }}>{t}</div>
-              <div className="text-[11px] text-gray-500">{TRIGGER_LABELS[t]}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Human question */}
-        <div className="rounded-lg border p-4 mb-5" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
-          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-            The question a human actually needs answered
+          <div>
+            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">Why</div>
+            <p className="text-gray-300 text-sm leading-relaxed">{TRIGGER_REASON[primary]}</p>
           </div>
-          <p className="text-white font-light leading-relaxed">
-            Can you prove the approval that covered this system still applies to what the system is doing now?
-          </p>
-        </div>
-
-        {/* Result */}
-        <div className="rounded-lg border p-4" style={{ borderColor: `${RED}25`, background: `${RED}06` }}>
-          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">Result</div>
-          <div className="font-mono text-sm mb-3" style={{ color: RED }}>ACCOUNTABILITY_CONTINUITY_GAP</div>
-          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">Next</div>
-          <p className="text-gray-300 text-sm leading-relaxed">
-            A named human owner must review before continuity can be proven.
-          </p>
         </div>
       </div>
+
+      {/* Human question */}
+      <div className="rounded-lg border p-4 mt-4" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
+        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
+          The question a human actually needs answered
+        </div>
+        <p className="text-white font-light leading-relaxed">
+          Can you prove the approval that covered this system still applies to what the system is doing now?
+        </p>
+      </div>
+
+      {/* Next */}
+      <div className="mt-4">
+        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">Next</div>
+        <p className="text-gray-300 text-sm leading-relaxed">
+          A named human owner must review before continuity can be proven.
+        </p>
+      </div>
+
+      {/* Sealed-record honesty note + representative example + CTA */}
+      <div className="mt-5 pt-4 border-t border-white/5">
+        <p className="text-[11px] text-gray-500 leading-relaxed mb-2">
+          This chain is part of the synthetic scale dataset and is not individually sealed.
+        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="text-[11px] text-gray-600 font-mono">
+            Representative sealed example: {SEALED_EXAMPLE}
+          </span>
+          <a
+            href={STORY_URL}
+            className="text-[12px] font-mono px-4 py-1.5 rounded-full border transition-colors"
+            style={{ color: '#c4b5fd', borderColor: '#a855f740', background: '#a855f712' }}
+          >
+            Open detailed accountability story →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Field({ k, v, c }: { k: string; v: string; c: string }) {
+  return (
+    <div className="flex justify-between gap-3">
+      <span className="text-gray-500">{k}</span>
+      <span style={{ color: c }}>{v}</span>
     </div>
   )
 }
