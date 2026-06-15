@@ -211,6 +211,11 @@ export default function ChainScannerClient() {
   const [selected, setSelected] = useState<Resolved | null>(null)
   const [phase, setPhase] = useState<ScanPhase>('idle')
   const [scanStep, setScanStep] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  // Mark hydrated so the Run scan button only becomes interactive once React
+  // has taken over — prevents "dead" clicks before hydration completes.
+  useEffect(() => { setMounted(true) }, [])
 
   const { gaps, scanMs, summary, dist } = useMemo(() => {
     const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now()
@@ -249,6 +254,13 @@ export default function ChainScannerClient() {
     setSelected(null)
     setScanStep(0)
     setPhase('scanning')
+  }
+
+  // Reset back to the idle state (clears selection, returns to Run scan).
+  function resetScan() {
+    setSelected(null)
+    setScanStep(0)
+    setPhase('idle')
   }
 
   useEffect(() => {
@@ -308,10 +320,11 @@ export default function ChainScannerClient() {
                 </p>
                 <button
                   onClick={runScan}
-                  className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors"
+                  disabled={!mounted}
+                  className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors disabled:opacity-40 disabled:cursor-wait"
                   style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}
                 >
-                  Run scan →
+                  {mounted ? 'Run scan →' : 'Loading…'}
                 </button>
               </div>
             )}
@@ -361,13 +374,22 @@ export default function ChainScannerClient() {
           <p className="text-[11px] text-gray-600 font-mono">
             Deterministic resolver completed in {scanMs} ms. Status sequence shown for demo clarity.
           </p>
-          <button
-            onClick={runScan}
-            className="text-[11px] font-mono px-3 py-1 rounded-full border transition-colors"
-            style={{ color: GREY, borderColor: '#ffffff18', background: 'transparent' }}
-          >
-            ↻ Replay scan
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={runScan}
+              className="text-[11px] font-mono px-3 py-1 rounded-full border transition-colors"
+              style={{ color: GREY, borderColor: '#ffffff18', background: 'transparent' }}
+            >
+              ↻ Replay scan
+            </button>
+            <button
+              onClick={resetScan}
+              className="text-[11px] font-mono px-3 py-1 rounded-full border transition-colors"
+              style={{ color: GREY, borderColor: '#ffffff18', background: 'transparent' }}
+            >
+              Reset
+            </button>
+          </div>
         </div>
         <p className="text-gray-400 text-sm leading-relaxed mt-4">
           EVE does not decide the outcome. It finds where the evidence chain no longer proves continuity.
