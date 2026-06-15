@@ -73,11 +73,21 @@ export default function AccountabilityScrollStory() {
       </section>
 
       {/* PROVE IT */}
-      <section id="prove-it" className="px-6 max-w-3xl mx-auto mb-10 scroll-mt-24">
+      <section id="prove-it" className="px-6 max-w-3xl mx-auto mb-6 scroll-mt-24">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-6">
           Prove the chain — sealed record
         </div>
         <GovernanceRecordPanel />
+        <div className="flex justify-center mt-6">
+          <a
+            href="https://verify.eveverified.com/?id=EVE-ISO42001-00004652"
+            target="_blank" rel="noopener noreferrer"
+            className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors"
+            style={{ color: '#00ff88', borderColor: '#00ff8840', background: '#00ff880a' }}
+          >
+            Verify sealed record →
+          </a>
+        </div>
       </section>
 
       {/* Secondary, story-led CTA — scale proof */}
@@ -86,7 +96,7 @@ export default function AccountabilityScrollStory() {
           This is one chain, sealed and verifiable. The same deterministic resolver can scan
           many governance chains at once —{' '}
           <a href="/iso42001/chain-scanner" className="text-purple-300 underline hover:text-purple-200">
-            Scale proof: scan 1,000 synthetic decision chains →
+            Scale proof: scan 1,000 synthetic governance chains →
           </a>
         </p>
       </section>

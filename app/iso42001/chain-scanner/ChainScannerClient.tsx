@@ -172,7 +172,17 @@ const CARD_ORDER = [
 
 const STORY_URL = '/stories/accountability'
 const SEALED_EXAMPLE = 'EVE-ISO42001-00004652'
+const VERIFY_URL = `https://verify.eveverified.com/?id=${SEALED_EXAMPLE}`
 const RESOLVER_VERSION = 'accountability_continuity_v0.1'
+
+// Short human label per trigger, for the table column (full id stays in the detail panel)
+const TRIGGER_SHORT: Record<string, string> = {
+  approval_scope_mismatch: 'Scope mismatch',
+  last_human_review_stale: 'Stale review',
+  accountable_owner_unconfirmed: 'Owner unconfirmed',
+  declared_authority_unconfirmed: 'Authority unconfirmed',
+  authority_invalid_after_changes: 'Facts changed',
+}
 
 // Human-readable reason per primary trigger (for the detail panel)
 const TRIGGER_REASON: Record<string, string> = {
@@ -289,13 +299,21 @@ export default function ChainScannerClient() {
             </div>
 
             {phase === 'idle' && (
-              <button
-                onClick={runScan}
-                className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors"
-                style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}
-              >
-                Run scan →
-              </button>
+              <div className="space-y-4">
+                <p className="text-gray-400 text-sm leading-relaxed max-w-2xl">
+                  This production-style demo scans {N_CHAINS.toLocaleString()} synthetic governance
+                  chains using the same deterministic resolver. It does not use an LLM. It does not
+                  score compliance. It creates a human review queue where continuity can no longer
+                  be proven.
+                </p>
+                <button
+                  onClick={runScan}
+                  className="px-6 py-2.5 rounded-full text-sm font-mono border transition-colors"
+                  style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}
+                >
+                  Run scan →
+                </button>
+              </div>
             )}
 
             {phase === 'scanning' && (
@@ -351,6 +369,9 @@ export default function ChainScannerClient() {
             ↻ Replay scan
           </button>
         </div>
+        <p className="text-gray-400 text-sm leading-relaxed mt-4">
+          EVE does not decide the outcome. It finds where the evidence chain no longer proves continuity.
+        </p>
       </section>
 
       {/* Trigger cards */}
@@ -396,7 +417,7 @@ export default function ChainScannerClient() {
               <div className="col-span-3 text-gray-400">{r.chain.chain_id}</div>
               <div className="col-span-4 text-gray-300 truncate">{r.chain.system_name}</div>
               <div className="col-span-2 text-gray-500">{r.chain.domain}</div>
-              <div className="col-span-3 text-right truncate" style={{ color: RED }}>{r.triggers[0]}</div>
+              <div className="col-span-3 text-right truncate" style={{ color: RED }}>{TRIGGER_SHORT[r.triggers[0]!] ?? r.triggers[0]}</div>
             </button>
           ))}
         </div>
@@ -406,6 +427,38 @@ export default function ChainScannerClient() {
 
         {/* Inline selected-chain detail panel (below the table) */}
         {selected && <ChainDetail resolved={selected} onClose={() => setSelected(null)} />}
+      </section>
+
+      {/* Representative sealed example — the one real, verifiable record */}
+      <section className="px-6 max-w-4xl mx-auto mb-6">
+        <div className="rounded-xl border p-5" style={{ borderColor: '#a855f730', background: '#a855f708' }}>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
+            Representative sealed example
+          </div>
+          <p className="text-gray-300 text-sm leading-relaxed mb-1">
+            The synthetic chains above are a scale proof and are not individually sealed. A
+            representative accountability-continuity record has been sealed and can be independently
+            verified.
+          </p>
+          <div className="text-white font-mono text-sm mb-4">{SEALED_EXAMPLE}</div>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={STORY_URL}
+              className="px-5 py-2.5 rounded-full text-sm font-mono border transition-colors"
+              style={{ color: '#c4b5fd', borderColor: '#a855f740', background: '#a855f712' }}
+            >
+              Open accountability story →
+            </a>
+            <a
+              href={VERIFY_URL}
+              target="_blank" rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-sm font-mono border transition-colors"
+              style={{ color: GREEN, borderColor: `${GREEN}40`, background: `${GREEN}0a` }}
+            >
+              Verify sealed record →
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Disclaimer */}
@@ -484,10 +537,10 @@ function ChainDetail({ resolved, onClose }: { resolved: Resolved; onClose: () =>
         </div>
       </div>
 
-      {/* Human question */}
+      {/* Human review question */}
       <div className="rounded-lg border p-4 mt-4" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
         <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-          The question a human actually needs answered
+          Human review question
         </div>
         <p className="text-white font-light leading-relaxed">
           Can you prove the approval that covered this system still applies to what the system is doing now?
@@ -502,24 +555,10 @@ function ChainDetail({ resolved, onClose }: { resolved: Resolved; onClose: () =>
         </p>
       </div>
 
-      {/* Sealed-record honesty note + representative example + CTA */}
-      <div className="mt-5 pt-4 border-t border-white/5">
-        <p className="text-[11px] text-gray-500 leading-relaxed mb-2">
-          This chain is part of the synthetic scale dataset and is not individually sealed.
-        </p>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-[11px] text-gray-600 font-mono">
-            Representative sealed example: {SEALED_EXAMPLE}
-          </span>
-          <a
-            href={STORY_URL}
-            className="text-[12px] font-mono px-4 py-1.5 rounded-full border transition-colors"
-            style={{ color: '#c4b5fd', borderColor: '#a855f740', background: '#a855f712' }}
-          >
-            Open detailed accountability story →
-          </a>
-        </div>
-      </div>
+      {/* Synthetic-chain note (no per-chain verify link — see the representative example below) */}
+      <p className="text-[11px] text-gray-500 leading-relaxed mt-5 pt-4 border-t border-white/5">
+        This chain is part of the synthetic scale dataset and is not individually sealed.
+      </p>
     </div>
   )
 }
