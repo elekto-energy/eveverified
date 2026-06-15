@@ -217,7 +217,7 @@ const FRAMES: Frame[] = [
   },
 
   {
-    logLabel: 'The approval still exists — the chain no longer proves it',
+    logLabel: 'Accountability continuity gap',
     headline: 'The chain breaks here.',
     subtext: 'The approval still exists. The chain no longer proves it.',
     subtextColor: '#fca5a5',
@@ -605,21 +605,16 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
               ▶
             </button>
           </div>
-          <div className="flex items-center gap-2 transition-opacity duration-500"
-            style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
-            {!hideFullChainLink && (
+          {!hideFullChainLink && (
+            <div className="flex items-center gap-2 transition-opacity duration-500"
+              style={{ opacity: linkVisible ? 1 : 0, pointerEvents: linkVisible ? 'auto' : 'none' }}>
               <a href="/solutions/tprm" target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
                 style={{ color: GREY, borderColor: '#ffffff20', background: '#ffffff08' }}>
                 Governance product →
               </a>
-            )}
-            <a href={VERIFY_URL} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border transition-colors"
-              style={{ color: '#fca5a5', borderColor: '#ef444466', background: '#ef44441a' }}>
-              Verify record →
-            </a>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

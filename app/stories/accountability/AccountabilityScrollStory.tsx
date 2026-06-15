@@ -24,8 +24,7 @@ export default function AccountabilityScrollStory() {
         </h1>
         <p className="text-gray-500 text-sm max-w-xl mx-auto leading-relaxed">
           A risk decision had been approved. The system changed. Nobody could prove that the
-          prior approval still applied to what the system was now doing. EVE detected the
-          accountability-continuity gap and sealed a tamper-evident record.
+          prior approval still applied to what the system was now doing.
         </p>
       </section>
 
@@ -90,12 +89,12 @@ export default function AccountabilityScrollStory() {
             attestation. EVE does not say compliant, non-compliant, incident or material.
           </p>
           <p className="text-gray-600 text-xs mt-2">
-            Same pattern:{' '}
+            Same evidence pattern across domains:{' '}
             <a href="/control-chain/agv" className="underline hover:text-gray-400">AGV — DENIED</a>
             {' · '}
             <a href="/control-chain/energy" className="underline hover:text-gray-400">Energy — HELD</a>
             {' · '}
-            <a href="https://grc.eveverified.com" className="underline hover:text-gray-400">GRC platform</a>
+            <a href="https://grc.eveverified.com" className="underline hover:text-gray-400">ISO 42001 — GAP</a>
           </p>
         </div>
       </section>
