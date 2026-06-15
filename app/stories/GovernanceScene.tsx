@@ -138,13 +138,11 @@ const FRAMES: Frame[] = [
   },
 
   {
-    logLabel: '\u26a0 Credit committee uses indicator',
+    logLabel: '\u26a0 Loan decision issued',
     signal: 'collective_outcome_unverified',
-    headline: 'Credit committee uses indicator.',
+    headline: 'Loan decision issued.',
     detail: [
-      'System: Credit Decision Layer',
-      'Owner: Credit Committee Chair',
-      'Each system passed its own assessment.',
+      'Every system has an owner.',
       'No owner sees the full chain.',
     ],
     event: 'credit_decision_recorded',
@@ -152,11 +150,10 @@ const FRAMES: Frame[] = [
   },
 
   {
-    // THE FREEZE — a credit decision is challenged. No answer yet.
+    // THE FREEZE — large centred question. Nothing else.
     logLabel: '',
-    headline: 'A credit decision\nis challenged.',
-    subtext: 'Who approved what, based on which evidence?',
-    subtextColor: AMBER,
+    headline: 'WHO APPROVED WHAT,\nBASED ON WHICH EVIDENCE?',
+    subtext: undefined,
     detail: [],
     event: null,
     phase: 'amber', links: 5, broken: false, human: false, isPremise: true,
@@ -465,11 +462,15 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
 
         {/* Headline */}
         {headlineLines.map((line, li) => (
-          <text key={li} x="40" y={28 + li * (isBig ? 28 : 22)}
-            fill={f.phase === 'red' && !isUnknown ? '#fca5a5' : isFrozen ? AMBER : isUnknown ? '#e5e7eb' : '#e5e7eb'}
+          <text key={li}
+            x={isFrozen ? '340' : '40'}
+            textAnchor={isFrozen ? 'middle' : 'start'}
+            y={isFrozen ? 80 + li * 38 : 28 + li * 22}
+            fill={f.phase === 'red' && !isUnknown ? '#fca5a5' : isFrozen ? AMBER : '#e5e7eb'}
             fontFamily="sans-serif"
-            fontSize={isBig ? 20 : 16}
-            fontWeight="300">
+            fontSize={isFrozen ? 22 : 16}
+            fontWeight={isFrozen ? '400' : '300'}
+            letterSpacing={isFrozen ? '0.02em' : '0'}>
             {line}
           </text>
         ))}
@@ -577,7 +578,7 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
           {i >= 5 && (
             <div className="border-t border-white/5 pt-1 mt-1">
               <div className="text-[10px] font-mono text-gray-700 italic pl-1">
-                Auditor: "Who approved what, based on which evidence?"
+                "Who approved what, based on which evidence?"
               </div>
             </div>
           )}
