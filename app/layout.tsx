@@ -9,9 +9,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'EVE Verified | Evidence & Verification Engine',
-  description: 'Deterministic AI platform where systems never guess — only know. Witness-mode AI, cryptographic verification, and infinite precision.',
-  keywords: ['AI', 'verification', 'deterministic', 'EVE', 'witness mode', 'compliance', 'GDPR', 'NIS2', 'EU AI Act'],
+  title: 'EVE Verified | Evidence Verification Engine',
+  description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
+  keywords: ['evidence verification', 'deterministic', 'EVE', 'governance', 'TPRM', 'vendor review', 'compliance', 'GDPR', 'NIS2', 'EU AI Act'],
   authors: [{ name: 'Organiq Sweden AB' }],
   creator: 'Organiq Sweden AB',
   publisher: 'Organiq Sweden AB',
@@ -21,21 +21,21 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://eveverified.com',
     siteName: 'EVE Verified',
-    title: 'EVE Verified | Evidence & Verification Engine',
-    description: 'Deterministic AI platform where systems never guess — only know.',
+    title: 'EVE Verified | Evidence Verification Engine',
+    description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'EVE Verified - Deterministic AI',
+        alt: 'EVE Verified - Evidence Verification Engine',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EVE Verified | Evidence & Verification Engine',
-    description: 'Deterministic AI platform where systems never guess — only know.',
+    title: 'EVE Verified | Evidence Verification Engine',
+    description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
     images: ['/og-image.png'],
   },
   icons: {
