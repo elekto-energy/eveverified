@@ -83,8 +83,8 @@ export default function AccountabilityScrollStory() {
       {/* Secondary, story-led CTA — scale proof */}
       <section className="px-6 max-w-3xl mx-auto mb-10">
         <p className="text-gray-500 text-sm leading-relaxed">
-          This is one chain, sealed and verifiable. The same deterministic resolver runs across
-          many chains at once —{' '}
+          This is one chain, sealed and verifiable. The same deterministic resolver can scan
+          many governance chains at once —{' '}
           <a href="/iso42001/chain-scanner" className="text-purple-300 underline hover:text-purple-200">
             Scale proof: scan 1,000 synthetic decision chains →
           </a>
