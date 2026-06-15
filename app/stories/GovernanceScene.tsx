@@ -262,16 +262,9 @@ export default function GovernanceScene({ hideFullChainLink = false }: { hideFul
 
   useEffect(() => {
     reduceRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceRef.current) { setStarted(true); return }
-    // Wait for tab to be visible before starting autoplay
-    const start = () => {
-      const t = window.setTimeout(() => setPlaying(true), 1400)
-      return () => window.clearTimeout(t)
-    }
-    if (document.visibilityState === 'visible') return start()
-    const onVisible = () => { if (document.visibilityState === 'visible') { start(); document.removeEventListener('visibilitychange', onVisible) } }
-    document.addEventListener('visibilitychange', onVisible)
-    return () => document.removeEventListener('visibilitychange', onVisible)
+    if (reduceRef.current) { setStarted(true) }
+    // No autoplay on mount. User must press Play.
+    // This guarantees step 1 is always what the visitor sees first.
   }, [])
 
   useEffect(() => {
