@@ -254,6 +254,10 @@ export default function ChainScannerClient() {
             </div>
           ))}
         </div>
+        <p className="text-[11px] text-gray-600 mt-3 leading-relaxed">
+          Each flagged chain in this demo has one primary trigger, so trigger counts equal the
+          number of chains flagged for review (they sum to {N_GAP}).
+        </p>
       </section>
 
       {/* Top 10 requiring review */}
