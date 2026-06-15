@@ -1,12 +1,15 @@
 'use client'
 
-// EVE Governance Chain Scanner — ISO 42001 demo
+// EVE Governance Chain Scanner — ISO 42001 scale proof (narrow demo)
 // Deterministic. Synthetic fixture data only (1,000 decision chains).
-// Same input -> same output every run. No backend, no live data.
+// Same input -> same output every run. No backend, no live data, no filters.
 //
-// This is NOT an ISO 42001 compliance assessment and NOT a compliance score.
-// It demonstrates one thing: EVE can scan many governance decision chains and
-// deterministically surface accountability-continuity gaps.
+// This is a SCALE PROOF, not a dashboard and not a compliance judgement.
+// One chain shows the problem. 1,000 chains show the operational scale.
+//
+// Sealed-record honesty: we do NOT fabricate sealed records for 1,000 chains.
+// EVE-ISO42001-00004652 is used only as the one representative sealed example,
+// linked via the accountability story.
 import { useMemo, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
@@ -17,33 +20,40 @@ const RED = '#ef4444'
 const GREY = '#9ca3af'
 
 const N_CHAINS = 1000
-const SEED = 0x42001 // fixed seed -> deterministic fixture every run
+const SEED = 0x42001
+
+// Deterministic primary-trigger distribution for the 127 flagged chains.
+// Each gap chain gets EXACTLY ONE primary trigger, so the cards sum cleanly to 127.
+// We set the underlying FIELDS only — the resolver still derives the result from fields.
+const GAP_PLAN: { key: string; count: number }[] = [
+  { key: 'approval_scope_mismatch', count: 41 },
+  { key: 'last_human_review_stale', count: 38 },
+  { key: 'accountable_owner_unconfirmed', count: 26 },
+  { key: 'declared_authority_unconfirmed', count: 14 },
+  { key: 'authority_invalid_after_changes', count: 8 },
+]
+const N_GAP = GAP_PLAN.reduce((s, g) => s + g.count, 0) // = 127
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Chain {
   chain_id: string
   system_name: string
   domain: string
-  prior_approval_exists: boolean
   owner_confirmed: boolean
   authority_confirmed: boolean
   facts_changed_after_approval: boolean
   last_human_review_days: number
   approval_scope_matches_current_system: boolean
 }
-
 type Result = 'NO_CHECKPOINT_REQUIRED' | 'ACCOUNTABILITY_CONTINUITY_GAP'
-
 interface Resolved {
   chain: Chain
   triggers: string[]
   result: Result
   human_confirmation_required: boolean
-  is_compliance_score: false
-  materiality_assessed_by_eve: false
 }
 
-// ── Deterministic PRNG (mulberry32) ────────────────────────────────────────────
+// ── Deterministic PRNG (mulberry32) ─────────────────────────────────────────────
 function mulberry32(seed: number) {
   let a = seed >>> 0
   return function () {
@@ -55,7 +65,6 @@ function mulberry32(seed: number) {
   }
 }
 
-// ── Synthetic fixture data ──────────────────────────────────────────────────────
 const DOMAINS = ['Lending', 'Insurance', 'Fraud', 'Onboarding', 'Trading', 'Claims', 'AML', 'Pricing']
 const SYSTEMS = [
   'Credit Decision Model',
@@ -68,23 +77,66 @@ const SYSTEMS = [
   'Underwriting Assistant',
 ]
 
+// Build exactly N_CHAINS chains. 873 are clean (zero triggers); 127 are gap chains,
+// each carrying EXACTLY ONE primary trigger per GAP_PLAN. Only FIELDS are set here —
+// the deterministic resolver derives the result. The result label is never hard-coded.
 function buildFixtures(): Chain[] {
   const rnd = mulberry32(SEED)
+
+  // Assign a primary trigger key to 127 of the 1000 indices, deterministically.
+  // Build the multiset of trigger keys, then place them at a shuffled set of indices.
+  const gapKeys: string[] = []
+  for (const g of GAP_PLAN) for (let k = 0; k < g.count; k++) gapKeys.push(g.key)
+
+  const order = Array.from({ length: N_CHAINS }, (_, i) => i)
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1))
+    ;[order[i], order[j]] = [order[j]!, order[i]!]
+  }
+  // primaryTrigger[index] = key, or undefined for clean chains
+  const primaryTrigger: (string | undefined)[] = new Array(N_CHAINS).fill(undefined)
+  for (let k = 0; k < gapKeys.length; k++) primaryTrigger[order[k]!] = gapKeys[k]
+
   const chains: Chain[] = []
   for (let i = 0; i < N_CHAINS; i++) {
     const domain = DOMAINS[Math.floor(rnd() * DOMAINS.length)]!
     const system = SYSTEMS[Math.floor(rnd() * SYSTEMS.length)]!
-    chains.push({
+    const trig = primaryTrigger[i]
+
+    // Default: all fields non-triggering (clean chain).
+    const c: Chain = {
       chain_id: `CHAIN-${String(i + 1).padStart(5, '0')}`,
       system_name: system,
       domain,
-      prior_approval_exists: rnd() > 0.04, // a few never had an approval at all
-      owner_confirmed: rnd() > 0.22,
-      authority_confirmed: rnd() > 0.18,
-      facts_changed_after_approval: rnd() > 0.7,
-      last_human_review_days: Math.floor(rnd() * 540), // 0..540 days
-      approval_scope_matches_current_system: rnd() > 0.25,
-    })
+      owner_confirmed: true,
+      authority_confirmed: true,
+      facts_changed_after_approval: false,
+      last_human_review_days: Math.floor(rnd() * 180), // 0..179 -> not stale
+      approval_scope_matches_current_system: true,
+    }
+
+    // Set exactly ONE field so the resolver fires exactly ONE trigger.
+    switch (trig) {
+      case 'approval_scope_mismatch':
+        c.approval_scope_matches_current_system = false
+        break
+      case 'last_human_review_stale':
+        c.last_human_review_days = 181 + Math.floor(rnd() * 359) // 181..539 -> stale
+        break
+      case 'accountable_owner_unconfirmed':
+        c.owner_confirmed = false
+        break
+      case 'declared_authority_unconfirmed':
+        c.authority_confirmed = false
+        break
+      case 'authority_invalid_after_changes':
+        c.facts_changed_after_approval = true
+        break
+      default:
+        break // clean chain
+    }
+
+    chains.push(c)
   }
   return chains
 }
@@ -97,259 +149,193 @@ function resolve(chain: Chain): Resolved {
   if (chain.facts_changed_after_approval) triggers.push('authority_invalid_after_changes')
   if (chain.last_human_review_days > 180) triggers.push('last_human_review_stale')
   if (!chain.approval_scope_matches_current_system) triggers.push('approval_scope_mismatch')
-
   const result: Result =
     triggers.length === 0 ? 'NO_CHECKPOINT_REQUIRED' : 'ACCOUNTABILITY_CONTINUITY_GAP'
-
-  return {
-    chain,
-    triggers,
-    result,
-    human_confirmation_required: triggers.length > 0,
-    is_compliance_score: false,
-    materiality_assessed_by_eve: false,
-  }
+  return { chain, triggers, result, human_confirmation_required: triggers.length > 0 }
 }
 
 const TRIGGER_LABELS: Record<string, string> = {
+  approval_scope_mismatch: 'the approval no longer covers the running system',
+  last_human_review_stale: 'the last human review is too old to rely on',
   accountable_owner_unconfirmed: 'no named owner currently stands behind the decision',
   declared_authority_unconfirmed: 'the authority it was granted under is unconfirmed',
   authority_invalid_after_changes: 'the facts the approval rested on were replaced',
-  last_human_review_stale: 'the last human review is too old to rely on',
-  approval_scope_mismatch: 'the approval no longer covers the running system',
 }
-const TRIGGER_ORDER = [
-  'accountable_owner_unconfirmed',
-  'declared_authority_unconfirmed',
-  'authority_invalid_after_changes',
-  'last_human_review_stale',
-  'approval_scope_mismatch',
+// Card display order (matches the brief)
+const CARD_ORDER = [
+  { key: 'approval_scope_mismatch', title: 'Approval scope mismatch' },
+  { key: 'last_human_review_stale', title: 'Stale human review' },
+  { key: 'accountable_owner_unconfirmed', title: 'Owner unconfirmed' },
+  { key: 'declared_authority_unconfirmed', title: 'Authority unconfirmed' },
+  { key: 'authority_invalid_after_changes', title: 'Facts changed after approval' },
 ]
+
+const STORY_URL = '/stories/accountability'
 
 export default function ChainScannerClient() {
   const [selected, setSelected] = useState<Resolved | null>(null)
-  const [domainFilter, setDomainFilter] = useState<string>('ALL')
 
-  // Build + resolve once (deterministic). Measure elapsed time for display.
-  const { resolved, scanMs, summary, dist } = useMemo(() => {
-    const t0 =
-      typeof performance !== 'undefined' ? performance.now() : Date.now()
+  const { gaps, scanMs, summary, dist } = useMemo(() => {
+    const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now()
     const chains = buildFixtures()
     const resolvedAll = chains.map(resolve)
-    const t1 =
-      typeof performance !== 'undefined' ? performance.now() : Date.now()
+    const t1 = typeof performance !== 'undefined' ? performance.now() : Date.now()
 
-    const gaps = resolvedAll.filter(r => r.result === 'ACCOUNTABILITY_CONTINUITY_GAP')
-    const clear = resolvedAll.filter(r => r.result === 'NO_CHECKPOINT_REQUIRED')
+    const gapList = resolvedAll.filter(r => r.result === 'ACCOUNTABILITY_CONTINUITY_GAP')
+    const clearList = resolvedAll.filter(r => r.result === 'NO_CHECKPOINT_REQUIRED')
 
     const distribution: Record<string, number> = {}
-    for (const t of TRIGGER_ORDER) distribution[t] = 0
+    for (const c of CARD_ORDER) distribution[c.key] = 0
     for (const r of resolvedAll) for (const t of r.triggers) distribution[t]++
 
     return {
-      resolved: resolvedAll,
+      gaps: gapList,
       scanMs: Math.max(1, Math.round((t1 - t0) * 100) / 100),
-      summary: {
-        total: resolvedAll.length,
-        gap: gaps.length,
-        clear: clear.length,
-        humanConfirm: gaps.length,
-      },
+      summary: { total: resolvedAll.length, gap: gapList.length, clear: clearList.length },
       dist: distribution,
     }
   }, [])
 
-  const domains = useMemo(() => ['ALL', ...DOMAINS], [])
-  const rows = useMemo(
+  // Top 10 chains requiring human review (deterministic order by chain_id)
+  const top10 = useMemo(
     () =>
-      domainFilter === 'ALL'
-        ? resolved
-        : resolved.filter(r => r.chain.domain === domainFilter),
-    [resolved, domainFilter],
+      [...gaps]
+        .sort((a, b) => a.chain.chain_id.localeCompare(b.chain.chain_id))
+        .slice(0, 10),
+    [gaps],
   )
-
-  const maxDist = Math.max(1, ...Object.values(dist))
 
   return (
     <main className="min-h-screen bg-eve-dark">
       <Navigation />
 
       {/* Hero */}
-      <section className="pt-28 pb-6 px-6 max-w-5xl mx-auto text-center">
-        <span className="text-xs text-purple-400 tracking-[0.3em] uppercase font-mono">
-          EVE Governance Chain Scanner · ISO 42001
-        </span>
-        <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mt-3 mb-3">
-          Scan many decision chains.<br />
-          <span className="text-white/50">Surface the accountability gaps.</span>
+      <section className="pt-28 pb-6 px-6 max-w-4xl mx-auto text-center">
+        <h1 className="text-3xl md:text-4xl font-extralight tracking-wide text-white/90 mb-3">
+          EVE Governance Chain Scanner
         </h1>
-        <p className="text-gray-500 text-sm max-w-2xl mx-auto leading-relaxed">
-          A deterministic scan of {N_CHAINS.toLocaleString()} synthetic AI governance decision chains.
-          Each chain is evaluated against five accountability-continuity signals. Same input, same
-          output, every run.
+        <p className="text-gray-500 text-sm font-mono">
+          Synthetic demo dataset with deterministic gap distribution · deterministic resolver · no compliance judgement
         </p>
-        <p className="text-[11px] text-gray-600 font-mono mt-3">
-          Synthetic fixture data — not a real organisation. Not an ISO 42001 compliance assessment.
+        <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed mt-5">
+          One chain shows the problem.{' '}
+          <span className="text-white/80">1,000 chains show the operational scale.</span>
         </p>
       </section>
 
-      {/* Summary cards */}
-      <section className="px-6 max-w-5xl mx-auto mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          <SummaryCard label="Decision chains scanned" value={summary.total.toLocaleString()} color="#e5e7eb" />
-          <SummaryCard label="Scanned in" value={`${scanMs} ms`} color={GREY} />
-          <SummaryCard label="NO_CHECKPOINT_REQUIRED" value={summary.clear.toLocaleString()} color={GREEN} mono />
-          <SummaryCard label="ACCOUNTABILITY_CONTINUITY_GAP" value={summary.gap.toLocaleString()} color={RED} mono />
-          <SummaryCard label="Human confirmation required" value={summary.humanConfirm.toLocaleString()} color={AMBER} />
+      {/* Summary line */}
+      <section className="px-6 max-w-4xl mx-auto mb-8">
+        <div className="rounded-xl bg-white/[0.02] border border-white/10 divide-y divide-white/5">
+          <SummaryRow label="Decision chains scanned" value={summary.total.toLocaleString()} color="#e5e7eb" />
+          <SummaryRow label="Scanned in" value={`${scanMs} ms`} color={GREY} />
+          <SummaryRow label="No checkpoint required" value={summary.clear.toLocaleString()} color={GREEN} />
+          <SummaryRow
+            label="Flagged for human review before continuity can be proven"
+            value={summary.gap.toLocaleString()}
+            color={RED}
+          />
+          <SummaryRow label="Compliance decisions made by EVE" value="0" color={GREY} />
         </div>
-        <p className="text-[11px] text-gray-600 font-mono mt-3">
-          is_compliance_score: false · materiality_assessed_by_eve: false
-        </p>
       </section>
 
-      {/* Trigger distribution */}
-      <section className="px-6 max-w-5xl mx-auto mb-8">
+      {/* Trigger cards */}
+      <section className="px-6 max-w-4xl mx-auto mb-10">
         <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-4">
-          Trigger distribution — across {N_CHAINS.toLocaleString()} chains
+          Why chains were flagged
         </div>
-        <div className="rounded-xl bg-white/[0.02] border border-white/10 p-5 space-y-3">
-          {TRIGGER_ORDER.map(t => {
-            const count = dist[t] ?? 0
-            const pct = Math.round((count / maxDist) * 100)
-            return (
-              <div key={t}>
-                <div className="flex items-baseline justify-between text-[12px] font-mono mb-1">
-                  <span style={{ color: RED }}>{t}</span>
-                  <span className="text-gray-500">{count.toLocaleString()} chains</span>
-                </div>
-                <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: `${RED}88` }} />
-                </div>
-                <div className="text-[11px] text-gray-600 mt-1">{TRIGGER_LABELS[t]}</div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {CARD_ORDER.map(c => (
+            <div key={c.key} className="rounded-xl bg-white/[0.02] border border-white/10 p-4">
+              <div className="font-mono text-2xl font-light mb-1" style={{ color: RED }}>
+                {(dist[c.key] ?? 0).toLocaleString()}
               </div>
-            )
-          })}
+              <div className="text-[11px] text-gray-400 leading-tight">{c.title}</div>
+              <div className="text-[9px] text-gray-600 font-mono mt-1">{c.key}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Table */}
-      <section className="px-6 max-w-5xl mx-auto mb-6">
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-          <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono">
-            Decision chains ({rows.length.toLocaleString()})
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {domains.map(d => (
-              <button
-                key={d}
-                onClick={() => setDomainFilter(d)}
-                className="text-[11px] font-mono px-2.5 py-1 rounded-full border transition-colors"
-                style={{
-                  color: domainFilter === d ? '#e5e7eb' : GREY,
-                  borderColor: domainFilter === d ? '#ffffff30' : '#ffffff12',
-                  background: domainFilter === d ? '#ffffff10' : 'transparent',
-                }}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
+      {/* Top 10 requiring review */}
+      <section className="px-6 max-w-4xl mx-auto mb-6">
+        <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-mono mb-4">
+          Top 10 chains requiring human review
         </div>
-
         <div className="rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden">
           <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] font-mono uppercase tracking-wide text-gray-600 border-b border-white/5">
             <div className="col-span-3">chain_id</div>
-            <div className="col-span-4">system_name</div>
+            <div className="col-span-5">system_name</div>
             <div className="col-span-2">domain</div>
-            <div className="col-span-3 text-right">result</div>
+            <div className="col-span-2 text-right">trigger</div>
           </div>
-          <div className="max-h-[480px] overflow-y-auto">
-            {rows.slice(0, 200).map(r => {
-              const gap = r.result === 'ACCOUNTABILITY_CONTINUITY_GAP'
-              return (
-                <button
-                  key={r.chain.chain_id}
-                  onClick={() => setSelected(r)}
-                  className="w-full grid grid-cols-12 gap-2 px-4 py-2 text-[12px] font-mono text-left border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors"
-                >
-                  <div className="col-span-3 text-gray-400">{r.chain.chain_id}</div>
-                  <div className="col-span-4 text-gray-300 truncate">{r.chain.system_name}</div>
-                  <div className="col-span-2 text-gray-500">{r.chain.domain}</div>
-                  <div className="col-span-3 text-right" style={{ color: gap ? RED : GREEN }}>
-                    {gap ? 'GAP' : 'CLEAR'}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-          {rows.length > 200 && (
-            <div className="px-4 py-2 text-[11px] font-mono text-gray-600 border-t border-white/5">
-              Showing first 200 of {rows.length.toLocaleString()} — filter by domain to narrow.
+          {top10.map(r => (
+            <button
+              key={r.chain.chain_id}
+              onClick={() => setSelected(r)}
+              className="w-full grid grid-cols-12 gap-2 px-4 py-2.5 text-[12px] font-mono text-left border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors"
+            >
+              <div className="col-span-3 text-gray-400">{r.chain.chain_id}</div>
+              <div className="col-span-4 text-gray-300 truncate">{r.chain.system_name}</div>
+              <div className="col-span-2 text-gray-500">{r.chain.domain}</div>
+              <div className="col-span-3 text-right truncate" style={{ color: RED }}>{r.triggers[0]}</div>
+            </button>
+          ))}
+        </div>
+        <p className="text-[11px] text-gray-600 font-mono mt-3">
+          Showing 10 of {summary.gap} flagged chains. Click a chain for detail.
+        </p>
+      </section>
+
+      {/* CTA to the representative sealed example */}
+      <section className="px-6 max-w-4xl mx-auto mb-16">
+        <div className="rounded-xl border p-5 flex flex-wrap items-center justify-between gap-4"
+          style={{ borderColor: '#a855f730', background: '#a855f708' }}>
+          <div>
+            <div className="text-white text-sm font-light mb-1">
+              One representative chain is sealed and independently verifiable.
             </div>
-          )}
+            <div className="text-gray-500 text-xs font-mono">
+              EVE-ISO42001-00004652 — the one sealed example behind this pattern.
+            </div>
+          </div>
+          <a
+            href={STORY_URL}
+            className="shrink-0 px-5 py-2.5 rounded-full text-sm font-mono border transition-colors"
+            style={{ color: '#c4b5fd', borderColor: '#a855f740', background: '#a855f712' }}
+          >
+            Open detailed accountability story →
+          </a>
         </div>
+        <p className="text-[11px] text-gray-600 font-mono mt-4">
+          Synthetic fixture data — not a real organisation. Not an ISO 42001 compliance assessment.
+          EVE does not produce a compliance score and does not assess materiality.
+        </p>
       </section>
 
-      {/* Footer note */}
-      <section className="px-6 max-w-5xl mx-auto mb-16">
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-          <p className="text-gray-500 text-xs leading-relaxed">
-            EVE surfaces the signal. A named human owner decides. The scan is deterministic — the
-            same fixtures resolve to the same result every run. EVE does not say compliant,
-            non-compliant, incident or material, and this is not a compliance score.
-          </p>
-        </div>
-      </section>
-
-      {/* Detail drawer */}
-      {selected && (
-        <ChainDetail resolved={selected} onClose={() => setSelected(null)} />
-      )}
+      {selected && <ChainDetail resolved={selected} onClose={() => setSelected(null)} />}
 
       <Footer />
     </main>
   )
 }
 
-// ── Summary card ────────────────────────────────────────────────────────────────
-function SummaryCard({
-  label,
-  value,
-  color,
-  mono,
-}: {
-  label: string
-  value: string
-  color: string
-  mono?: boolean
-}) {
+// ── Summary row ─────────────────────────────────────────────────────────────────
+function SummaryRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="rounded-xl bg-white/[0.02] border border-white/10 p-4">
-      <div className="text-[9px] text-gray-500 uppercase tracking-wide font-mono mb-2 leading-tight">
-        {label}
-      </div>
-      <div
-        className={mono ? 'font-mono text-lg' : 'text-2xl font-light'}
-        style={{ color }}
-      >
-        {value}
-      </div>
+    <div className="flex items-center justify-between gap-4 px-5 py-3">
+      <span className="text-gray-400 text-sm">{label}</span>
+      <span className="font-mono text-lg shrink-0" style={{ color }}>{value}</span>
     </div>
   )
 }
 
 // ── Chain detail ────────────────────────────────────────────────────────────────
 function ChainDetail({ resolved, onClose }: { resolved: Resolved; onClose: () => void }) {
-  const { chain, triggers, result, human_confirmation_required } = resolved
-  const gap = result === 'ACCOUNTABILITY_CONTINUITY_GAP'
-
+  const { chain, triggers } = resolved
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <div
-        className="w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0e14] p-6"
+        className="w-full max-w-lg max-h-[88vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0e14] p-6"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-5">
@@ -359,97 +345,42 @@ function ChainDetail({ resolved, onClose }: { resolved: Resolved; onClose: () =>
             </div>
             <div className="text-white font-mono">{chain.system_name}</div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-300 text-xl leading-none px-2"
-            aria-label="Close"
-          >
-            ×
-          </button>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-300 text-xl leading-none px-2" aria-label="Close">×</button>
         </div>
 
-        {/* Chain facts */}
+        {/* Detected triggers */}
         <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-          Chain facts
+          Detected triggers ({triggers.length})
         </div>
-        <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5 space-y-1.5 font-mono text-[12px]">
-          <Fact k="prior_approval_exists" v={chain.prior_approval_exists} />
-          <Fact k="owner_confirmed" v={chain.owner_confirmed} />
-          <Fact k="authority_confirmed" v={chain.authority_confirmed} />
-          <Fact k="facts_changed_after_approval" v={chain.facts_changed_after_approval} invert />
-          <div className="flex justify-between">
-            <span className="text-gray-500">last_human_review_days</span>
-            <span style={{ color: chain.last_human_review_days > 180 ? RED : GREEN }}>
-              {chain.last_human_review_days}
-            </span>
-          </div>
-          <Fact k="approval_scope_matches_current_system" v={chain.approval_scope_matches_current_system} />
+        <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5 space-y-2">
+          {triggers.map(t => (
+            <div key={t}>
+              <div className="text-[12px] font-mono" style={{ color: RED }}>{t}</div>
+              <div className="text-[11px] text-gray-500">{TRIGGER_LABELS[t]}</div>
+            </div>
+          ))}
         </div>
-
-        {/* Triggers */}
-        <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-          Triggers {triggers.length > 0 ? `(${triggers.length})` : ''}
-        </div>
-        {triggers.length === 0 ? (
-          <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5 text-[12px] font-mono" style={{ color: GREEN }}>
-            none — no accountability-continuity signal fired
-          </div>
-        ) : (
-          <div className="rounded-lg bg-white/[0.02] border border-white/5 p-4 mb-5 space-y-2">
-            {triggers.map(t => (
-              <div key={t}>
-                <div className="text-[12px] font-mono" style={{ color: RED }}>{t}</div>
-                <div className="text-[11px] text-gray-500">{TRIGGER_LABELS[t]}</div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Human question */}
-        {gap && (
-          <div className="rounded-lg border p-4 mb-5" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
-            <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-              The question a human actually needs answered
-            </div>
-            <p className="text-white font-light leading-relaxed">
-              Can you prove the approval that covered this system still applies to what the
-              system is doing now?
-            </p>
-          </div>
-        )}
-
-        {/* EVE result */}
-        <div className="rounded-lg border p-4" style={{ borderColor: gap ? `${RED}25` : `${GREEN}20`, background: gap ? `${RED}06` : `${GREEN}06` }}>
+        <div className="rounded-lg border p-4 mb-5" style={{ borderColor: `${AMBER}25`, background: `${AMBER}06` }}>
           <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">
-            EVE result
+            The question a human actually needs answered
           </div>
-          <div className="font-mono text-sm mb-2" style={{ color: gap ? RED : GREEN }}>
-            {result}
-          </div>
-          <div className="flex flex-wrap gap-2 font-mono text-[11px]">
-            <span className="px-2 py-0.5 rounded border" style={{ color: AMBER, borderColor: `${AMBER}25`, background: `${AMBER}08` }}>
-              human_confirmation_required: {String(human_confirmation_required)}
-            </span>
-            <span className="px-2 py-0.5 rounded border" style={{ color: GREEN, borderColor: `${GREEN}25`, background: `${GREEN}08` }}>
-              is_compliance_score: false
-            </span>
-            <span className="px-2 py-0.5 rounded border" style={{ color: GREEN, borderColor: `${GREEN}25`, background: `${GREEN}08` }}>
-              materiality_assessed_by_eve: false
-            </span>
-          </div>
+          <p className="text-white font-light leading-relaxed">
+            Can you prove the approval that covered this system still applies to what the system is doing now?
+          </p>
+        </div>
+
+        {/* Result */}
+        <div className="rounded-lg border p-4" style={{ borderColor: `${RED}25`, background: `${RED}06` }}>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-2">Result</div>
+          <div className="font-mono text-sm mb-3" style={{ color: RED }}>ACCOUNTABILITY_CONTINUITY_GAP</div>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide font-mono mb-1">Next</div>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            A named human owner must review before continuity can be proven.
+          </p>
         </div>
       </div>
-    </div>
-  )
-}
-
-function Fact({ k, v, invert }: { k: string; v: boolean; invert?: boolean }) {
-  // invert: true value is the "bad" one (e.g. facts_changed_after_approval)
-  const good = invert ? !v : v
-  return (
-    <div className="flex justify-between">
-      <span className="text-gray-500">{k}</span>
-      <span style={{ color: good ? GREEN : RED }}>{String(v)}</span>
     </div>
   )
 }
