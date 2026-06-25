@@ -56,50 +56,24 @@ export const generateEParticles = (count: number, baseRadius: number = 60) => {
   })
 }
 
-// Navigation items
+// Navigation items — trimmed for the marketing surface.
+// Primary buying paths up front; deeper architecture/ecosystem under "More".
 export const navItems = [
-  { name: 'EVE', href: '/eve' },
-  {
-    name: 'Solutions',
-    href: '/solutions/tprm',
-    children: [
-      { name: 'TPRM Vendor Evidence Assessment', href: '/solutions/tprm' },
-    ]
-  },
-  { 
-    name: 'ASK', 
-    href: '/ask',
-    children: [
-      { name: 'Research', href: 'https://research.eveverified.com' },
-      { name: 'Healthcare Law', href: '/ask/legal/healthcare' },
-      { name: 'Public Access', href: '/ask/legal/journalism' },
-    ]
-  },
-  { name: 'ELEKTO', href: '/elekto' },
-  {
-    name: 'Control Chain',
-    href: '/control-chain',
-    children: [
-      { name: 'Overview', href: '/control-chain' },
-      { name: 'Energy Control Chain', href: '/control-chain/energy' },
-      { name: 'AGV Control Chain', href: '/control-chain/agv' },
-    ]
-  },
-  { name: 'Philosophy', href: '/philosophy' },
-  { name: 'Insights', href: '/insights' },
-  { name: 'Stories', href: '/stories' },
+  { name: 'Platform', href: '/#products' },
+  { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
-  { name: 'ComplieDocs', href: 'https://compliedocs.com' },
-  { 
-    name: 'About', 
-    href: '/about',
+  { name: 'Verify', href: 'https://verify.eveverified.com' },
+  {
+    name: 'More',
+    href: '/about/what-is-eve',
     children: [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
-      { name: 'Determinism', href: '/about/determinism' },
-      { name: 'EVE Control Room', href: '/about/eve-control-room' },
-      { name: 'ELEKTO-X / X-Vault', href: '/elekto-x' },
+      { name: 'Architecture', href: '/#architecture' },
+      { name: 'Control Chain', href: '/control-chain' },
+      { name: 'ComplieDocs', href: 'https://compliedocs.com' },
+      { name: 'ASK Research', href: 'https://research.eveverified.com' },
+      { name: 'Stories', href: '/stories' },
       { name: 'Company', href: '/about/company' },
-      { name: 'Origin', href: '/origin' },
       { name: 'Pilot Program', href: '/pilot' },
     ]
   },

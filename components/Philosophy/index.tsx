@@ -5,7 +5,8 @@ import { principles } from '@/data/products'
 
 export default function Philosophy() {
   return (
-    <section id="philosophy" className="py-20 md:py-32 px-6 max-w-5xl mx-auto">
+    <section id="philosophy" className="py-20 md:py-28 px-6 bg-lite-bg border-t border-lite-border">
+     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -14,9 +15,9 @@ export default function Philosophy() {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <span className="text-xs text-gray-500 tracking-[0.3em]">WHY DETERMINISM</span>
-        <h2 className="text-3xl md:text-5xl font-extralight tracking-[0.15em] md:tracking-[0.2em] mt-3">
-          PHILOSOPHY
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-lite-muted">Why determinism</span>
+        <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.02em] text-lite-text">
+          Principles
         </h2>
       </motion.div>
 
@@ -29,16 +30,13 @@ export default function Philosophy() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-center p-5 md:p-6 bg-white/[0.02] rounded-lg border border-white/5
-                       hover:border-eve-green/20 transition-all duration-300 group"
+            className="p-5 bg-lite-card rounded-lg border border-lite-border
+                       hover:border-lite-border-hi transition-all duration-300 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
           >
-            <div className="text-3xl md:text-4xl mb-3 opacity-60 group-hover:opacity-100 transition-opacity">
-              {principle.symbol}
-            </div>
-            <div className="text-white text-sm font-medium">
+            <div className="text-lite-text text-sm font-semibold mb-2">
               {principle.title}
             </div>
-            <div className="text-gray-600 text-xs mt-2 leading-relaxed">
+            <div className="text-lite-dim text-xs leading-relaxed">
               {principle.description}
             </div>
           </motion.div>
@@ -51,20 +49,20 @@ export default function Philosophy() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="mt-16 p-8 md:p-12 bg-black/40 rounded-2xl border border-white/5 text-center"
+        className="mt-16 p-8 md:p-12 bg-lite-card rounded-2xl border border-lite-border text-center shadow-[0_1px_3px_rgba(15,23,42,0.05)]"
       >
-        <div 
-          className="text-4xl md:text-5xl text-eve-green/30 italic"
+        <div
+          className="text-4xl md:text-5xl text-lite-accent/30 italic"
           style={{ fontFamily: 'Georgia, serif' }}
         >
           "
         </div>
-        <blockquote className="text-xl md:text-2xl font-extralight leading-relaxed mt-2">
+        <blockquote className="text-xl md:text-2xl font-light leading-relaxed mt-2 text-lite-text">
           Like a formal system: the inference rules are fixed, and conclusions are derived from approved premises.
           <br />
-          <span className="text-eve-green">Our core is stable — our knowledge expands as new premises pass approval.</span>
+          <span className="text-lite-accent">The core is stable — knowledge expands as new premises pass approval.</span>
         </blockquote>
-        <div className="mt-6 text-sm text-gray-600">
+        <div className="mt-6 text-sm text-lite-muted">
           — The Determinism Manifesto
         </div>
       </motion.div>
@@ -75,28 +73,27 @@ export default function Philosophy() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="mt-12 grid md:grid-cols-2 gap-8 text-sm text-gray-500"
+        className="mt-12 grid md:grid-cols-2 gap-8 text-sm text-lite-dim"
       >
         <div>
-          <h4 className="text-white font-medium mb-3">The Symbol</h4>
+          <h4 className="text-lite-text font-semibold mb-3">The Symbol</h4>
           <p className="leading-relaxed">
-            The <span className="text-eve-green italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> in EVE stands for Evidence & Verification Engine.
-            We use Euler’s number as a visual symbol — a nod to mathematical precision, formal systems and reproducible reasoning.
-            EVE’s architecture is built on fixed rules, verified premises and derived conclusions.
+            The <span className="text-lite-accent italic" style={{ fontFamily: 'Georgia, serif' }}>e</span> in EVE stands for Evidence & Verification Engine. It also references Euler’s number (e), reflecting the platform’s foundation in reproducible reasoning, formal systems and deterministic verification.
+            The symbol represents a simple idea: critical decisions should be supported by verifiable evidence rather than assumptions.
           </p>
         </div>
         <div>
-          <h4 className="text-white font-medium mb-3">The Engineering</h4>
+          <h4 className="text-lite-text font-semibold mb-3">The Engineering</h4>
           <p className="leading-relaxed">
-            Every critical component in EVE is designed around deterministic execution.
-            Given the same inputs, approved premises and rule versions, the system should produce the same result.
-            Outputs are evidence-bound, traceable and reproducible.
-            When evidence is missing, EVE returns NO_ANSWER.
-            When authority, accountability or approval scope cannot be confirmed, EVE surfaces the signal.
-            EVE verifies. Humans decide.
+            EVE is built around deterministic verification.
+            Given the same inputs, approved evidence, policy and rule versions, EVE produces the same verification outcome.
+            If required evidence is missing, EVE returns NO_ANSWER.
+            If authority, accountability or approval scope cannot be verified, EVE surfaces the governance signal rather than guessing.
+            EVE verifies the chain. Organisations decide how to act.
           </p>
         </div>
       </motion.div>
+     </div>
     </section>
   )
 }

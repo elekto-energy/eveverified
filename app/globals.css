@@ -32,8 +32,8 @@ html {
 }
 
 body {
-  background-color: var(--eve-dark);
-  color: #ffffff;
+  background-color: #0b1120;
+  color: #e8eef6;
   font-family: var(--font-sans);
 }
 

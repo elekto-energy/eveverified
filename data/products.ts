@@ -12,65 +12,102 @@ export interface Product {
   icon: string
   features: string[]
   href?: string
-  status: 'live' | 'beta' | 'coming'
+  status: 'live' | 'beta' | 'coming' | 'preview'
 }
 
 export const products: Product[] = [
   {
+    id: 'pre-action',
+    name: 'AI Agent Pre-Action',
+    tagline: 'Pre-Action Verification API',
+    description: 'Before an AI agent acts, verify the governance chain behind the action. One API call returns a verified chain outcome and a customer-policy outcome. Your workflow decides and enforces.',
+    color: '#3b82f6',
+    icon: '→',
+    features: ['One API call', 'Verified chain outcome', 'Customer policy outcome', 'Fail-closed by design'],
+    href: 'https://grc.eveverified.com/chain/pre-action',
+    status: 'live'
+  },
+  {
+    id: 'grc',
+    name: 'EVE Verified GRC',
+    tagline: 'Governance Chain Verification',
+    description: 'Evidence-chain verification for governance workflows. Verify whether a chain was authorised, owned and monitored — for DORA, ISO 42001, TPRM and third-party risk. Surfaces gaps; humans decide.',
+    color: '#10b981',
+    icon: '⛓',
+    features: ['DORA / ICT third-party', 'ISO 42001', 'TPRM / vendor access', 'Governance signals'],
+    href: 'https://grc.eveverified.com/chain',
+    status: 'live'
+  },
+  {
+    id: 'codegate',
+    name: 'CodeGate',
+    tagline: 'Code-Change Verification',
+    description: 'Before AI-generated code reaches the codebase, verify it in a sandbox and apply only on explicit human approval. Proposals go to a lab; nothing touches production without confirmation.',
+    color: '#a855f7',
+    icon: '⚙',
+    features: ['Sandbox validation', 'Human-approved apply', 'Atomic write', 'Fail-closed'],
+    href: undefined,
+    status: 'preview'
+  },
+  {
+    id: 'document-verify',
+    name: 'Document Verify',
+    tagline: 'Cryptographic Seal Verification',
+    description: 'Verify cryptographically sealed EVE documents. Confirm integrity and trace any document back to its original data source. Any modification produces a different hash.',
+    color: '#00d4ff',
+    icon: '§',
+    features: ['SHA-256 seal', 'Source traceability', 'Tamper detection', 'Offline-verifiable'],
+    href: 'https://verify.eveverified.com',
+    status: 'live'
+  },
+]
+
+// Secondary ecosystem entries (shown lower, under architecture / ecosystem)
+export const ecosystemProducts: Product[] = [
+  {
     id: 'eve',
-    name: 'EVE',
+    name: 'EVE Core',
     tagline: 'Intelligence & Verification Layer',
-    description: 'Evidence & Verification Engine with 25 agents and 47 factory engines. The core that powers everything.',
+    description: 'The deterministic engine that powers every verification surface. Witness-mode architecture, cryptographic sealing, approved-knowledge core.',
     color: '#00ff88',
     icon: 'e',
-    features: ['Witness-Mode Architecture', 'Cryptographic Sealing', '325K Knowledge Chunks', 'Self-Coding Capability'],
+    features: ['Witness-Mode Architecture', 'Cryptographic Sealing', 'Deterministic Core', 'Approved Knowledge'],
     href: '/eve',
     status: 'live'
   },
   {
-    id: 'signals',
-    name: 'EVE Signals',
-    tagline: 'Governance Signal Layer',
-    description: 'Deterministic governance signals for agentic workflows. Surfaces authority, accountability, approval scope and decision-chain coherence before execution continues.',
-    color: '#a855f7',
-    icon: '§',
-    features: ['Authority Boundary', 'Approval Chain', 'Accountability Continuity', 'Accumulation Risk'],
-    href: 'https://grc.eveverified.com',
+    id: 'control-chain',
+    name: 'EVE Control Chain',
+    tagline: 'Control-Event Evidence Layer',
+    description: 'Evidence layer for critical control events: observed state, requested action, deterministic verdict, hash-chained events, sealed record and later verification.',
+    color: '#00ff88',
+    icon: '⛓',
+    features: ['Deterministic Verdict', 'Hash-Chained Events', 'Sealed Record', 'Verify Adapter'],
+    href: '/control-chain/energy',
     status: 'live'
   },
   {
     id: 'compliedocs',
     name: 'ComplieDocs',
-    tagline: 'Documentation Layer',
-    description: 'Evidence-bound compliance documentation and regulated evidence workflows. 53 templates for GDPR, NIS2, EU AI Act.',
+    tagline: 'Compliance Documentation Layer',
+    description: 'Evidence-bound compliance documentation for GDPR, NIS2 and the EU AI Act. 53 templates with evidence-bound outputs.',
     color: '#00d4ff',
     icon: '§',
-    features: ['53 Legal Templates', 'Evidence-Bound Outputs', 'Instant Generation', 'Multi-jurisdiction'],
+    features: ['53 Legal Templates', 'Evidence-Bound Outputs', 'Multi-jurisdiction'],
     href: 'https://compliedocs.com',
-    status: 'live'
-  },
-  {
-    id: 'elekto',
-    name: 'EVE Control Chain',
-    tagline: 'Verification and control-chain evidence layer',
-    description: 'Evidence layer for critical control events: observed state, requested action, deterministic verdict, hash-chained events, sealed record and later verification.',
-    color: '#00ff88',
-    icon: '⛓',
-    features: ['Deterministic Verdict', 'Hash-Chained Events', 'Sealed Record', 'Verify Adapter', 'Patent Pending'],
-    href: '/control-chain/energy',
     status: 'live'
   },
   {
     id: 'cabledna',
     name: 'CableDNA',
     tagline: 'Physical Identity Layer',
-    description: 'Physical fingerprinting for cables and infrastructure. Unhackable identity through impedance signatures.',
+    description: 'Physical fingerprinting for cables and infrastructure. Identity through impedance signatures.',
     color: '#a855f7',
     icon: '⧬',
-    features: ['Impedance Signatures', 'Temperature Mapping', 'Tamper Detection', 'Zero Trust Hardware'],
+    features: ['Impedance Signatures', 'Tamper Detection', 'Zero Trust Hardware'],
     href: '/cabledna',
     status: 'coming'
-  }
+  },
 ]
 
 // Philosophy principles - based on formal systems theory

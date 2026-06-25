@@ -4,8 +4,8 @@ import ChainScannerClient from './ChainScannerClient'
 export const metadata: Metadata = {
   title: 'EVE Governance Chain Scanner · ISO 42001',
   description:
-    'Deterministic demo: scan many synthetic AI governance decision chains and surface accountability-continuity gaps. ' +
-    'Synthetic fixture data only. Not an ISO 42001 compliance assessment.',
+    'Scale proof: a deterministic scan of 1,000 synthetic AI governance decision chains, surfacing ' +
+    'accountability-continuity gaps. Synthetic demo dataset, no compliance judgement.',
 }
 
 export default function ChainScannerPage() {

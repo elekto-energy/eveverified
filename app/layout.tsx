@@ -52,7 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="bg-eve-dark text-white antialiased">
+      <body className="bg-ent-bg text-ent-text antialiased">
         {children}
       </body>
     </html>

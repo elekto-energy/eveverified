@@ -11,76 +11,50 @@ interface ProductCardProps {
 
 function ProductCard({ product, index }: ProductCardProps) {
   const [hovered, setHovered] = useState(false)
-  const isEve = product.icon === 'e'
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: 0.45, delay: index * 0.08 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="rounded-xl p-6 transition-all duration-300 cursor-pointer border group"
+      className="relative rounded-[10px] p-6 transition-all duration-300 border group bg-white"
       style={{
-        backgroundColor: hovered ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.4)',
-        borderColor: hovered ? product.color : 'rgba(255,255,255,0.1)',
-        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
-        boxShadow: hovered ? `0 15px 30px ${product.color}25` : 'none'
+        borderColor: hovered ? '#cbd5e1' : '#e5e7eb',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        boxShadow: hovered ? '0 10px 24px rgba(15,23,42,0.10)' : '0 1px 2px rgba(15,23,42,0.04)'
       }}
     >
-      {/* Status badge */}
+      {/* Status badge — only for non-live */}
       {product.status !== 'live' && (
-        <div className="absolute top-4 right-4">
-          <span 
-            className="text-xs px-2 py-1 rounded-full uppercase tracking-wider"
-            style={{
-              backgroundColor: product.status === 'beta' ? '#ff6b0020' : '#ffffff10',
-              color: product.status === 'beta' ? '#ff6b00' : '#666'
-            }}
-          >
-            {product.status}
+        <div className="absolute top-5 right-5">
+          <span className="text-[10px] font-bold uppercase tracking-[0.08em] rounded px-2 py-0.5 bg-[#eef2ff] text-[#4338ca] border border-[#c7d2fe]">
+            {product.status === 'preview' ? 'Developer Preview' : product.status === 'coming' ? 'Coming soon' : product.status}
           </span>
         </div>
       )}
 
-      {/* Icon */}
-      <div 
-        className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4 
-                   transition-transform duration-300 group-hover:scale-110"
-        style={{ 
-          backgroundColor: `${product.color}15`, 
-          border: `1px solid ${product.color}40`,
-          fontFamily: isEve ? 'Georgia, serif' : 'inherit',
-          fontStyle: isEve ? 'italic' : 'normal'
-        }}
-      >
-        {product.icon}
-      </div>
-
-      {/* Content */}
-      <h3 className="text-white text-xl font-semibold">{product.name}</h3>
-      <div 
-        className="text-xs uppercase tracking-widest mt-1 mb-3"
-        style={{ color: product.color }}
-      >
+      {/* Kicker label */}
+      <div className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#9ca3af] mb-2">
         {product.tagline}
       </div>
-      <p className="text-gray-500 text-sm leading-relaxed mb-4">
+
+      {/* Title */}
+      <h3 className="text-[#111827] text-lg font-bold tracking-[-0.01em]">{product.name}</h3>
+
+      {/* Description */}
+      <p className="text-[#4b5563] text-sm leading-relaxed mt-2 mb-4">
         {product.description}
       </p>
 
-      {/* Features */}
-      <div className="flex flex-wrap gap-2">
+      {/* Features — neutral chips, single style (no rainbow) */}
+      <div className="flex flex-wrap gap-1.5">
         {product.features.map((feature, i) => (
           <span
             key={i}
-            className="text-xs px-2 py-1 rounded-full transition-colors duration-200"
-            style={{
-              backgroundColor: `${product.color}15`,
-              border: `1px solid ${product.color}30`,
-              color: product.color
-            }}
+            className="text-[11px] px-2 py-0.5 rounded-md bg-[#f7f8fa] border border-[#e5e7eb] text-[#4b5563]"
           >
             {feature}
           </span>
@@ -88,22 +62,26 @@ function ProductCard({ product, index }: ProductCardProps) {
       </div>
 
       {/* Learn more link */}
-      {product.href && (
-        <div className="mt-4 pt-4 border-t border-white/5">
+      {product.href ? (
+        <div className="mt-5 pt-4 border-t border-[#e5e7eb]">
           <a
             href={product.href}
-            className="text-sm text-gray-500 hover:text-white transition-colors inline-flex items-center gap-2"
+            className="text-sm font-semibold text-[#1d4ed8] hover:text-[#1e3a8a] transition-colors inline-flex items-center gap-1.5"
           >
             Learn more
-            <svg 
-              className="w-4 h-4 transition-transform group-hover:translate-x-1" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="w-4 h-4 transition-transform group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </a>
+        </div>
+      ) : (
+        <div className="mt-5 pt-4 border-t border-[#e5e7eb]">
+          <span className="text-sm text-[#9ca3af]">Developer preview · internal</span>
         </div>
       )}
     </motion.div>
@@ -112,9 +90,9 @@ function ProductCard({ product, index }: ProductCardProps) {
 
 export default function Products() {
   return (
-    <section 
-      id="products" 
-      className="py-20 md:py-32 px-6 bg-gradient-to-b from-transparent via-eve-green/[0.02] to-transparent"
+    <section
+      id="products"
+      className="py-20 md:py-28 px-6 bg-lite-bg"
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -125,17 +103,18 @@ export default function Products() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="text-xs text-gray-500 tracking-[0.3em]">ECOSYSTEM</span>
-          <h2 className="text-3xl md:text-5xl font-extralight tracking-[0.15em] md:tracking-[0.2em] mt-3">
-            <span className="italic" style={{ fontFamily: 'Georgia, serif' }}>e</span>-EXPANSION
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-lite-muted">Powered by the same verification engine</span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.02em] text-lite-text">
+            Verify before any system acts
           </h2>
-          <p className="text-gray-600 mt-4 text-sm md:text-base">
-            One core. Infinite products.
+          <p className="mt-4 max-w-2xl mx-auto text-sm md:text-base text-lite-dim leading-relaxed">
+            The same verification engine across AI agents, governance workflows,
+            software delivery and cryptographically verifiable evidence.
           </p>
         </motion.div>
 
         {/* Products Grid */}
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid md:grid-cols-2 gap-5">
           {products.map((product, i) => (
             <ProductCard key={product.id} product={product} index={i} />
           ))}

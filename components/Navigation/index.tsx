@@ -35,22 +35,22 @@ export default function Navigation() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-eve-dark/90 backdrop-blur-xl border-b border-white/5' 
-          : 'bg-transparent'
+        scrolled
+          ? 'bg-ent-panel/90 backdrop-blur-xl border-b border-ent-border'
+          : 'bg-ent-panel/60 backdrop-blur-md'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-3 group">
-          <span 
-            className="text-2xl text-eve-green transition-all duration-300 group-hover:text-glow-green"
+        <a href="/" className="flex items-center gap-2.5 group">
+          <span
+            className="flex h-7 w-7 items-center justify-center rounded-md border border-ent-border bg-ent-card text-lg text-ent-accent-hi"
             style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}
           >
             e
           </span>
-          <span className="text-sm tracking-[0.3em] font-light hidden sm:block">
-            EVE VERIFIED
+          <span className="text-sm font-semibold tracking-[0.06em] text-ent-text hidden sm:block">
+            EVE Verified
           </span>
         </a>
 
@@ -110,11 +110,11 @@ export default function Navigation() {
             )
           ))}
           <a
-            href="/pilot"
-            className="text-xs px-4 py-2 rounded-full border border-eve-green/30 text-eve-green 
-                       hover:bg-eve-green/10 transition-all duration-200"
+            href="https://grc.eveverified.com/chain/pre-action"
+            className="text-xs font-bold px-4 py-2 rounded-lg bg-ent-verified text-[#04140d]
+                       hover:bg-[#0ea371] transition-all duration-200"
           >
-            Pilot
+            Try live demo
           </a>
         </div>
 

@@ -22,6 +22,35 @@ const config: Config = {
           dark: '#0a0a0a',
           darker: '#050505',
         },
+        // Enterprise palette (clean navy — no neon). Used by the marketing surface.
+        ent: {
+          bg: '#0b1120',        // deep navy page background
+          panel: '#0f172a',     // hero / panel
+          card: '#111c30',      // card surface
+          'card-hi': '#16243d', // hover
+          border: '#1e2d45',
+          'border-hi': '#2c3f5e',
+          text: '#e8eef6',
+          dim: '#9fb0c8',
+          muted: '#64748b',
+          accent: '#3b82f6',    // calm enterprise blue
+          'accent-hi': '#60a5fa',
+          verified: '#10b981',  // green = verified (meaningful, not decorative)
+          warn: '#f59e0b',      // amber = escalate/review
+        },
+        // Light surface (enterprise SaaS body sections)
+        lite: {
+          bg: '#f7f8fa',        // light page section
+          card: '#ffffff',      // white card
+          'card-hi': '#f1f5f9', // hover
+          border: '#e5e7eb',
+          'border-hi': '#cbd5e1',
+          text: '#0f172a',      // near-navy text on light
+          dim: '#475569',
+          muted: '#94a3b8',
+          accent: '#2563eb',
+          verified: '#059669',
+        },
       },
       spacing: {
         // e-based spacing system

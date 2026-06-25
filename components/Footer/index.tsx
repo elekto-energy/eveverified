@@ -1,45 +1,44 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { products, company } from '@/data/products'
-import { eveStats } from '@/data/agents'
 
 export default function Footer() {
   return (
-    <footer className="py-16 px-6 border-t border-white/5 mt-12">
+    <footer className="py-16 px-6 border-t border-ent-border bg-ent-panel">
       <div className="max-w-6xl mx-auto">
         {/* Main footer content */}
         <div className="grid md:grid-cols-4 gap-12 md:gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <span 
-                className="text-3xl text-eve-green italic"
+            <div className="flex items-center gap-2.5 mb-4">
+              <span
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-ent-border bg-ent-card text-lg text-ent-accent-hi italic"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
                 e
               </span>
-              <span className="tracking-[0.2em] font-light text-lg">
-                EVE VERIFIED
+              <span className="font-semibold tracking-[0.06em] text-base text-ent-text">
+                EVE Verified
               </span>
             </div>
-            <p className="text-gray-600 text-sm leading-relaxed max-w-sm">
-              Deterministic verification platform for approved knowledge, governance signals and evidence-bound workflows.
+            <p className="text-ent-dim text-sm leading-relaxed max-w-sm">
+              A pre-action verification platform for AI agents, governance workflows
+              and critical operational decisions. EVE proves the chain. The organisation acts on it.
             </p>
-            <div className="mt-4 text-gray-700 text-xs">
+            <div className="mt-4 text-ent-muted text-xs">
               {company.name} · org.nr {company.orgNr}
             </div>
           </div>
 
           {/* Products */}
           <div>
-            <div className="text-gray-500 text-xs tracking-[0.2em] mb-4">PRODUCTS</div>
+            <div className="text-ent-muted text-xs font-semibold uppercase tracking-[0.12em] mb-4">Platform</div>
             <ul className="space-y-2">
               {products.map(product => (
                 <li key={product.id}>
                   <a
                     href={product.href || `#${product.id}`}
-                    className="text-gray-600 hover:text-white transition-colors text-sm"
+                    className="text-ent-dim hover:text-ent-text transition-colors text-sm"
                   >
                     {product.name}
                   </a>
@@ -50,40 +49,30 @@ export default function Footer() {
 
           {/* Connect */}
           <div>
-            <div className="text-gray-500 text-xs tracking-[0.2em] mb-4">CONNECT</div>
+            <div className="text-ent-muted text-xs font-semibold uppercase tracking-[0.12em] mb-4">Connect</div>
             <ul className="space-y-2">
+              <li>
+                <a
+                  href="https://grc.eveverified.com/chain/pre-action"
+                  className="text-ent-dim hover:text-ent-text transition-colors text-sm"
+                >
+                  Try live demo →
+                </a>
+              </li>
               <li>
                 <a
                   href="https://verify.eveverified.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-white transition-colors text-sm"
+                  className="text-ent-dim hover:text-ent-text transition-colors text-sm"
                 >
-                  Verify a seal →
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/elekto-energy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-white transition-colors text-sm"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/docs"
-                  className="text-gray-600 hover:text-white transition-colors text-sm"
-                >
-                  Documentation
+                  Verify a document
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:info@eveverified.com"
-                  className="text-gray-600 hover:text-white transition-colors text-sm"
+                  className="text-ent-dim hover:text-ent-text transition-colors text-sm"
                 >
                   Contact
                 </a>
@@ -92,28 +81,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Domains */}
-        <div className="mt-12 pt-8 border-t border-white/5">
-          <div className="flex flex-wrap gap-4 text-xs text-gray-700">
-            {company.domains.map(domain => (
-              <span key={domain} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-eve-green/50" />
-                {domain}
-              </span>
-            ))}
-          </div>
-        </div>
-
         {/* Bottom */}
-        <div className="mt-8 pt-8 border-t border-white/[0.03] flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="text-gray-700 text-xs">
-            © {new Date().getFullYear()} {company.name}. Built by Joakim Eklund.
+        <div className="mt-12 pt-8 border-t border-ent-border flex flex-col md:flex-row justify-between items-center gap-4">
+          <span className="text-ent-muted text-xs">
+            © {new Date().getFullYear()} {company.name}.
           </span>
-          <span 
-            className="font-mono text-xs text-eve-green/40"
-            title="EVE stats: agents.engines.knowledge_"
-          >
-            {eveStats.agents}.{eveStats.engines}.{eveStats.knowledgeChunks}{eveStats.expansion}
+          <span className="text-ent-muted text-xs">
+            EVE proves the chain. The organisation acts on it.
           </span>
         </div>
       </div>
