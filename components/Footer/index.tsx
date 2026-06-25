@@ -71,7 +71,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:info@eveverified.com"
+                  href="/contact"
                   className="text-ent-dim hover:text-ent-text transition-colors text-sm"
                 >
                   Contact
