@@ -119,6 +119,16 @@ export default function Products() {
             <ProductCard key={product.id} product={product} index={i} />
           ))}
         </div>
+
+        {/* Regulatory context — claim-safe: supports, does not certify */}
+        <div className="mt-8 rounded-[10px] border border-[#e5e7eb] bg-white px-5 py-4">
+          <p className="text-sm text-[#4b5563] leading-relaxed">
+            <span className="font-semibold text-[#111827]">Supports governance requirements</span> such as
+            human oversight, record-keeping and traceability under the EU AI Act (Art. 12–14), DORA,
+            ISO 42001 and TPRM. EVE provides verifiable evidence and surfaces gaps —
+            it does not certify compliance, and the organisation acts on the result.
+          </p>
+        </div>
       </div>
     </section>
   )

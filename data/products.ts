@@ -34,7 +34,7 @@ export const products: Product[] = [
     description: 'Evidence-chain verification for governance workflows. Verify whether a chain was authorised, owned and monitored — for DORA, ISO 42001, TPRM and third-party risk. Surfaces gaps; humans decide.',
     color: '#10b981',
     icon: '⛓',
-    features: ['DORA / ICT third-party', 'ISO 42001', 'TPRM / vendor access', 'Governance signals'],
+    features: ['EU AI Act', 'DORA / ICT third-party', 'ISO 42001', 'TPRM / vendor access'],
     href: 'https://grc.eveverified.com/chain',
     status: 'live'
   },
