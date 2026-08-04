@@ -73,6 +73,7 @@ export const navItems = [
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
       { name: 'ASK Research', href: 'https://research.eveverified.com' },
       { name: 'Stories', href: '/stories' },
+      { name: 'Marine', href: 'https://marine.eveverified.com' },
       { name: 'Company', href: '/about/company' },
       { name: 'Pilot Program', href: '/pilot' },
     ]
