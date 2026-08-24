@@ -28,7 +28,7 @@ export default function Hero() {
       >
         <span className="h-1.5 w-1.5 rounded-full bg-ent-verified shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
         <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ent-verified">
-          Live · Pre-Action Verification Platform
+          Live · Evidence Verification for AI &amp; Automated Systems
         </span>
       </motion.div>
 
@@ -45,28 +45,53 @@ export default function Hero() {
         systems act.
       </motion.h1>
 
-      {/* Sub */}
+      {/* Sub — LOCKED POSITIONING. The mechanism, not only the principle.
+          The four roles are kept distinct and must not be merged:
+            EVE                   verifies the evidence
+            Human-defined policy  determines what happens next
+            Customer workflow     enforces the outcome
+            EVE                   does not execute the action
+          "EVE proves the chain. The organisation acts on it." is retained as
+          the principle/signature line on secondary surfaces (footer), not as
+          the main thesis. */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
         className="relative z-10 mt-7 max-w-xl text-center text-lg leading-relaxed text-ent-dim"
       >
-        Pre-action verification for AI agents, GRC chains and critical decisions.
-        EVE verifies the chain behind an action and returns what the evidence supports.
+        <span className="font-semibold text-ent-text">EVE verifies evidence</span> against
+        requirements fixed beforehand.{' '}
+        <span className="font-semibold text-ent-text">Human-defined policy</span> determines
+        what happens next.
       </motion.p>
 
-      {/* Boundary line */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative z-10 mt-4 text-center text-sm text-ent-muted"
+        transition={{ duration: 0.8, delay: 0.45 }}
+        className="relative z-10 mt-4 max-w-xl text-center text-base leading-relaxed text-ent-dim"
       >
-        EVE proves the chain. The organisation acts on it.
+        If required evidence cannot be verified, EVE refuses instead of guessing.
       </motion.p>
 
-      {/* CTAs */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.55 }}
+        className="relative z-10 mt-3 text-center text-sm text-ent-muted"
+      >
+        The customer workflow enforces the outcome. EVE does not execute the action.
+      </motion.p>
+
+      {/* CTAs — two complementary entry points, not two of the same kind.
+          PRIMARY  live, synthetic, interactive: try the product.
+          SECONDARY recorded production run: see what the product actually did.
+          DEVIATION 2b from WEB_RELEASE_MODEL v1.2: the secondary CTA was
+          reassigned from the generic governance demo to the provider-backed
+          evidence story, and the separate quiet text link was removed because
+          it pointed at the same destination. The governance demo remains
+          reachable from the navigation and from its product card. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,14 +105,32 @@ export default function Hero() {
           ▶ Try Pre-Action API
         </a>
         <a
-          href="https://grc.eveverified.com/chain"
-          className="inline-flex items-center gap-2 rounded-lg border border-ent-border bg-ent-card px-6 py-3 text-sm font-semibold text-ent-text transition-colors hover:border-ent-border-hi hover:bg-ent-card-hi"
+          href="/stories/provider-backed"
+          className="group inline-flex items-center gap-2 rounded-lg border border-ent-border bg-ent-card px-6 py-3 text-sm font-semibold text-ent-text transition-colors hover:border-ent-border-hi hover:bg-ent-card-hi"
         >
-          See Governance Demo →
+          See the Azure-backed proof
+          <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
         </a>
       </motion.div>
 
-      {/* Flow illustration — the chain, the hero's quiet centrepiece */}
+      {/* Caption for the two paths. Layer 1 only: no digests, no manifests,
+          no EXACT_MATCH / QUALIFIED, no internal record vocabulary. */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.7 }}
+        className="relative z-10 mt-5 max-w-xl text-center text-sm leading-relaxed text-ent-dim"
+      >
+        <span className="font-semibold text-ent-text">Live synthetic pre-action demo</span>, or a{' '}
+        <span className="font-semibold text-ent-text">recorded Azure DevOps production verification</span>
+        {' '}— one sealed expectation, two fail-closed states, one authenticated read.
+      </motion.p>
+
+      {/* Flow illustration — the chain, the hero's quiet centrepiece.
+          LOCKED: it now names the determination and the policy step, so the
+          illustration tells the same four-role story as the copy above. */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -96,13 +139,13 @@ export default function Hero() {
       >
         <span className="rounded-md border border-ent-border bg-ent-card px-3 py-1.5">System wants to act</span>
         <span className="text-ent-border-hi">→</span>
-        <span className="rounded-md border border-ent-accent/30 bg-ent-accent/10 px-3 py-1.5 font-semibold text-ent-accent-hi">EVE verifies the chain</span>
+        <span className="rounded-md border border-ent-accent/30 bg-ent-accent/10 px-3 py-1.5 font-semibold text-ent-accent-hi">EVE verifies the evidence</span>
         <span className="text-ent-border-hi">→</span>
-        <span className="rounded-md border border-ent-border bg-ent-card px-3 py-1.5">Verified outcome</span>
+        <span className="rounded-md border border-ent-border bg-ent-card px-3 py-1.5">Verified determination</span>
         <span className="text-ent-border-hi">→</span>
-        <span className="rounded-md border border-ent-border bg-ent-card px-3 py-1.5">Customer policy</span>
+        <span className="rounded-md border border-ent-border bg-ent-card px-3 py-1.5">Human-defined policy</span>
         <span className="text-ent-border-hi">→</span>
-        <span className="rounded-md border border-ent-verified/30 bg-ent-verified/10 px-3 py-1.5 font-semibold text-ent-verified">Execute</span>
+        <span className="rounded-md border border-ent-verified/30 bg-ent-verified/10 px-3 py-1.5 font-semibold text-ent-verified">Customer workflow acts</span>
       </motion.div>
 
       {/* Scroll indicator */}

@@ -13,9 +13,15 @@ const chain = [
 
 const properties = [
   { title: 'Witness Mode',          desc: 'EVE observes and verifies. It does not act on the system\u2019s behalf. Every verdict is a record, not an instruction.' },
-  { title: 'Deterministic Core',    desc: 'Given the same inputs, approved premises and rule versions, the engine produces the same result \u2014 every time.' },
+  { title: 'Deterministic Core',    desc: 'Given the same inputs, approved premises and rule versions, the engine produces the same result — every time.' },
   { title: 'Evidence Chain',        desc: 'Each action is modelled as a chain of evidence: identity, authority, approval, scope and monitoring.' },
   { title: 'Cryptographic Sealing', desc: 'Outcomes are hash-sealed and reproducible. Any change to the underlying evidence produces a different hash.' },
+  // Two sentences, deliberately different in kind. The first states the
+  // ARCHITECTURAL principle; the second reports the MEASURED outcome of the
+  // provider-backed demonstration. Collapsing them into "EVE records nothing"
+  // would turn a result measured on one path into a universal claim about
+  // every EVE operation. Locked in WEB_RELEASE_MODEL.md v1.2 §C3.
+  { title: 'Fail-Closed', desc: 'When a required source is unavailable or a required credential cannot be resolved, EVE refuses the verification path. In the provider-backed demonstration, no observation or determination was recorded and EVE did not downgrade to an unauthenticated read.' },
 ]
 
 const stats = [
@@ -44,7 +50,7 @@ export default function HowItWorks() {
           </h2>
           <p className="mt-4 text-sm md:text-base text-ent-dim leading-relaxed">
             EVE verifies each link in the chain behind an action and returns what the evidence
-            supports. The system decides what happens next \u2014 EVE does not execute.
+            supports. The system decides what happens next — EVE does not execute.
           </p>
         </motion.div>
 

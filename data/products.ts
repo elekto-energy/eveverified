@@ -129,7 +129,7 @@ export const principles = [
   },
   {
     symbol: '⛓',
-    title: 'Cryptographic Truth',
+    title: 'Cryptographic Integrity',
     description: 'Every sealed output is verifiable. Every approved claim links to its source. Every record can be checked without trusting the system that produced it.'
   },
   {

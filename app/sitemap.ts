@@ -34,6 +34,13 @@ const ROUTES: Route[] = [
   { path: '/insights',                  priority: 0.8, changeFrequency: 'weekly' },
   { path: '/insights/ai-act-proof-v1',  priority: 0.9, changeFrequency: 'monthly' },
 
+  // Stories
+  // NOTE: /stories itself is NOT listed. It redirects to /stories/accountability
+  // and is not canonical content; a sitemap points at the indexable page, never
+  // at a URL that immediately forwards the visitor.
+  { path: '/stories/accountability',    priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/stories/provider-backed',   priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-08-24') },
+
   // ASK
   { path: '/ask',                       priority: 0.6, changeFrequency: 'monthly' },
   { path: '/ask/legal',                 priority: 0.6, changeFrequency: 'monthly' },

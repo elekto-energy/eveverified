@@ -9,6 +9,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  // Required for Next.js to resolve relative social-image URLs to absolute ones.
+  // Without it the generated og:image / twitter:image resolve against
+  // http://localhost:3000 and every share card breaks in production.
+  // Added as a documented deviation from WEB_RELEASE_MODEL v1.2 (metadata only,
+  // no claim or content change).
+  metadataBase: new URL('https://eveverified.com'),
   title: 'EVE Verified | Evidence Verification Engine',
   description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
   keywords: ['evidence verification', 'deterministic', 'EVE', 'governance', 'TPRM', 'vendor review', 'compliance', 'GDPR', 'NIS2', 'EU AI Act'],
