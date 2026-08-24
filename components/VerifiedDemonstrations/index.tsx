@@ -117,22 +117,40 @@ function DemonstrationCard({ item, index }: { item: Demonstration; index: number
         {item.layer2.map((chip) => (
           <span
             key={chip}
-            className="rounded-[6px] border border-[#e5e7eb] bg-[#f7f8fa] px-2 py-0.5 text-[.68rem] text-gray-600"
+            className={`rounded-[6px] border border-[#e5e7eb] bg-[#f7f8fa] px-2 py-0.5 text-gray-600 ${
+              featured ? 'text-[.72rem]' : 'text-[.68rem]'
+            }`}
           >
             {chip}
           </span>
         ))}
       </div>
 
-      <p className="mt-4 text-[.82rem] leading-[1.55] text-gray-600">{item.summary}</p>
+      <p className={`mt-4 leading-[1.55] text-gray-600 ${featured ? 'text-[.88rem]' : 'text-[.82rem]'}`}>
+        {item.summary}
+      </p>
 
-      <a
-        href={item.href}
-        className={`mt-5 inline-flex items-center gap-1.5 text-[.82rem] font-bold underline-offset-2 transition-opacity hover:underline ${accent.link}`}
-      >
-        {item.linkLabel}
-        <span aria-hidden="true">→</span>
-      </a>
+      {/* The featured demonstration gets a real call to action. A grey text
+          link under the strongest claim on the page would bury it — the card
+          says an action was governed and verified, and the visitor should be
+          able to go and look without hunting for the way in. */}
+      {featured ? (
+        <a
+          href={item.href}
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#0f172a] px-6 py-3.5 text-[.92rem] font-bold text-white transition-colors hover:bg-[#1e293b] sm:w-auto sm:self-start"
+        >
+          {item.linkLabel}
+          <span aria-hidden="true">→</span>
+        </a>
+      ) : (
+        <a
+          href={item.href}
+          className={`mt-5 inline-flex items-center gap-1.5 text-[.82rem] font-bold underline-offset-2 transition-opacity hover:underline ${accent.link}`}
+        >
+          {item.linkLabel}
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
 
       {/* RULE 3 — evidence status, visible without a click */}
       <p className="mt-4 border-t border-[#e5e7eb] pt-3 text-[.7rem] leading-[1.5] text-gray-400">

@@ -85,13 +85,16 @@ export default function Hero() {
       </motion.p>
 
       {/* CTAs — two complementary entry points, not two of the same kind.
-          PRIMARY  live, synthetic, interactive: try the product.
-          SECONDARY recorded production run: see what the product actually did.
-          DEVIATION 2b from WEB_RELEASE_MODEL v1.2: the secondary CTA was
-          reassigned from the generic governance demo to the provider-backed
-          evidence story, and the separate quiet text link was removed because
-          it pointed at the same destination. The governance demo remains
-          reachable from the navigation and from its product card. */}
+          PRIMARY   the governed-action proof: what EVE actually did, end to end,
+                    with a real provider read, a real side effect, and
+                    post-action verification.
+          SECONDARY the provider-backed evidence story.
+
+          2026-08-24: the primary slot previously pointed at the synthetic
+          pre-action sandbox. That put the weakest demonstration behind the
+          first thing a visitor clicks. The sandbox explains a mechanism; the
+          governed-action page shows the model working. It remains reachable
+          from the navigation and from the governed-action page itself. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -99,10 +102,13 @@ export default function Hero() {
         className="relative z-10 mt-10 flex flex-wrap items-center justify-center gap-3"
       >
         <a
-          href="https://grc.eveverified.com/chain/pre-action"
-          className="inline-flex items-center gap-2 rounded-lg bg-ent-verified px-6 py-3 text-sm font-bold text-[#04140d] transition-colors hover:bg-[#0ea371]"
+          href="https://grc.eveverified.com/chain/governed-action"
+          className="group inline-flex items-center gap-2 rounded-lg bg-ent-verified px-7 py-3.5 text-sm font-bold text-[#04140d] transition-colors hover:bg-[#0ea371]"
         >
-          ▶ Try Pre-Action API
+          See the governed-action proof
+          <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
         </a>
         <a
           href="/stories/provider-backed"
@@ -123,7 +129,8 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 0.7 }}
         className="relative z-10 mt-5 max-w-xl text-center text-sm leading-relaxed text-ent-dim"
       >
-        <span className="font-semibold text-ent-text">Live synthetic pre-action demo</span>, or a{' '}
+        <span className="font-semibold text-ent-text">A real action, blocked and then allowed</span>{' '}
+        by verified evidence — or a{' '}
         <span className="font-semibold text-ent-text">recorded Azure DevOps production verification</span>
         {' '}— one sealed expectation, two fail-closed states, one authenticated read.
       </motion.p>
