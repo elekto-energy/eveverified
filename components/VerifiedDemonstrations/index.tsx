@@ -51,6 +51,12 @@ const ACCENT: Record<
     dot: 'bg-green-700',
     link: 'text-green-700',
   },
+  PRODUCTION_GOVERNED_ACTION: {
+    rule: 'border-l-blue-700',
+    badge: 'border-blue-200 bg-blue-50 text-blue-700',
+    dot: 'bg-blue-700',
+    link: 'text-blue-700',
+  },
   SCENARIO_LIVE_VERIFIED: {
     rule: 'border-l-indigo-700',
     badge: 'border-indigo-200 bg-indigo-50 text-indigo-700',
@@ -61,6 +67,7 @@ const ACCENT: Record<
 
 function DemonstrationCard({ item, index }: { item: Demonstration; index: number }) {
   const accent = ACCENT[item.kind]
+  const featured = item.featured === true
 
   return (
     <motion.article
@@ -68,7 +75,9 @@ function DemonstrationCard({ item, index }: { item: Demonstration; index: number
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.1 }}
-      className={`flex flex-col rounded-[10px] border border-[#e5e7eb] border-l-[3px] bg-white p-5 ${accent.rule}`}
+      className={`flex flex-col rounded-[10px] border border-[#e5e7eb] border-l-[3px] bg-white ${accent.rule} ${
+        featured ? 'p-6 shadow-[0_4px_16px_rgba(15,23,42,.07)]' : 'p-5'
+      }`}
     >
       {/* RULE 2 — kind label, always visible, never abbreviated */}
       <div>
@@ -79,16 +88,26 @@ function DemonstrationCard({ item, index }: { item: Demonstration; index: number
         </span>
       </div>
 
-      <h3 className="mt-3 text-[1.05rem] font-bold leading-[1.35] tracking-[-.01em] text-[#0f172a]">
+      <h3
+        className={`mt-3 font-bold leading-[1.3] tracking-[-.015em] text-[#0f172a] ${
+          featured ? 'text-[1.3rem] md:text-[1.5rem]' : 'text-[1.05rem] leading-[1.35]'
+        }`}
+      >
         {item.headline}
       </h3>
 
       {/* RULE 1 — layer 1 dominates. Understood without reading further. */}
-      <div className="mt-4 flex flex-col gap-1.5">
+      <div className={`mt-4 gap-1.5 ${featured ? 'flex flex-col sm:flex-row sm:gap-6' : 'flex flex-col'}`}>
         {item.layer1.map((line) => (
           <div key={line} className="flex items-baseline gap-2.5">
             <span className={`mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full ${accent.dot}`} />
-            <span className="text-[.88rem] font-semibold text-[#111827]">{line}</span>
+            <span
+              className={`font-semibold text-[#111827] ${
+                featured ? 'text-[.95rem]' : 'text-[.88rem]'
+              }`}
+            >
+              {line}
+            </span>
           </div>
         ))}
       </div>
@@ -152,10 +171,20 @@ export default function VerifiedDemonstrations() {
           </div>
         </motion.div>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
-          {demonstrations.map((item, i) => (
-            <DemonstrationCard key={item.id} item={item} index={i} />
-          ))}
+        <div className="mt-5 flex flex-col gap-4">
+          {demonstrations
+            .filter((d) => d.featured)
+            .map((item, i) => (
+              <DemonstrationCard key={item.id} item={item} index={i} />
+            ))}
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {demonstrations
+            .filter((d) => !d.featured)
+            .map((item, i) => (
+              <DemonstrationCard key={item.id} item={item} index={i + 1} />
+            ))}
         </div>
       </div>
     </section>

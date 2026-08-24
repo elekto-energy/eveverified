@@ -31,12 +31,23 @@
  *   connection. Evidence is published as cryptographic commitments; the full
  *   records are retained for controlled diligence.
  *
+ * PRODUCTION_GOVERNED_ACTION
+ *   The strongest claim on this list, and it is separated for that reason.
+ *   A production run in which a verified determination governed whether an
+ *   external workflow performed a real action, and EVE afterwards verified
+ *   that the same action had occurred — both halves bound to ONE sealed
+ *   requirement. The others verify evidence; this one also shows a decision
+ *   and its consequence. Filing it under PRODUCTION_PROVIDER_BACKED would let
+ *   the weaker label mask the stronger claim, which is the same defect this
+ *   type exists to prevent, in the opposite direction.
+ *
  * SCENARIO_LIVE_VERIFIED
  *   A scenario narrative anchored to a real sealed record which is fetched and
  *   integrity-checked live, in the browser, at read time.
  */
 export type DemonstrationKind =
   | 'PRODUCTION_PROVIDER_BACKED'
+  | 'PRODUCTION_GOVERNED_ACTION'
   | 'SCENARIO_LIVE_VERIFIED'
 
 export interface Demonstration {
@@ -62,9 +73,47 @@ export interface Demonstration {
    * does not open the story.
    */
   evidenceNote: string
+  /**
+   * Renders full width, ahead of the grid. At most ONE demonstration may set
+   * this. It is a claim about relative strength, not a layout preference: the
+   * featured card is the one a visitor should read if they read only one.
+   */
+  featured?: boolean
 }
 
 export const demonstrations: Demonstration[] = [
+  {
+    id: 'governed-action',
+    kind: 'PRODUCTION_GOVERNED_ACTION',
+    kindLabel: 'Production · Governed action · Before + after',
+    headline:
+      'Insufficient evidence blocked the action. Sufficient evidence allowed it.',
+    layer1: [
+      'One sealed requirement',
+      'A person changed the world between the runs',
+      'Verified again afterwards',
+    ],
+    layer2: [
+      'Real provider read',
+      'Blocked, then allowed',
+      'Real side effect',
+      'Verified after the fact',
+    ],
+    summary:
+      'EVE read a real Azure DevOps work item, and the evidence was not ' +
+      'sufficient — policy returned block and the external workflow did ' +
+      'nothing. A person then moved the work item to Done. The same ' +
+      'requirement, the same action, the same workflow: this time the ' +
+      'evidence was sufficient, policy returned allow, the workflow acted, ' +
+      'and EVE verified afterwards that it had.',
+    href: 'https://grc.eveverified.com/chain/governed-action',
+    linkLabel: 'See the block, the change, and the verified outcome',
+    evidenceNote:
+      'Recorded production runs against a real provider. The action changed ' +
+      'state in an isolated demonstration target — no real vendor access was ' +
+      'granted.',
+    featured: true,
+  },
   {
     id: 'provider-backed',
     kind: 'PRODUCTION_PROVIDER_BACKED',
