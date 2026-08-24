@@ -58,9 +58,15 @@ export const generateEParticles = (count: number, baseRadius: number = 60) => {
 
 // Navigation items — trimmed for the marketing surface.
 // Primary buying paths up front; deeper architecture/ecosystem under "More".
+//
+// 2026-08-24: the flagship slot is the GOVERNED ACTION PROOF, not the
+// pre-action API page. A visitor arriving on the API page lands in a synthetic
+// sandbox and has no obvious way onward to the demonstration that actually
+// carries the claim. Pre-Action API moves under "More": it explains a
+// mechanism, and a mechanism is not the proof.
 export const navItems = [
   { name: 'Platform', href: '/#products' },
-  { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
+  { name: 'Governed Action Proof', href: 'https://grc.eveverified.com/chain/governed-action' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
   { name: 'Verify', href: 'https://verify.eveverified.com' },
   {
@@ -68,6 +74,7 @@ export const navItems = [
     href: '/about/what-is-eve',
     children: [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
+      { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
       { name: 'Architecture', href: '/#architecture' },
       { name: 'Control Chain', href: '/control-chain' },
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
