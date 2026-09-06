@@ -143,6 +143,7 @@ export const principles = [
 export const company = {
   name: 'Organiq Sweden AB',
   orgNr: '559505-3579',
+  email: 'joakim@organiq.se',
   domains: ['eveverified.com', 'eveverified.se'],
   founded: 2024,
   founder: 'Joakim Eklund',

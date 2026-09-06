@@ -1,5 +1,7 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.2 — locked 2026-08-24, after owner review
+**Status:** LOCKED FOR BUILD v1.3 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+  adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
+  unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -524,3 +526,145 @@ during the build stops being a lock.
   were this one. The two stay separate and are labelled as different kinds.
 - Does not claim live verification anywhere it does not happen.
 - Does not fix sitemap debt beyond its own scope.
+
+---
+
+## G. GOVERNED DEVELOPMENT DEMONSTRATION (v1.3 — 2026-09-06)
+
+**Scope:** eveverified.com homepage only — one new entry in the Verified
+demonstrations section, one footer contact line. No new page, no navigation
+change, no hero change, no component restructuring.
+
+**Copy source (release input):**
+    evidence/governed_actions/_review/gov/EVE-GOV-020/EVE_GOV_TASK_RESULT.json
+    (the owner act that measured the public deployment; owner-held evidence, not
+    in this repository). The measured numbers below come from that record and
+    from the hosted deployment it describes. Nothing on the homepage may state a
+    number that record does not carry.
+
+**Destination:** https://demo.eveverified.com/actions — a public, read-only
+snapshot demonstration. A CNAME to the hosted deployment; same bytes as the
+owner's published/ directory (7/7 byte-identical, measured). No live store, no
+API, no authentication, no write path.
+
+### G1 — A fourth demonstration kind, and why it is separate
+
+    PRODUCTION_PUBLISHED_SNAPSHOT
+
+A production run of EVE's own governed development: the actions that built the
+dashboard, the operator and the publication path were themselves declared,
+admitted through pre-action gates, measured, reviewed and only then eligible for
+promotion. Selected governed states were published as hash-sealed snapshots.
+
+It is filed as its own kind because its claim is different from all three
+existing kinds:
+
+    stronger than SCENARIO_LIVE_VERIFIED   the runs are production, not scenario
+    weaker than PRODUCTION_GOVERNED_ACTION the reviewer of every governed task
+                                           was the same party that wrote the
+                                           change; the review records say
+                                           NOT_ESTABLISHED for independence, and
+                                           the demonstration shows that field
+    different from PROVIDER_BACKED         no provider is read; the evidence is
+                                           EVE's own governed state
+
+Filing it under any existing kind would let it borrow a claim it does not make.
+
+### G2 — What "verified in your browser" means, and does not mean
+
+WORDING LOCK. The phrase is permitted only with this meaning: the visitor's
+browser re-derives each snapshot's declared hash from the published bytes and
+compares it, and checks that the snapshot declares the contract the client
+validates. That is verification of PUBLISHED BYTES and of a DECLARED CONTRACT.
+
+It is NOT: "the system is verified", "the actions were audited", "the evidence
+is complete", or "tamper-proof". None of those words may appear on the homepage
+in connection with this demonstration. The demonstration itself renders three
+distinct states — VERIFIED PUBLISHED SNAPSHOT, PUBLISHED SNAPSHOT CONTRACT
+MISMATCH, PUBLISHED SNAPSHOT INVALID — and the homepage must not collapse them.
+
+### G3 — The limitation travels with the claim
+
+The card's evidenceNote MUST carry both limitations, visible without a click:
+
+    A snapshot shows what the owner chose to publish at a specific point in
+    time; it does not assert that the complete underlying evidence set has been
+    exposed or independently reviewed.
+
+The homepage may never be stronger than the demonstration it links to. The
+demonstration shows "Independence: NOT_ESTABLISHED" on every action; the
+homepage therefore says "independently reviewed" only inside a negation.
+
+### G4 — Measured claims permitted on the card (from the copy source)
+
+    7/7 published files byte-identical after remote hosting        (H2)
+    zero requests to any live API or store from the hosted client   (H8, behaviour)
+    no default live-API locator found in the delivered client JS    (H8, static —
+                                                                    the 9 scripts
+                                                                    /actions loads)
+    failed runs published as failed: REFUSED, MISSING, UNRESOLVED   (H7)
+
+Not permitted: record ids, hashes, action ids, counts of governed tasks, cost
+figures, or any sentence containing "independent" outside a negation.
+
+### G5 — Layer rules applied
+
+    layer1   plain language only, no internal vocabulary:
+             "Declared before it was written" · "Admitted through pre-action gates"
+             · "Failed runs stay visible"
+    layer2   "Published as hash-verifiable snapshots" · "Verified in your browser"
+             (meaning fixed by G2) · "No access to the live store" ·
+             "7/7 files byte-identical after hosting"
+    summary  two sentences; states named in capitals exactly as the
+             demonstration renders them
+    href     https://demo.eveverified.com/actions — a public destination, like
+             grc.eveverified.com in the existing entries; leak-scan rule E7
+             concerns internal hosts, paths and identifiers, none of which appear
+
+### G6 — Footer contact
+
+    data/products.ts       company.email = joakim@organiq.se
+    components/Footer      one mailto line under the org.nr line
+
+The same address the contact page and grc.eveverified.com already publish.
+Reason: a visible, consistent company contact on the homepage; recorded because
+it is a public-identity change, not a copy change.
+
+### G7 — DEVIATION recorded: 2 + 1 grid
+
+With three non-featured demonstrations the two-column grid renders two cards
+on one row and one alone on the next. The component is NOT changed for
+symmetry: layout does not get to edit which claims exist, and a three-column
+grid would shrink every card to fit a layout preference. If the section grows
+again, the grid is a separate decision.
+
+### G8 — Files touched by v1.3 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md              this section; status line
+    EDIT data/demonstrations.ts                        new kind + one entry;
+                                                       header hash re-pinned to
+                                                       THIS file's v1.3 hash
+    EDIT components/VerifiedDemonstrations/index.tsx   one ACCENT entry (literal
+                                                       classes); comment v1.3
+    EDIT data/products.ts                              company.email
+    EDIT components/Footer/index.tsx                   one mailto line
+
+### G9 — Verification before release (in this order)
+
+    1  this file's sha256 measured by the owner AFTER it is written; the same
+       value pinned in data/demonstrations.ts — a mismatch means the model
+       changed after it was pinned: stop and decide
+    2  npm run build   must pass clean (typecheck included; ESLint remains
+       unconfigured — see the recorded incident)
+    3  claim scan      no "audited", "tamper-proof", "verified system",
+                       "independent" outside a negation, no hash, no record id,
+                       no action id on the homepage
+    4  leak scan       no internal host, path, account, environment variable,
+                       organisation identifier beyond the public org.nr already
+                       shown, or record id in any touched file
+    5  stage exactly the five files above; never `git add .`
+    6  commit · push origin main · Vercel builds from the linked repo
+    7  live smoke      https://eveverified.com/ (section renders, card present,
+                       footer email present) · https://demo.eveverified.com/actions
+                       (destination reachable; nothing on the homepage claims
+                       more than what that page shows)

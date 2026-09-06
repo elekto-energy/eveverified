@@ -7,7 +7,7 @@
 // demonstrations are different kinds of statement and must not be readable as
 // one continuous list of product cards.
 //
-// Governed by app/stories/WEB_RELEASE_MODEL.md v1.2
+// Governed by app/stories/WEB_RELEASE_MODEL.md v1.3
 //
 // VISUAL LANGUAGE — grc.eveverified.com/chain/pre-action, the house benchmark
 // for an evidence surface: light body #f7f8fa, white cards with #e5e7eb
@@ -62,6 +62,12 @@ const ACCENT: Record<
     badge: 'border-indigo-200 bg-indigo-50 text-indigo-700',
     dot: 'bg-indigo-700',
     link: 'text-indigo-700',
+  },
+  PRODUCTION_PUBLISHED_SNAPSHOT: {
+    rule: 'border-l-amber-700',
+    badge: 'border-amber-200 bg-amber-50 text-amber-700',
+    dot: 'bg-amber-700',
+    link: 'text-amber-700',
   },
 }
 

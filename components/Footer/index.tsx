@@ -28,6 +28,11 @@ export default function Footer() {
             <div className="mt-4 text-ent-muted text-xs">
               {company.name} · org.nr {company.orgNr}
             </div>
+            <div className="mt-1 text-ent-muted text-xs">
+              <a href={`mailto:${company.email}`} className="hover:text-ent-text transition-colors">
+                {company.email}
+              </a>
+            </div>
           </div>
 
           {/* Products */}

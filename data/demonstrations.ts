@@ -8,8 +8,9 @@
 // demonstration describes an outcome that was measured and can be checked.
 //
 // Governed by:
-//   app/stories/WEB_RELEASE_MODEL.md            v1.2
-//     752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba
+//   app/stories/WEB_RELEASE_MODEL.md            v1.3
+//     2f6737eb635c597746c681dae4b853c5d27f93fce6238f1b62fa73a237286b49
+//     (measured on the working-copy bytes, LF line endings, 2026-09-06)
 //   app/stories/PROVIDER_BACKED_STORY_MODEL.md  v1.2
 //     c293fb6fac0f483b0a37659111a074c45ef8196c5de08034a70380eb3a36ff5b
 //
@@ -44,11 +45,23 @@
  * SCENARIO_LIVE_VERIFIED
  *   A scenario narrative anchored to a real sealed record which is fetched and
  *   integrity-checked live, in the browser, at read time.
+ *
+ * PRODUCTION_PUBLISHED_SNAPSHOT
+ *   A production run of EVE's own governed development, published as
+ *   hash-sealed snapshots. "Verified in your browser" has exactly the meaning
+ *   fixed in WEB_RELEASE_MODEL v1.3 §G2: the visitor's browser re-derives each
+ *   snapshot's declared hash from the published bytes and checks the declared
+ *   contract. Nothing is fetched from the live store. Weaker than
+ *   PRODUCTION_GOVERNED_ACTION in one stated respect: the reviewer of every
+ *   governed task was the party that wrote the change, and the demonstration
+ *   shows that field as NOT_ESTABLISHED. The card's evidenceNote carries that
+ *   limitation so the homepage is never stronger than the demonstration.
  */
 export type DemonstrationKind =
   | 'PRODUCTION_PROVIDER_BACKED'
   | 'PRODUCTION_GOVERNED_ACTION'
   | 'SCENARIO_LIVE_VERIFIED'
+  | 'PRODUCTION_PUBLISHED_SNAPSHOT'
 
 export interface Demonstration {
   id: string
@@ -148,5 +161,35 @@ export const demonstrations: Demonstration[] = [
     evidenceNote:
       'Anchored to a sealed record that is fetched and integrity-checked while ' +
       'you read.',
+  },
+  {
+    id: 'governed-development',
+    kind: 'PRODUCTION_PUBLISHED_SNAPSHOT',
+    kindLabel: 'Production · Governed development · Published snapshot',
+    headline: 'See EVE govern the development of EVE itself.',
+    layer1: [
+      'Declared before it was written',
+      'Admitted through pre-action gates',
+      'Failed runs stay visible',
+    ],
+    layer2: [
+      'Published as hash-verifiable snapshots',
+      'Verified in your browser',
+      'No access to the live store',
+      '7/7 files byte-identical after hosting',
+    ],
+    summary:
+      'EVE’s own development actions are declared, admitted through pre-action ' +
+      'gates, measured, reviewed and only then eligible for promotion. Selected ' +
+      'governed states are published as hash-verifiable snapshots that can be ' +
+      'inspected without access to the underlying live store — and REFUSED, ' +
+      'MISSING and UNRESOLVED states remain visible exactly as recorded.',
+    href: 'https://demo.eveverified.com/actions',
+    linkLabel: 'Open the public governed-action demo',
+    evidenceNote:
+      'Published snapshots verified in the browser against their declared ' +
+      'hashes. A snapshot shows what the owner chose to publish at a specific ' +
+      'point in time; it does not assert that the complete underlying evidence ' +
+      'set has been exposed or independently reviewed.',
   },
 ]
