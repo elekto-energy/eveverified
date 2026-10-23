@@ -64,7 +64,7 @@ export default function ContactPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-lg">
           {state === 'sent' ? (
-            <div className="rounded-xl border border-ent-verified/30 bg-ent-verified/[0.06] p-8 text-center">
+            <div role="status" className="rounded-xl border border-ent-verified/30 bg-ent-verified/[0.06] p-8 text-center">
               <div className="text-ent-verified text-base font-semibold mb-2">Message sent</div>
               <p className="text-sm text-ent-dim leading-relaxed">
                 Thank you. Your message has reached us and we will reply to {form.email.trim()}.
@@ -87,39 +87,40 @@ export default function ContactPage() {
               <div className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-ent-dim mb-1.5">Name *</label>
-                    <input className={inputCls} value={form.name} onChange={e => set('name', e.target.value)} placeholder="Your name" />
+                    <label htmlFor="contact-name" className="block text-xs font-semibold text-ent-dim mb-1.5">Name *</label>
+                    <input id="contact-name" name="name" autoComplete="name" required className={inputCls} value={form.name} onChange={e => set('name', e.target.value)} placeholder="Your name" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-ent-dim mb-1.5">Email *</label>
-                    <input className={inputCls} type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="you@company.com" />
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-ent-dim mb-1.5">Email *</label>
+                    <input id="contact-email" name="email" autoComplete="email" required className={inputCls} type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="you@company.com" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ent-dim mb-1.5">Company <span className="text-ent-muted font-normal">(optional)</span></label>
-                  <input className={inputCls} value={form.company} onChange={e => set('company', e.target.value)} placeholder="Organisation" />
+                  <label htmlFor="contact-company" className="block text-xs font-semibold text-ent-dim mb-1.5">Company <span className="text-ent-muted font-normal">(optional)</span></label>
+                  <input id="contact-company" name="company" autoComplete="organization" className={inputCls} value={form.company} onChange={e => set('company', e.target.value)} placeholder="Organisation" />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ent-dim mb-1.5">I am a</label>
-                  <select className={inputCls} value={form.audience} onChange={e => set('audience', e.target.value)}>
+                  <label htmlFor="contact-audience" className="block text-xs font-semibold text-ent-dim mb-1.5">I am a</label>
+                  <select id="contact-audience" name="audience" className={inputCls} value={form.audience} onChange={e => set('audience', e.target.value)}>
                     {audiences.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ent-dim mb-1.5">Message *</label>
-                  <textarea className={inputCls + ' resize-none'} rows={5} value={form.message} onChange={e => set('message', e.target.value)} placeholder="How can we help?" />
+                  <label htmlFor="contact-message" className="block text-xs font-semibold text-ent-dim mb-1.5">Message *</label>
+                  <textarea id="contact-message" name="message" required className={inputCls + ' resize-none'} rows={5} value={form.message} onChange={e => set('message', e.target.value)} placeholder="How can we help?" />
                 </div>
 
                 {error && (
-                  <div className="rounded-lg border border-ent-warn/30 bg-ent-warn/[0.08] px-4 py-2.5 text-sm text-ent-warn">
+                  <div role="alert" className="rounded-lg border border-ent-warn/30 bg-ent-warn/[0.08] px-4 py-2.5 text-sm text-ent-warn">
                     {error}
                   </div>
                 )}
 
                 <button
+                  type="button"
                   onClick={submit}
                   disabled={state === 'sending'}
                   className="w-full rounded-lg bg-ent-verified px-5 py-3 text-sm font-bold text-[#04140d] transition-colors hover:bg-[#0ea371] disabled:opacity-60 disabled:cursor-not-allowed"

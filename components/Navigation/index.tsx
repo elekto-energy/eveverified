@@ -61,11 +61,15 @@ export default function Navigation() {
               // Dropdown item
               <div key={item.name} className="relative">
                 <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === item.name}
                   onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                   className="text-xs text-gray-500 hover:text-white transition-colors duration-200 tracking-wide flex items-center gap-1"
                 >
                   {item.name}
                   <svg 
+                    aria-hidden="true"
                     className={`w-3 h-3 transition-transform duration-200 ${openDropdown === item.name ? 'rotate-180' : ''}`} 
                     fill="none" 
                     viewBox="0 0 24 24" 
@@ -120,10 +124,14 @@ export default function Navigation() {
 
         {/* Mobile Menu Button */}
         <button
+          type="button"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden p-2"
         >
-          <div className="w-6 h-5 flex flex-col justify-between">
+          <div className="w-6 h-5 flex flex-col justify-between" aria-hidden="true">
             <span className={`w-full h-0.5 bg-white transition-all duration-300 ${
               mobileMenuOpen ? 'rotate-45 translate-y-2' : ''
             }`} />
@@ -141,6 +149,7 @@ export default function Navigation() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}

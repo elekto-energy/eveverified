@@ -75,7 +75,10 @@ export const navItems = [
     children: [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
       { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
-      { name: 'Architecture', href: '/#architecture' },
+      // Was '/#architecture'. No element with id="architecture" is rendered on
+      // '/', so the link landed at the top of the home page. The architecture
+      // visualisations live on /eve.
+      { name: 'Architecture', href: '/eve' },
       { name: 'Control Chain', href: '/control-chain' },
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
       { name: 'ASK Research', href: 'https://research.eveverified.com' },
