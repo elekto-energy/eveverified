@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Constructed per request, not at module load: `new Resend(undefined)` throws,
+// which made `next build` fail ("Failed to collect page data") whenever
+// RESEND_API_KEY was absent from the build environment.
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY
+  return key ? new Resend(key) : null
+}
 
 const FROM = 'EVE Verified <noreply@eveverified.com>'
 const TO = 'joakim@organiq.se'
@@ -62,14 +68,26 @@ ${'─'.repeat(50)}
 Submitted via eveverified.com/contact
 `
 
+  const resend = getResend()
+  if (!resend) {
+    console.error('[contact/route] RESEND_API_KEY is not configured')
+    return NextResponse.json(
+      { error: 'Failed to send message. Please try again or email joakim@organiq.se.' },
+      { status: 503 }
+    )
+  }
+
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: FROM,
       to: TO,
       replyTo: email,
       subject: `Contact — ${name}${company !== '—' ? ` (${company})` : ''}`,
       text,
     })
+    // Resend v6 reports API and network failures in `error`; it does not
+    // throw. Without this check a failed send was answered with { ok: true }.
+    if (error) throw error
   } catch (err) {
     console.error('[contact/route] Resend error:', err)
     return NextResponse.json(

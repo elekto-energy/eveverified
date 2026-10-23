@@ -53,6 +53,7 @@ const ROUTES: Route[] = [
   { path: '/about/determinism',         priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about/eve-control-room',    priority: 0.6, changeFrequency: 'monthly' },
   { path: '/about/company',             priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/contact',                   priority: 0.5, changeFrequency: 'yearly', lastModified: new Date('2026-10-23') },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

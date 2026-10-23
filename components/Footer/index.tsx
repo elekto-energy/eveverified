@@ -76,6 +76,14 @@ export default function Footer() {
               </li>
               <li>
                 <a
+                  href="/about/company"
+                  className="text-ent-dim hover:text-ent-text transition-colors text-sm"
+                >
+                  Company
+                </a>
+              </li>
+              <li>
+                <a
                   href="/contact"
                   className="text-ent-dim hover:text-ent-text transition-colors text-sm"
                 >
