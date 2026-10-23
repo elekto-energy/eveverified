@@ -78,13 +78,16 @@ Submitted via eveverified.com/contact
   }
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: FROM,
       to: TO,
       replyTo: email,
       subject: `Contact — ${name}${company !== '—' ? ` (${company})` : ''}`,
       text,
     })
+    // Resend v6 reports API and network failures in `error`; it does not
+    // throw. Without this check a failed send was answered with { ok: true }.
+    if (error) throw error
   } catch (err) {
     console.error('[contact/route] Resend error:', err)
     return NextResponse.json(

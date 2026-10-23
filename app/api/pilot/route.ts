@@ -118,12 +118,15 @@ Submitted via eveverified.com/pilot
   }
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: FROM,
       to: TO,
       subject: `Pilot application — ${body.contact_name.trim()}${body.organization_name ? ` (${body.organization_name.trim()})` : ''}`,
       text,
     })
+    // Resend v6 reports API and network failures in `error`; it does not
+    // throw. Without this check a failed send was answered with { ok: true }.
+    if (error) throw error
   } catch (err) {
     // Log server-side only, never expose internals to client
     console.error('[pilot/route] Resend error:', err)
