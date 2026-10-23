@@ -62,7 +62,6 @@ export default function Navigation() {
               <div key={item.name} className="relative">
                 <button
                   type="button"
-                  aria-haspopup="true"
                   aria-expanded={openDropdown === item.name}
                   onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                   className="text-xs text-gray-500 hover:text-white transition-colors duration-200 tracking-wide flex items-center gap-1"
