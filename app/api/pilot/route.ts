@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Constructed per request, not at module load: `new Resend(undefined)` throws,
+// which made `next build` fail ("Failed to collect page data") whenever
+// RESEND_API_KEY was absent from the build environment.
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY
+  return key ? new Resend(key) : null
+}
 
 const FROM = 'EVE Verified <noreply@eveverified.com>'
 const TO = 'joakim@organiq.se'
@@ -101,6 +107,15 @@ ${background}
 ${'─'.repeat(50)}
 Submitted via eveverified.com/pilot
 `
+
+  const resend = getResend()
+  if (!resend) {
+    console.error('[pilot/route] RESEND_API_KEY is not configured')
+    return NextResponse.json(
+      { error: 'Failed to send application. Please try again or contact joakim@organiq.se.' },
+      { status: 503 }
+    )
+  }
 
   try {
     await resend.emails.send({
