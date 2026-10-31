@@ -1,7 +1,10 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.3 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.4 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
+  v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
+  Sections A-G and the recorded deviations are unchanged from v1.3
+  (sha256 2f6737eb635c597746c681dae4b853c5d27f93fce6238f1b62fa73a237286b49).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -668,3 +671,121 @@ again, the grid is a separate decision.
                        footer email present) · https://demo.eveverified.com/actions
                        (destination reachable; nothing on the homepage claims
                        more than what that page shows)
+
+---
+
+## H. SERVICES PAGE AND NAVIGATION ENTRY (v1.4 - 2026-10-31)
+
+**Scope:** eveverified.com only. One new page (/services), one top-level
+navigation entry, one sitemap entry. No homepage change, no hero change, no
+component change, no change to any existing page or demonstration.
+
+**Copy source (release input):** the owner work order "eveverified.com -
+Services page (Technical Review)" of 2026-10-31, page copy section, used
+verbatim. Page metadata title and description are owner decisions recorded in
+H3. No claim, metric, customer name or wording beyond that copy is added.
+
+**Destination:** https://eveverified.com/services - a static page. Its only
+form path is the existing CTA target /contact. Three external links point to
+public GitHub resources (H4).
+
+### H1 - Navigation entry: owner decision, DEVIATION 2 not resolved
+
+    lib/constants.ts   navItems: { name: 'Services', href: '/services' }
+                       placed after 'Verify', before 'More'; no children
+
+The Services entry is an OWNER DECISION. It does NOT resolve DEVIATION 2.
+DEVIATION 2 states that navigation should change only once the long-term
+structure for demos and stories is decided. That decision has not been made;
+this entry neither makes it nor depends on it. Every other navItems entry is
+unchanged.
+
+### H2 - Page structure
+
+    app/services/page.tsx   server component; shell as app/page.tsx
+                            (bg-ent-bg, Navigation, sections, Footer);
+                            ent-* classes as app/contact/page.tsx and
+                            components/StartingPoint; no framer-motion
+
+Services are a typed array at the top of the file:
+
+    type NamedItem = { name: string; description: string }
+    type Service   = { name: string; summary: string;
+                       reviewAreas: NamedItem[]; engagementContents: NamedItem[];
+                       cta: { label: string; href: string } }
+
+One entry: Technical Review. Adding a service is adding one array entry. No
+placeholder or "coming soon" entries. The lead-ins "Review areas include:" and
+"Every engagement includes:" are fixed strings in the render code, not fields.
+
+Shared sections outside the array: "Public technical work", "How an
+engagement works", "What this is not".
+
+CTA: "Discuss an engagement" followed by U+2192, target /contact (the existing
+Resend-backed contact form; app/api/contact/route.ts is not touched).
+
+### H3 - Metadata
+
+app/layout.tsx defines title as a plain string, not title.template. Therefore,
+per owner decision:
+
+    title        'Services | EVE Verified'
+    description  'Bounded engagements with a fixed scope and a fixed deliverable.'
+
+### H4 - External links
+
+Three links in "Public technical work", owner-verified and re-measured
+2026-10-31, used exactly as written (no tracking parameters):
+
+    Public comment #77
+      https://github.com/LFDT-ProofOfControl/ov-poc-standard/issues/77
+    Public comment register
+      https://github.com/LFDT-ProofOfControl/ov-poc-standard/blob/master/docs/reviews/public-comment-register-2026-10.md
+    Reproducible technical analysis
+      https://github.com/LFDT-ProofOfControl/ov-poc-standard/issues/66#issuecomment-6056765203
+
+Rendered with target="_blank" rel="noopener noreferrer", following the
+existing precedent for links that leave the site (app/insights/page.tsx,
+app/origin/page.tsx, app/solutions/tprm/TprmClient.tsx). The ent-* homepage
+components carry no precedent: their external links are all first-party
+*.eveverified.com subdomains.
+
+### H5 - Wording notes
+
+"checked independently" is kept verbatim by owner decision. The G4 rule
+("independent" only inside a negation) is scoped to the homepage card and does
+not govern this page.
+
+### H6 - Sitemap
+
+    app/sitemap.ts   { path: '/services', priority: 0.7,
+                       changeFrequency: 'monthly',
+                       lastModified: new Date('2026-10-31') }
+                     Top-level group, after /philosophy
+
+### H7 - Tracking
+
+No EVE-GOV act record was made for this release. The ACCEPTED_BASELINE_WEB
+series was not advanced. This section is the release record.
+
+### H8 - Files touched by v1.4 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block (version, hash, date)
+                                            re-pinned to THIS file's v1.4 hash
+    EDIT lib/constants.ts                   one navItems entry
+    EDIT app/sitemap.ts                     one route entry
+    NEW  app/services/page.tsx
+
+### H9 - Verification before release (in this order)
+
+    1  this file's sha256 measured AFTER it is written; the same value pinned
+       in data/demonstrations.ts - a mismatch means the model changed after it
+       was pinned: stop and decide
+    2  npm run build   must pass clean (typecheck included)
+    3  stage exactly the five files above; never `git add .`
+    4  commit on the working branch; push, merge into main and production
+       publication each require separate owner approval
+    5  live smoke after an approved publication: https://eveverified.com/services
+       renders; Services appears in the navigation on desktop and mobile; the
+       CTA opens /contact; the three external links resolve
