@@ -831,13 +831,14 @@ DEVIATION 2 is not affected: no navigation entry is added or changed.
                Olive Grey #777868, Sand #D3C6AD - used as Tailwind arbitrary values
                inside app/services only; no theme token added
     fonts      IBM Plex Sans (UI/body), IBM Plex Mono (labels, indices, technical
-               detail), Source Serif 4 with optical sizing (large headings);
-               loaded with next/font/google in app/services/layout.tsx and exposed
-               only as CSS variables --ev-font-sans/-mono/-serif
+               detail), Source Serif 4 (large headings); self-hosted latin woff2
+               files in app/services/fonts, loaded with next/font/local in
+               app/services/layout.tsx and exposed only as CSS variables
+               --ev-font-sans/-mono/-serif
     rationale  Plex was drawn for engineering and industrial use and has a matching
                mono for technical detail; Source Serif 4 optical sizes keep large
-               headings sober at display size. All three are open licence (OFL)
-               and self-hosted by next/font at build time
+               headings sober at display size. All three are SIL OFL 1.1
+               (notice: app/services/fonts/OFL-NOTICE.txt)
     motifs     verification chain (the seven stages of the public EVE README core
                model) inside a dashed "Agreed scope" boundary; evidence card showing
                the structure of the written review (field names only, no values);
@@ -891,6 +892,16 @@ rel="noopener noreferrer"), "How an engagement works", "What this is not", and t
     width       no horizontal overflow at 1440px and 390px (scrollWidth = viewport)
     typecheck   tsc --noEmit: exit 0
 
+DEVIATION recorded: the first preview build (commit 9fed090, Vercel
+dpl_33mP7EMErWrBfR9Dw5tfynrkwoZ5) failed in next/font/google while loading IBM Plex
+Sans ("TypeError: Cannot read properties of null (reading '1')" at
+@next/font/dist/google/loader.js:112, a font URL without a file extension). The local
+build of the same commit compiled, so the result depended on the Google Fonts
+response. Fix: the four font files are committed and loaded with next/font/local; the
+build no longer fetches fonts. Local build after the fix: "Compiled successfully";
+page-data collection still stops on the pre-existing missing RESEND_API_KEY
+(app/api/contact, app/api/pilot), as recorded in v1.4.
+
 ### I6 - Tracking
 
 No EVE-GOV act record was made for this release. The ACCEPTED_BASELINE_WEB series was not
@@ -903,6 +914,15 @@ Atlas 02_ACTIVE_WORK zone.
     EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.5 hash
     EDIT app/services/page.tsx              Evidence Systems layout, three branches
     NEW  app/services/layout.tsx            scoped fonts as CSS variables
+    NEW  app/services/fonts/IBMPlexSans-latin-var.woff2
+         e2291e842cf5af167122a22881a740c7f2dda7716f1e8cd76680264f4a859470
+    NEW  app/services/fonts/IBMPlexMono-latin-400.woff2
+         08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7
+    NEW  app/services/fonts/IBMPlexMono-latin-500.woff2
+         01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22
+    NEW  app/services/fonts/SourceSerif4-latin-var.woff2
+         f2ea9c12d2fe9bd3a9589b02ad2c0909da88f30938c91adc838c4f4098f9f9e0
+    NEW  app/services/fonts/OFL-NOTICE.txt
 
 ### I8 - Verification before any release (in this order)
 

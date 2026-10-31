@@ -1,0 +1,12 @@
+Fonts in this directory (latin subset, woff2, as served by Google Fonts on 2026-10-31)
+
+IBMPlexSans-latin-var.woff2   IBM Plex Sans   Copyright IBM Corp.
+IBMPlexMono-latin-400.woff2   IBM Plex Mono   Copyright IBM Corp.
+IBMPlexMono-latin-500.woff2   IBM Plex Mono   Copyright IBM Corp.
+SourceSerif4-latin-var.woff2  Source Serif 4  Copyright Adobe
+
+All are licensed under the SIL Open Font License, Version 1.1.
+Licence text: https://openfontlicense.org/open-font-license-official-text/
+Upstream: https://github.com/IBM/plex and https://github.com/adobe-fonts/source-serif
+
+The font files are unmodified. They are used only by the /services route.

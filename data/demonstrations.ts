@@ -9,7 +9,7 @@
 //
 // Governed by:
 //   app/stories/WEB_RELEASE_MODEL.md            v1.5
-//     17cfee09c2c7d0e52d86e88f1f5ef9f2f02adff9a039925b29104dd69aa35056
+//     3ab1f2d18157951ca8020c08dbbbeaf7c035af2f59c2a99f1fade38f822bf5c4
 //     (measured on the working-copy bytes, LF line endings, 2026-10-31)
 //   app/stories/PROVIDER_BACKED_STORY_MODEL.md  v1.2
 //     c293fb6fac0f483b0a37659111a074c45ef8196c5de08034a70380eb3a36ff5b
