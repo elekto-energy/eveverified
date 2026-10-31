@@ -11,7 +11,7 @@
   v1.6 written 2026-10-31 by owner direction, adding section J (EVE Verified Lab, three case studies).
   Sections A-I and the recorded deviations are unchanged from v1.5
   (sha256 3ab1f2d18157951ca8020c08dbbbeaf7c035af2f59c2a99f1fade38f822bf5c4).
-  v1.7 written 2026-10-31 by owner GO, adding section K (scroll-driven presentation of /services).
+  v1.7 written 2026-10-31 by owner GO, adding section K (scroll-driven presentation and colour themes of /services).
   Sections A-J and the recorded deviations are unchanged from v1.6
   (sha256 f4c599ad589e2ee46a5369cbf5e3e8694633511aa4dfb5e89acd4447c00448d7).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
@@ -1069,72 +1069,114 @@ No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchang
 
 ---
 
-## K. SCROLL-DRIVEN PRESENTATION OF /services (v1.7 - 2026-10-31)
+## K. SCROLL-DRIVEN PRESENTATION AND COLOUR THEMES OF /services (v1.7 - 2026-10-31)
 
 **Scope:** presentation only on /services. No copy, figure, link, claim or route is added,
-removed or changed; every component renders the same text as the v1.6 layout. No change to
-the home page, navigation, footer, /pilot, APIs, global styles or other pages. Branch +
-Vercel preview; merge and production publication need a separate OWNER-GO.
+removed or changed, except the theme switch labels ("Theme", "Evidence", "Light", "Dark").
+No change to the home page, navigation, footer, /pilot, APIs, globals.css,
+tailwind.config.ts or other pages. Branch + Vercel preview; merge and production
+publication need a separate OWNER-GO.
 
-**Source:** owner request 2026-10-31 for a modern scroll experience ("stop, scroll sideways,
-grow into view") instead of "a long PDF"; owner GO for a preview with four effects.
+**Source:** owner requests 2026-10-31: a modern scroll experience ("stop, scroll sideways,
+grow into view", "more effect when scrolling into a new part") instead of "a long PDF"; all
+colours as CSS variables so themes can be swapped easily; for now the FlowWink light and
+dark colours plus the current Evidence palette, until colours are decided.
 
 ### K1 - Effects
 
     hero       pinned (240vh) while the seven verification-chain stages light up one by one;
-               an orange line fills along the chain; last stage fills orange at the end
+               an orange line fills along the chain; at the end the hero recedes (scale
+               0.93, opacity 0.35) as the next part takes over
     branches   pinned horizontal track: the three branch cards move sideways while the page
                scrolls down; a progress line shows position; height = 100vh + 1.25 x track
                overflow (measured at runtime)
-    lab        each case-study card fades and rises into view once
-    headings   every section heading block fades and rises into view once
+    headings   every section heading builds up word by word when it enters the view
+    lab        each case-study card opens from the bottom edge (clip reveal)
+    figures    Lab "Measured result" values that contain exactly one number count up to
+               that number once; the final text is always the original string; values
+               with several numbers are shown unchanged
+    other      section heading blocks fade and rise into view once
 
-Not built: stacked sticky Lab cards. The Lab cards are taller than a laptop viewport, so a
-sticky stack would hide the lower part of each card under the next one. Reveal is used
-instead.
+Not built: stacked sticky Lab cards (cards are taller than a laptop viewport; a sticky
+stack would hide their lower part).
 
-### K2 - Accessibility and fallbacks
+### K2 - Colour themes
 
-    reduce motion   prefers-reduced-motion: all effects off, static v1.6 layout
-    mobile/tablet   below 1024px: no pinning and no horizontal track; static layout with
-                    reveals
+    file       app/services/theme.css, imported only by app/services/layout.tsx; every
+               colour on /services is a var(--ev-*) token; no colour code remains in the
+               components
+    themes     evidence  owner palette of 2026-10-31 (default)
+               light     FlowWink default light tokens (flowwink src/index.css :root,
+                         commit 30e3648c)
+               dark      FlowWink default dark tokens (same file, .dark)
+    tokens     bg, bg-alt, surface, text, border, border-strong, rule, accent, callout,
+               ink, on-ink, on-ink-muted, accent-on-ink
+    ink        dark bands (hero, public record, closing) and card header bars carry class
+               ev-ink; inside them --ev-accent switches to --ev-accent-on-ink
+    default    DEFAULT_THEME in app/services/layout.tsx
+    switch     "Theme: Evidence / Light / Dark" buttons in the hero; the choice is stored in
+               localStorage (ev-theme) and applied before paint by an inline script in
+               the services layout; buttons expose aria-pressed
+
+Measured contrast (WCAG 2.1) of the FlowWink themes as used:
+
+    light   text on bg 16.68, on bg-alt 14.54, on surface 17.06; on-ink on ink 16.64;
+            on-ink-muted on ink 6.44; accent on bg 12.08; accent-on-ink on ink 6.4
+            (FlowWink light primary on ink would be 1.51 - hence accent-on-ink)
+    dark    text on bg 16.64, on bg-alt/surface 15.22; on-ink on ink 12.70; on-ink-muted
+            on ink 4.91; accent on bg 6.20, on surface 5.67, on ink 4.73
+    evidence unchanged from section I2
+
+### K3 - Accessibility and fallbacks
+
+    reduce motion   prefers-reduced-motion: all effects off, static layout, plain headings
+                    and final figures
+    mobile/tablet   below 1024px: no pinning and no horizontal track; reveals only
     keyboard        focusing a branch card in the horizontal track scrolls the page to the
                     point where that card is visible
-    content         all text stays in the server-rendered HTML; the inactive chain stages keep
-                    Sand on Graphite (8.58:1), the active state adds an orange marker
-    contrast        unchanged palette rules from section I2
+    screen readers  word-reveal headings keep their text; counted figures expose the final
+                    value in a visually hidden span, the animated digits are aria-hidden
+    content         all text stays in the server-rendered HTML
 
-### K3 - Implementation
+### K4 - Implementation
 
-    NEW  app/services/ServicesMotion.tsx   client components HeroChain, BranchesTrack
-                                           (static) / PinnedBranches (desktop), Reveal;
-                                           framer-motion (existing dependency, no new package)
-    EDIT app/services/page.tsx             hero and branch overview rendered through the
-                                           client components; SectionHead and Lab cards
-                                           wrapped in Reveal
+    NEW  app/services/ServicesMotion.tsx   client components HeroChain, BranchesTrack /
+                                           PinnedBranches, Reveal, WordReveal, ClipReveal,
+                                           CountUp, ThemeSwitch; framer-motion (existing
+                                           dependency, no new package)
+    NEW  app/services/theme.css            three themes as CSS variables
+    EDIT app/services/layout.tsx           data-ev-theme wrapper, default theme, stored
+                                           choice applied before paint
+    EDIT app/services/page.tsx             colours as tokens; hero and branches via the
+                                           client components; headings, Lab cards and
+                                           figures animated; theme switch in the hero
 
-Deviation found during the build and fixed before commit: the horizontal track first bound
-its scroll progress before the pinned section existed, so it followed the whole page and
-barely moved. The pinned track is now a separate component mounted only when pinning is
-active, and its offset reads the measured distance at run time.
+Deviations found during the build and fixed before commit: (1) the horizontal track first
+bound its scroll progress before the pinned section existed and barely moved; it is now a
+separate component mounted only when pinning is active. (2) A token conversion script
+emptied two files once; both were restored from git and converted again; the result was
+checked by line counts and a full visual pass.
 
-### K4 - Verification before commit (local dev server, Playwright, Chromium)
+### K5 - Verification before commit (local dev server, Playwright, Chromium)
 
-    desktop 1440x900   hero stages light 1 -> 7 over the pinned range; track moves 0 -> -653px
-                       and the third card is fully visible at the end; no horizontal page
-                       overflow (scrollWidth 1440)
-    reduced motion     static layout, document height 9033px (vs 11737px with effects)
+    desktop 1440x900   hero stages light 1 -> 7; track 0 -> -653px with the third card fully
+                       visible; no horizontal page overflow (scrollWidth 1440)
+    themes             evidence, light and dark render; stored choice applied (attribute
+                       read back); home page has no data-ev-theme and is unchanged
+    reduced motion     static layout
     mobile 390x844     static layout, scrollWidth 390
     console            no page errors
     typecheck          tsc --noEmit: exit 0
 
-### K5 - Tracking
+### K6 - Tracking
 
 No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchanged.
 
-### K6 - Files touched by v1.7 (complete)
+### K7 - Files touched by v1.7 (complete)
 
     EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
     EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.7 hash
     EDIT app/services/page.tsx
+    EDIT app/services/layout.tsx
     NEW  app/services/ServicesMotion.tsx
+    NEW  app/services/theme.css
