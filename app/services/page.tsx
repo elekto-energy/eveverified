@@ -130,6 +130,74 @@ const publicWorkLinks: { label: string; href: string }[] = [
   },
 ]
 
+// EVE Verified Lab case studies - WEB_RELEASE_MODEL v1.6 section J.
+// Public wording only; every figure is taken from a registered Atlas record.
+type LabCase = {
+  id: string
+  kind: string
+  figure?: string
+  title: string
+  flow?: string[]
+  flowNote?: string
+  body: string[]
+  facts: { label: string; value: string }[]
+  demonstrates: string
+  scope: string
+  service: string
+  serviceId: string
+}
+
+const labCases: LabCase[] = [
+  {
+    id: 'lab-agent-review',
+    kind: 'Bounded demonstration · Oct 2026',
+    title: "AI agents reviewing and improving each other's work",
+    flow: ['Code', 'Review', 'Fix', 'Tests', 'Replay check'],
+    flowNote:
+      'The handoff check was a separate replay after the agents had finished, not a live stop between them.',
+    body: [
+      'Two AI agents took part in an iterative development workflow on a small, self-contained input validator written from scratch for the exercise — not a production code base.',
+      'One agent wrote the code. The other reviewed it, identified defects and supplied a script that reproduces them. The first agent then corrected the implementation based on that review. The defects covered trailing line breaks, non-ASCII digits, a century-separator rule and a missing year-range check.',
+      'The recorded handoff was then evaluated in a deterministic replay, using EVE handoff verification together with package integrity checks. The unchanged package was accepted. Five defined scenarios — a changed package, substituted code, a tampered verification record, a replayed record and reuse for the same action — were rejected.',
+    ],
+    facts: [
+      { label: 'Tests, original', value: '21 passed' },
+      { label: 'Tests, corrected', value: '28 passed' },
+      { label: 'Defect categories', value: '4 corrected' },
+      { label: 'Replay scenarios', value: '1 accepted · 5 rejected' },
+    ],
+    demonstrates:
+      'AI agents can work in a structured development-and-review cycle, while their outputs and handoffs are subjected to explicit, evidence-based verification.',
+    scope:
+      'Bounded technical demonstration: one task, one run. The corrected version also passes the original 21 tests. Both agents used the same model, and reviewer independence was not established. EVE did not admit or stop the agents live.',
+    service: 'Agent Verification Review',
+    serviceId: 'agent-verification-review',
+  },
+  {
+    id: 'lab-performance',
+    kind: 'Measured production run · Oct 2026',
+    figure: '3.3×',
+    title: 'Faster, without removing verification',
+    body: [
+      "EVE's evidence synchronisation took about 16 minutes per publication. The bottleneck was traced to remote metadata checks performed one at a time.",
+      'The checks were run in parallel with four workers. A separate code review of the first revision found a concurrency defect in credential refresh; it was corrected and reviewed again before installation.',
+      'In the measured production run the publication completed and was verified, with no errors or integrity incidents reported.',
+    ],
+    facts: [
+      { label: 'Before', value: '≈ 16 min' },
+      { label: 'After', value: '4 min 50 s' },
+      { label: 'References checked', value: '3,678' },
+      { label: 'Errors / incidents', value: '0 / 0' },
+    ],
+    demonstrates:
+      'Performance can be improved without trading away verification: every reference is still checked, and any failure still stops publication.',
+    scope:
+      'One measured production run, not a long-term performance guarantee. Behaviour under provider rate limits has not been measured.',
+    service: 'Agent Verification Review',
+    serviceId: 'agent-verification-review',
+  },
+]
+
 const TITLE = 'Services | EVE Verified'
 const DESCRIPTION =
   'Agent Verification Review, Pilot Partnerships and EVA Business Workflows. Bounded engagements with a fixed scope and a fixed deliverable.'
@@ -297,7 +365,7 @@ export default function ServicesPage() {
               kicker="Version-bound technical review"
               title="Agent Verification Review"
             />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
                 <div>
@@ -359,7 +427,7 @@ export default function ServicesPage() {
         <section id="pilot-partnerships" className="scroll-mt-20 bg-[#D3C6AD] py-24">
           <div className={wrap}>
             <SectionHead index="02" kicker="Pilot partners wanted" title="Pilot Partnerships" />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
                 <div>
@@ -407,7 +475,7 @@ export default function ServicesPage() {
               kicker="Custom development and qualification"
               title="EVA Business Workflows"
             />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div>
                 <p className="max-w-3xl text-lg leading-relaxed">
@@ -432,6 +500,119 @@ export default function ServicesPage() {
                 </div>
                 <a href="/contact" className={`${btnDark} mt-10`}>
                   Discuss a workflow <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* EVE Verified Lab - v1.6 section J. Every claim maps to a registered
+            Atlas record (evidence map in section J3). No internal ids, paths,
+            hosts, hashes or record ids are published. */}
+        <section id="lab" className="scroll-mt-20 border-t border-[#D3C6AD] bg-[#F3ECDD] py-24">
+          <div className={wrap}>
+            <SectionHead index="Lab" kicker="EVE Verified Lab" title="Engineering intelligence. Verified results." />
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
+              <div aria-hidden="true" className="hidden md:block" />
+              <div>
+                <p className="max-w-3xl text-lg leading-relaxed">
+                  Real technical work from the EVE Verified Lab: reproducible findings, documented
+                  limitations and measured outcomes.
+                </p>
+
+                <div className="mt-12 grid gap-8 lg:grid-cols-2">
+                  {labCases.map((c) => (
+                    <article
+                      key={c.id}
+                      id={c.id}
+                      aria-labelledby={`${c.id}-title`}
+                      className="flex scroll-mt-24 flex-col border border-[#282A27] bg-[#F3ECDD]"
+                    >
+                      <div className="flex items-center justify-between gap-4 border-b border-[#282A27] bg-[#282A27] px-6 py-3">
+                        <p className={`${label} text-[#F3ECDD]`}>{c.kind}</p>
+                        <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-[#D95724]" />
+                      </div>
+                      <div className="flex flex-1 flex-col p-6 sm:p-8">
+                        {c.figure && (
+                          <p className={`${serif} text-[56px] font-semibold leading-none text-[#D95724]`}>
+                            {c.figure}
+                          </p>
+                        )}
+                        <h3
+                          id={`${c.id}-title`}
+                          className={`${serif} ${c.figure ? 'mt-4' : ''} text-[26px] font-semibold leading-snug`}
+                        >
+                          {c.title}
+                        </h3>
+
+                        {c.flow && (
+                          <figure className="mt-6">
+                            <ol className="flex flex-wrap items-center gap-x-2 gap-y-2">
+                              {c.flow.map((step, i) => (
+                                <li key={step} className="flex items-center gap-2">
+                                  <span
+                                    className={`${mono} border px-2.5 py-1 text-[12px] uppercase tracking-[0.1em] ${
+                                      i === c.flow!.length - 1
+                                        ? 'border-[#282A27] bg-[#282A27] text-[#F3ECDD]'
+                                        : 'border-[#282A27]'
+                                    }`}
+                                  >
+                                    {step}
+                                  </span>
+                                  {i < c.flow!.length - 1 && (
+                                    <span aria-hidden="true" className="text-[#D95724]">
+                                      →
+                                    </span>
+                                  )}
+                                </li>
+                              ))}
+                            </ol>
+                            {c.flowNote && (
+                              <figcaption className="mt-3 text-sm leading-relaxed">{c.flowNote}</figcaption>
+                            )}
+                          </figure>
+                        )}
+
+                        <div className="mt-6 space-y-4 text-[15px] leading-relaxed">
+                          {c.body.map((p) => (
+                            <p key={p}>{p}</p>
+                          ))}
+                        </div>
+
+                        {c.facts.length > 0 && (
+                          <dl className="mt-6 grid grid-cols-2 gap-px border border-[#D3C6AD] bg-[#D3C6AD]">
+                            {c.facts.map((f) => (
+                              <div key={f.label} className="bg-[#F3ECDD] p-4">
+                                <dt className={`${label}`}>{f.label}</dt>
+                                <dd className={`${serif} mt-2 text-xl font-semibold`}>{f.value}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        )}
+
+                        <div className="mt-6 border-l-4 border-[#282A27] bg-[#D3C6AD]/40 px-5 py-4 text-[15px] leading-relaxed">
+                          <span className="font-semibold">What this demonstrates:</span> {c.demonstrates}
+                        </div>
+                        <p className="mt-4 text-sm leading-relaxed">
+                          <span className="font-semibold">Scope:</span> {c.scope}
+                        </p>
+
+                        <div className="mt-auto pt-8">
+                          <p className={`${label}`}>Related service</p>
+                          <a
+                            href={`#${c.serviceId}`}
+                            className={`mt-2 inline-block text-[15px] font-semibold underline decoration-[#D95724] decoration-2 underline-offset-[6px] hover:decoration-[#282A27] ${focus}`}
+                          >
+                            {c.service}
+                          </a>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <a href="/contact" className={`${btnDark} mt-12`}>
+                  Discuss an engagement <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>

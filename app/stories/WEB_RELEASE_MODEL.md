@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.5 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.6 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -8,6 +8,9 @@
   v1.5 written 2026-10-31 by owner direction, adding section I (Services design prototype, preview only).
   Sections A-H and the recorded deviations are unchanged from v1.4
   (sha256 86d431e6c2ff8d629a19304a8c9def765608118de190a41254e25f32e7bb0b86).
+  v1.6 written 2026-10-31 by owner direction, adding section J (EVE Verified Lab case studies, preview only).
+  Sections A-I and the recorded deviations are unchanged from v1.5
+  (sha256 3ab1f2d18157951ca8020c08dbbbeaf7c035af2f59c2a99f1fade38f822bf5c4).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -931,3 +934,110 @@ Atlas 02_ACTIVE_WORK zone.
     3  owner review of the preview on desktop and mobile, and of the I4 copy
     4  claim scan: no invented status, metric, customer or certification claim
     5  separate OWNER-GO for merge into main and production publication
+
+---
+
+## J. EVE VERIFIED LAB - TWO CASE STUDIES ON /services (v1.6 - 2026-10-31)
+
+**Scope:** one new section "EVE Verified Lab" on /services, placed after the three service
+branches and before "Public technical work", plus a 32px column-alignment fix (gap-x-4) in the
+four section bodies built in v1.5. No new route, no navigation change, no change to any other
+page, API, global style or demonstration. Branch + Vercel preview only; merge and production
+publication need a separate OWNER-GO.
+
+**Copy source (release input):** owner work order "EVE Verified - Services Lab case studies" and owner copy "AI Agents Reviewing and Improving Each Other's Work",
+both 2026-10-31, corrected against registered Atlas records (J2). The owner explicitly
+excluded the wording "self-improving AI".
+
+**Destination:** /services#lab (preview of this branch).
+
+### J1 - Case studies as data
+
+    labCases: LabCase[]   id, kind, figure?, title, flow?, flowNote?, body[], facts[],
+                          demonstrates, scope, service, serviceId
+    case A                "AI agents reviewing and improving each other's work"
+    case B                "3.3x" - "Faster, without removing verification"
+    related service       both cases link to Agent Verification Review (#anchor);
+                          no new service branch
+
+### J2 - Evidence-to-claim map (all sources in Atlas zone 01_AUTO_SYNC, read 2026-10-31)
+
+Case A - sources: the verified-handoff record (2026-10-20), the review-phase result record,
+the follow-up test-period record (2026-10-31).
+
+    claim on page                                     verdict    note
+    two agents, iterative write/review/correct        CONFIRMED  order confirmed by recorded
+                                                                 handoff notes
+    reviewer "supplied a script that reproduces"      CONFIRMED  reviewer produced an adversarial
+                                                                 reproduction script; owner draft
+                                                                 "proposed corrections" NOT used
+    four defect categories (trailing line break,      CONFIRMED  plain-language summary of the
+    non-ASCII digits, century separator, year range)             four recorded defects
+    21 passed original / 28 passed corrected,         CONFIRMED  re-run on the recorded files in a
+    original 21 still pass                                       cloud workspace
+    deterministic replay, 1 accepted, 5 rejected      CONFIRMED  3 of 5 refused by the package /
+                                                                 single-use check, 2 by EVE; page
+                                                                 says "EVE handoff verification
+                                                                 together with package integrity
+                                                                 checks"
+    "small, self-contained input validator written    CONFIRMED  records: single task written from
+    from scratch ... not a production code base"                 scratch, "One task, one model,
+                                                                 one run each"; the validator's
+                                                                 domain is NOT named on the page
+    same model; reviewer independence not             PARTIAL    records state identity exclusivity
+    established                                                  not established and no third
+                                                                 verifier; one record calls the
+                                                                 review "independent" - that word
+                                                                 is NOT used positively on the page
+    EVE did not admit or stop the agents live         CONFIRMED  "not started through EVE; post-hoc
+                                                                 replay"
+    follow-up test period                             NOT USED   prepared, not run; separate test
+
+Case B - sources: the synchronisation live-run record, both revision reports, both code
+reviews, the owner installation approval.
+
+    bottleneck: remote metadata checks one at a time  CONFIRMED
+    about 16 min before -> 4 min 50 s after (290 s),  CONFIRMED  965/290 = 3.33, 960/290 = 3.31;
+    four workers, "3.3x"                                         record says "3.3x faster"
+    3,678 references checked                          CONFIRMED  the measured run (other runs show
+                                                                 other counts)
+    publication completed and verified; 0 errors,     CONFIRMED  verification PASS, errors [],
+    0 integrity incidents                                        incidents 0
+    separate review found a credential-refresh        CONFIRMED  corrected in revision 2, reviewed
+    concurrency defect before installation                       again before the owner's install GO
+    every reference still checked; failure still      CONFIRMED  fail-closed before upload or
+    stops publication                                            publication
+    one run; rate-limit behaviour not measured        CONFIRMED
+
+### J3 - Leak and claim scans (on app/services/page.tsx, before commit)
+
+    leak scan   no local or server paths, host names, IP addresses, workspace or account ids,
+                e-mail, agent ids, record ids, run/period/mandate ids, hashes, git refs,
+                Drive ids, reviewer names, model ids, cost figures, internal labels
+                or the agent framework name: 0 hits
+    claim scan  "independen*", "certif*", "audit*", "guarantee", "autonomous",
+                "self-improving", "production-ready": only in negations or in copy approved
+                in v1.4
+
+### J4 - Verification before commit
+
+    typecheck   tsc --noEmit: exit 0
+    isolation   / and /contact: Inter, no services fonts; /services nav: Inter (unchanged)
+    width       no horizontal overflow at 1440px and 390px
+
+### J5 - Tracking
+
+No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchanged.
+
+### J6 - Files touched by v1.6 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.6 hash
+    EDIT app/services/page.tsx              Lab section, labCases data, alignment fix
+
+### J7 - Verification before any release (in this order)
+
+    1  this file's sha256 equals the pin in data/demonstrations.ts
+    2  Vercel preview build of the branch commit READY (build of record)
+    3  owner review of the preview and of the J2 wording corrections
+    4  separate OWNER-GO for merge into main and production publication
