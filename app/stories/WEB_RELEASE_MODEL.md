@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.6 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.7 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -11,6 +11,9 @@
   v1.6 written 2026-10-31 by owner direction, adding section J (EVE Verified Lab, three case studies).
   Sections A-I and the recorded deviations are unchanged from v1.5
   (sha256 3ab1f2d18157951ca8020c08dbbbeaf7c035af2f59c2a99f1fade38f822bf5c4).
+  v1.7 written 2026-10-31 by owner GO, adding section K (scroll-driven presentation of /services).
+  Sections A-J and the recorded deviations are unchanged from v1.6
+  (sha256 f4c599ad589e2ee46a5369cbf5e3e8694633511aa4dfb5e89acd4447c00448d7).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1063,3 +1066,75 @@ No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchang
     3  pull request opened; merged as a merge commit only if 1-2 pass and no deviation
     4  production check: /services 200, the three cards and the contact link present
     5  result recorded in the Atlas 02_ACTIVE_WORK zone
+
+---
+
+## K. SCROLL-DRIVEN PRESENTATION OF /services (v1.7 - 2026-10-31)
+
+**Scope:** presentation only on /services. No copy, figure, link, claim or route is added,
+removed or changed; every component renders the same text as the v1.6 layout. No change to
+the home page, navigation, footer, /pilot, APIs, global styles or other pages. Branch +
+Vercel preview; merge and production publication need a separate OWNER-GO.
+
+**Source:** owner request 2026-10-31 for a modern scroll experience ("stop, scroll sideways,
+grow into view") instead of "a long PDF"; owner GO for a preview with four effects.
+
+### K1 - Effects
+
+    hero       pinned (240vh) while the seven verification-chain stages light up one by one;
+               an orange line fills along the chain; last stage fills orange at the end
+    branches   pinned horizontal track: the three branch cards move sideways while the page
+               scrolls down; a progress line shows position; height = 100vh + 1.25 x track
+               overflow (measured at runtime)
+    lab        each case-study card fades and rises into view once
+    headings   every section heading block fades and rises into view once
+
+Not built: stacked sticky Lab cards. The Lab cards are taller than a laptop viewport, so a
+sticky stack would hide the lower part of each card under the next one. Reveal is used
+instead.
+
+### K2 - Accessibility and fallbacks
+
+    reduce motion   prefers-reduced-motion: all effects off, static v1.6 layout
+    mobile/tablet   below 1024px: no pinning and no horizontal track; static layout with
+                    reveals
+    keyboard        focusing a branch card in the horizontal track scrolls the page to the
+                    point where that card is visible
+    content         all text stays in the server-rendered HTML; the inactive chain stages keep
+                    Sand on Graphite (8.58:1), the active state adds an orange marker
+    contrast        unchanged palette rules from section I2
+
+### K3 - Implementation
+
+    NEW  app/services/ServicesMotion.tsx   client components HeroChain, BranchesTrack
+                                           (static) / PinnedBranches (desktop), Reveal;
+                                           framer-motion (existing dependency, no new package)
+    EDIT app/services/page.tsx             hero and branch overview rendered through the
+                                           client components; SectionHead and Lab cards
+                                           wrapped in Reveal
+
+Deviation found during the build and fixed before commit: the horizontal track first bound
+its scroll progress before the pinned section existed, so it followed the whole page and
+barely moved. The pinned track is now a separate component mounted only when pinning is
+active, and its offset reads the measured distance at run time.
+
+### K4 - Verification before commit (local dev server, Playwright, Chromium)
+
+    desktop 1440x900   hero stages light 1 -> 7 over the pinned range; track moves 0 -> -653px
+                       and the third card is fully visible at the end; no horizontal page
+                       overflow (scrollWidth 1440)
+    reduced motion     static layout, document height 9033px (vs 11737px with effects)
+    mobile 390x844     static layout, scrollWidth 390
+    console            no page errors
+    typecheck          tsc --noEmit: exit 0
+
+### K5 - Tracking
+
+No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchanged.
+
+### K6 - Files touched by v1.7 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.7 hash
+    EDIT app/services/page.tsx
+    NEW  app/services/ServicesMotion.tsx

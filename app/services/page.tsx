@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { BranchesTrack, HeroChain, Reveal } from './ServicesMotion'
 
 // Governed by app/stories/WEB_RELEASE_MODEL.md v1.5 section I (supersedes the
 // v1.4 section H layout of this page; H's verbatim copy is reused where listed).
@@ -276,7 +277,7 @@ function NamedList({ items }: { items: NamedItem[] }) {
 
 function SectionHead({ index, kicker, title }: { index: string; kicker: string; title: string }) {
   return (
-    <div className="mb-10 grid gap-4 border-t border-[#777868] pt-6 md:grid-cols-[120px_1fr]">
+    <Reveal className="mb-10 grid gap-4 border-t border-[#777868] pt-6 md:grid-cols-[120px_1fr]">
       <div className={`${mono} text-sm text-[#282A27]`}>{index}</div>
       <div>
         <p className={label}>{kicker}</p>
@@ -284,7 +285,7 @@ function SectionHead({ index, kicker, title }: { index: string; kicker: string; 
           {title}
         </h2>
       </div>
-    </div>
+    </Reveal>
   )
 }
 
@@ -294,9 +295,11 @@ export default function ServicesPage() {
       <Navigation />
 
       <div className="font-[family-name:var(--ev-font-sans)] text-[#282A27] antialiased">
-        {/* Hero */}
-        <section className="bg-[#282A27] pb-20 pt-32 text-[#F3ECDD] md:pb-28 md:pt-40">
-          <div className={`${wrap} grid gap-14 lg:grid-cols-[1.25fr_1fr] lg:items-end`}>
+        {/* Hero - pinned verification chain (v1.7 section K) */}
+        <HeroChain
+          chain={chain}
+          caption="Each transition is inspected on its own. Evidence does not establish a claim by itself, and authorization is not proof that the action occurred."
+          intro={
             <div>
               <p className={`${label} text-[#D3C6AD]`}>EVE Verified / Services</p>
               <h1
@@ -320,66 +323,11 @@ export default function ServicesPage() {
                 </a>
               </div>
             </div>
+          }
+        />
 
-            {/* Verification chain inside a scope boundary */}
-            <figure className="relative">
-              <div className="rounded-sm border border-dashed border-[#777868] p-6 sm:p-8">
-                <p className={`${label} absolute -top-2.5 left-5 bg-[#282A27] px-2 text-[#D3C6AD]`}>
-                  Agreed scope
-                </p>
-                <ol className="relative space-y-3">
-                  <span
-                    aria-hidden="true"
-                    className="absolute bottom-3 left-[7px] top-3 w-px bg-[#777868]"
-                  />
-                  {chain.map((stage, i) => (
-                    <li key={stage} className="relative flex items-center gap-4">
-                      <span
-                        aria-hidden="true"
-                        className={`relative z-10 h-[15px] w-[15px] shrink-0 border-2 ${
-                          i === chain.length - 1
-                            ? 'border-[#D95724] bg-[#D95724]'
-                            : 'border-[#D3C6AD] bg-[#282A27]'
-                        }`}
-                      />
-                      <span className={`${mono} text-[13px] uppercase tracking-[0.12em] text-[#F3ECDD]`}>
-                        {stage}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <figcaption className="mt-4 text-sm leading-relaxed text-[#D3C6AD]">
-                Each transition is inspected on its own. Evidence does not establish a claim by
-                itself, and authorization is not proof that the action occurred.
-              </figcaption>
-            </figure>
-          </div>
-        </section>
-
-        {/* Branch overview */}
-        <section id="services" className="scroll-mt-20 bg-[#F3ECDD] py-20 md:py-24">
-          <div className={wrap}>
-            <p className={label}>Three service branches</p>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {branches.map((b) => (
-                <a
-                  key={b.id}
-                  href={`#${b.id}`}
-                  className={`group flex flex-col border border-[#D3C6AD] bg-[#F3ECDD] p-6 transition-colors hover:border-[#282A27] ${focus}`}
-                >
-                  <span aria-hidden="true" className="mb-6 h-1 w-10 bg-[#D95724]" />
-                  <span className={`${mono} text-sm`}>{b.index}</span>
-                  <span className={`${serif} mt-2 text-2xl font-semibold leading-snug`}>{b.name}</span>
-                  <span className="mt-3 flex-1 text-[15px] leading-relaxed">{b.line}</span>
-                  <span className="mt-6 text-sm font-semibold underline decoration-[#D95724] decoration-2 underline-offset-[6px] group-hover:decoration-[#282A27]">
-                    Details <span aria-hidden="true">↓</span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Branch overview - horizontal track on desktop (v1.7 section K) */}
+        <BranchesTrack branches={branches} />
 
         {/* 01 Agent Verification Review */}
         <section id="agent-verification-review" className="scroll-mt-20 bg-[#F3ECDD] pb-24">
@@ -546,8 +494,8 @@ export default function ServicesPage() {
 
                 <div className="mt-12 space-y-10">
                   {labCases.map((c) => (
+                    <Reveal key={c.id}>
                     <article
-                      key={c.id}
                       id={c.id}
                       aria-labelledby={`${c.id}-title`}
                       className="scroll-mt-24 border border-[#282A27] bg-[#F3ECDD]"
@@ -638,6 +586,7 @@ export default function ServicesPage() {
                         </div>
                       </div>
                     </article>
+                    </Reveal>
                   ))}
                 </div>
 
