@@ -1,10 +1,13 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.4 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.5 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
   Sections A-G and the recorded deviations are unchanged from v1.3
   (sha256 2f6737eb635c597746c681dae4b853c5d27f93fce6238f1b62fa73a237286b49).
+  v1.5 written 2026-10-31 by owner direction, adding section I (Services design prototype, preview only).
+  Sections A-H and the recorded deviations are unchanged from v1.4
+  (sha256 86d431e6c2ff8d629a19304a8c9def765608118de190a41254e25f32e7bb0b86).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -789,3 +792,122 @@ series was not advanced. This section is the release record.
     5  live smoke after an approved publication: https://eveverified.com/services
        renders; Services appears in the navigation on desktop and mobile; the
        CTA opens /contact; the three external links resolve
+
+---
+
+## I. SERVICES DESIGN PROTOTYPE - EVIDENCE SYSTEMS (v1.5 - 2026-10-31)
+
+**Scope:** /services and its sub-routes only. Branch + Vercel preview only. No merge, no
+deployment to production, no release without a separate OWNER-GO. Home page, global
+navigation (lib/constants.ts, components/Navigation), components/Footer, /pilot (page, form,
+/api/pilot, links), all existing APIs, app/globals.css, tailwind.config.ts and the site theme
+are NOT touched.
+
+**Copy source (release input):** owner direction "EVE VERIFIED SERVICES DESIGN" of 2026-10-31
+(palette, three branches, price line, branch boundaries), the owner's pilot copy of 2026-10-31,
+and the verbatim v1.4 section H copy where listed in I3. Copy written for the prototype is
+listed in I4 as PROPOSED and needs owner review before any release.
+
+**Destination:** preview deployment of this branch. Production /services keeps the v1.4 page
+until a separate OWNER-GO.
+
+### I1 - Owner decisions applied
+
+    branches   Agent Verification Review, Pilot Partnerships, EVA Business Workflows
+    price      Agent Verification Review: "From EUR 4,500" (rendered with the euro
+               sign U+20AC) + "depending on scope";
+               no package deliverable is specified beyond the v1.4 copy
+    pilot      Pilot Partnerships is a new commercial offer, separate from the old
+               /pilot programme; it does not link to /pilot
+    EVA        described as custom development and qualification, not production-ready
+               automation (Phase A, 2026-10-31: EVA is demo scope; FlowWink not reviewed)
+    CTA        every CTA targets /contact (existing form; app/api/contact untouched)
+
+DEVIATION 2 is not affected: no navigation entry is added or changed.
+
+### I2 - Visual identity "Evidence Systems" (scoped)
+
+    palette    Signal Orange #D95724, Warm Ivory #F3ECDD, Graphite #282A27,
+               Olive Grey #777868, Sand #D3C6AD - used as Tailwind arbitrary values
+               inside app/services only; no theme token added
+    fonts      IBM Plex Sans (UI/body), IBM Plex Mono (labels, indices, technical
+               detail), Source Serif 4 with optical sizing (large headings);
+               loaded with next/font/google in app/services/layout.tsx and exposed
+               only as CSS variables --ev-font-sans/-mono/-serif
+    rationale  Plex was drawn for engineering and industrial use and has a matching
+               mono for technical detail; Source Serif 4 optical sizes keep large
+               headings sober at display size. All three are open licence (OFL)
+               and self-hosted by next/font at build time
+    motifs     verification chain (the seven stages of the public EVE README core
+               model) inside a dashed "Agreed scope" boundary; evidence card showing
+               the structure of the written review (field names only, no values);
+               dashed scope-boundary boxes; orange square markers
+    excluded   generic AI imagery; invented statuses, hashes, record ids, counts,
+               customer names or metrics
+
+Contrast (WCAG 2.1, measured on the palette): Graphite on Ivory 12.31, Graphite on Sand
+8.58, Ivory on Graphite 12.31, Sand on Graphite 8.58, Orange on Ivory 3.34, Orange on
+Graphite 3.68, Olive on Ivory 3.82. Rule applied: body text only in the first four
+pairs; Signal Orange only for non-text marks and text of 24px or larger; Olive Grey only
+for rules and borders. Focus: 2px Signal Orange outline on every link and button.
+
+### I3 - Copy reused verbatim from v1.4 section H
+
+Summary paragraph of the former "Technical Review" (now under Agent Verification Review),
+"Review areas include:" with the five areas, "Every engagement includes:" with the three
+items, the whole "Public technical work" section with the three H4 links (target="_blank"
+rel="noopener noreferrer"), "How an engagement works", "What this is not", and the line
+"Bounded engagements with a fixed scope and a fixed deliverable."
+
+### I4 - Copy written for the prototype (PROPOSED, owner review required)
+
+    hero H1            "Can you prove your AI agent was authorized to act?"
+                       (from the commercial decision document, status proposed)
+    branch lines       the one-line descriptions of the three branch cards
+    chain caption      "Each transition is inspected on its own. Evidence does not
+                       establish a claim by itself, and authorization is not proof
+                       that the action occurred." (paraphrase of the public README)
+    kickers/labels     "EVE Verified / Services", "Three service branches",
+                       "Version-bound technical review", "Pilot partners wanted",
+                       "Custom development and qualification", "Public record",
+                       "Process", "Limitations", "Agreed scope", "Written review"
+    review card        seven field names and "The structure every report follows.
+                       Findings are separated from interpretation."
+    pilot              owner copy of 2026-10-31 verbatim, plus "Scope and pricing
+                       agreed per partnership"
+    EVA                intro sentence, four example names from the owner direction,
+                       "Scope boundary" sentence, "Discuss a workflow"
+    closing            "Start with a scoped conversation."
+    metadata           description, openGraph and twitter title/description for
+                       /services (fixes the v1.4 follow-up: share card inherited
+                       from the home page)
+
+### I5 - Isolation, measured on the local dev server before commit
+
+    /           body font Inter, body bg rgb(11,17,32), Plex not loaded
+    /contact    body font Inter, body bg rgb(11,17,32), Plex not loaded
+    /services   body font Inter, nav link font Inter (unchanged); Plex loaded and
+                used only inside the services content wrapper
+    width       no horizontal overflow at 1440px and 390px (scrollWidth = viewport)
+    typecheck   tsc --noEmit: exit 0
+
+### I6 - Tracking
+
+No EVE-GOV act record was made for this release. The ACCEPTED_BASELINE_WEB series was not
+advanced. Atlas roadmap not changed. The prototype and its boundaries are documented in the
+Atlas 02_ACTIVE_WORK zone.
+
+### I7 - Files touched by v1.5 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.5 hash
+    EDIT app/services/page.tsx              Evidence Systems layout, three branches
+    NEW  app/services/layout.tsx            scoped fonts as CSS variables
+
+### I8 - Verification before any release (in this order)
+
+    1  this file's sha256 equals the pin in data/demonstrations.ts
+    2  Vercel preview build of the branch commit READY (build of record)
+    3  owner review of the preview on desktop and mobile, and of the I4 copy
+    4  claim scan: no invented status, metric, customer or certification claim
+    5  separate OWNER-GO for merge into main and production publication
