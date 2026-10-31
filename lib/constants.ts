@@ -69,6 +69,7 @@ export const navItems = [
   { name: 'Governed Action Proof', href: 'https://grc.eveverified.com/chain/governed-action' },
   { name: 'GRC', href: 'https://grc.eveverified.com' },
   { name: 'Verify', href: 'https://verify.eveverified.com' },
+  { name: 'Services', href: '/services' },
   {
     name: 'More',
     href: '/about/what-is-eve',

@@ -29,6 +29,7 @@ const ROUTES: Route[] = [
   { path: '/eve-verified',              priority: 0.8, changeFrequency: 'monthly' },
   { path: '/elekto',                    priority: 0.8, changeFrequency: 'monthly' },
   { path: '/philosophy',                priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/services',                  priority: 0.7, changeFrequency: 'monthly', lastModified: new Date('2026-10-31') },
 
   // Insights
   { path: '/insights',                  priority: 0.8, changeFrequency: 'weekly' },
