@@ -130,6 +130,98 @@ const publicWorkLinks: { label: string; href: string }[] = [
   },
 ]
 
+// EVE Verified Lab case studies - WEB_RELEASE_MODEL v1.6 section J.
+// Public wording only; every statement is mapped to a registered Atlas record
+// in section J2. No internal ids, hosts, paths, hashes, costs or model ids.
+type LabCase = {
+  id: string
+  kind: string
+  title: string
+  summary: string
+  flow?: string[]
+  flowNote?: string
+  happened: string[]
+  facts: { label: string; value: string }[]
+  limits: string
+  services: { name: string; id: string }[]
+}
+
+const labCases: LabCase[] = [
+  {
+    id: 'lab-agent-review',
+    kind: 'Bounded demonstration · Oct 2026',
+    title: "AI agents reviewing and improving each other's work",
+    summary:
+      'Two AI agents took part in an iterative development cycle: one wrote code, the other reviewed it and exposed defects, and the first corrected its work.',
+    flow: ['Code', 'Review', 'Fix', 'Tests', 'Replay check'],
+    flowNote:
+      'The handoff check was a separate replay after the agents had finished, not a live stop between them.',
+    happened: [
+      'The task was a small, self-contained input validator written from scratch for the exercise — not a production code base.',
+      'The reviewing agent identified defects and supplied a script that reproduces them: trailing line breaks, non-ASCII digits, a century-separator rule and a missing year-range check.',
+      'The developing agent corrected the implementation based on that review.',
+      'The recorded handoff was then evaluated in a deterministic replay, using EVE handoff verification together with package integrity checks. The unchanged package was accepted; a changed package, substituted code, a tampered verification record, a replayed record and reuse for the same action were rejected.',
+    ],
+    facts: [
+      { label: 'Tests, original', value: '21 passed' },
+      { label: 'Tests, corrected', value: '28 passed' },
+      { label: 'Defect categories', value: '4 corrected' },
+      { label: 'Replay scenarios', value: '1 accepted · 5 rejected' },
+    ],
+    limits:
+      'One task, one run. Both agents used the same model, and reviewer independence was not established. EVE did not admit or stop the agents live.',
+    services: [{ name: 'Agent Verification Review', id: 'agent-verification-review' }],
+  },
+  {
+    id: 'lab-runner-review',
+    kind: 'Review cycle · Oct 2026',
+    title: 'AI reviewers finding real defects in an AI-built task runner',
+    summary:
+      'Two AI review agents examined a software package built by our developer agent. Their blocking findings were fixed and re-reviewed until the package was accepted.',
+    happened: [
+      'The package is a service on our agent server that takes owner-approved tasks one at a time, runs them through the existing verification chain and reports the results to the project board.',
+      'In each review session one agent reviewed the package and a second agent checked that review. The owner signed each review period before it ran; the system verifies that signature before anything starts.',
+      'The reviewers found real defects, for example: a result whose evidence did not match was still counted as reported; in a period with several tasks, only the first task was reported; one task’s report could mark another task’s card as done without its evidence.',
+      'After each rejected round the developer agent fixed every blocking finding, rebuilt, re-tested and resubmitted with the earlier reviews and a resolution table. One table overstated what was included, and the reviewers caught it.',
+      'The same day, after owner approval, the package was installed and switched on. The first unattended period ran three small tasks, each accepted by the reviewing agent, with no one stepping in.',
+    ],
+    facts: [
+      { label: 'Review rounds', value: '5' },
+      { label: 'Review sessions', value: '9' },
+      { label: 'Rejected with blocking findings', value: '6 · all resolved' },
+      { label: 'Accepted', value: 'Round 5' },
+    ],
+    limits:
+      'The reviewers and the developer are AI models; the developer made the fixes, not the reviewers. Both reviewing agents ran the same model from the same provider, so this is not independent review.',
+    services: [
+      { name: 'Agent Verification Review', id: 'agent-verification-review' },
+      { name: 'EVA Business Workflows', id: 'eva-business-workflows' },
+    ],
+  },
+  {
+    id: 'lab-performance',
+    kind: 'Measured production run · Oct 2026',
+    title: 'Evidence sync: about 16 minutes to under 5',
+    summary:
+      'Our evidence archive sync was slowing down as it grew. A bounded change, reviewed and tested before installation, cut a full run from about 16 minutes to 4 minutes 50 seconds.',
+    happened: [
+      'The sync publishes our evidence archive and checks every referenced file before it publishes the new index. Measured cause of the slowdown: more than 3,600 file checks ran one after another.',
+      'The change runs up to four checks in parallel under the same verification rules; nothing is published if any check fails.',
+      'A reviewer from a different AI provider read the change and raised seven points, chiefly a risk that parallel checks could refresh the shared login at the same time. The developer serialised that refresh, added tests, and the reviewer accepted. The reviewer inspected the code and test evidence but did not run the tests.',
+      'Installation followed tests on the production machine, with the previous version kept for rollback. During testing an existing test was found faulty — it failed for the old and the new version alike; it was documented and a corrected copy was used.',
+    ],
+    facts: [
+      { label: 'Before → after', value: '≈ 16 min → 4 min 50 s' },
+      { label: 'Speed-up', value: '3.3×' },
+      { label: 'File references checked', value: '3,678' },
+      { label: 'Errors', value: '0' },
+    ],
+    limits:
+      'One live run measured at the time of writing; four parallel checks approved, higher concurrency not yet approved. No authentication or rate-limit errors appeared in that run; behaviour under provider rate limits has not been measured.',
+    services: [{ name: 'Agent Verification Review', id: 'agent-verification-review' }],
+  },
+]
+
 const TITLE = 'Services | EVE Verified'
 const DESCRIPTION =
   'Agent Verification Review, Pilot Partnerships and EVA Business Workflows. Bounded engagements with a fixed scope and a fixed deliverable.'
@@ -297,7 +389,7 @@ export default function ServicesPage() {
               kicker="Version-bound technical review"
               title="Agent Verification Review"
             />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
                 <div>
@@ -359,7 +451,7 @@ export default function ServicesPage() {
         <section id="pilot-partnerships" className="scroll-mt-20 bg-[#D3C6AD] py-24">
           <div className={wrap}>
             <SectionHead index="02" kicker="Pilot partners wanted" title="Pilot Partnerships" />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
                 <div>
@@ -407,7 +499,7 @@ export default function ServicesPage() {
               kicker="Custom development and qualification"
               title="EVA Business Workflows"
             />
-            <div className="grid gap-12 md:grid-cols-[120px_1fr]">
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
               <div aria-hidden="true" className="hidden md:block" />
               <div>
                 <p className="max-w-3xl text-lg leading-relaxed">
@@ -432,6 +524,128 @@ export default function ServicesPage() {
                 </div>
                 <a href="/contact" className={`${btnDark} mt-10`}>
                   Discuss a workflow <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* EVE Verified Lab - v1.6 section J. Every statement maps to a registered
+            Atlas record (section J2). No internal ids, paths, hosts, hashes,
+            costs or model ids are published. */}
+        <section id="lab" className="scroll-mt-20 border-t border-[#D3C6AD] bg-[#F3ECDD] py-24">
+          <div className={wrap}>
+            <SectionHead index="Lab" kicker="EVE Verified Lab" title="Engineering intelligence. Verified results." />
+            <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
+              <div aria-hidden="true" className="hidden md:block" />
+              <div>
+                <p className="max-w-3xl text-lg leading-relaxed">
+                  Work we run on our own systems, documented the same way we document client reviews:
+                  every figure below comes from a recorded run.
+                </p>
+
+                <div className="mt-12 space-y-10">
+                  {labCases.map((c) => (
+                    <article
+                      key={c.id}
+                      id={c.id}
+                      aria-labelledby={`${c.id}-title`}
+                      className="scroll-mt-24 border border-[#282A27] bg-[#F3ECDD]"
+                    >
+                      <div className="flex items-center justify-between gap-4 border-b border-[#282A27] bg-[#282A27] px-6 py-3">
+                        <p className={`${label} text-[#F3ECDD]`}>{c.kind}</p>
+                        <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-[#D95724]" />
+                      </div>
+                      <div className="grid gap-10 p-6 sm:p-8 lg:grid-cols-[1.45fr_1fr]">
+                        <div>
+                          <h3
+                            id={`${c.id}-title`}
+                            className={`${serif} text-[26px] font-semibold leading-snug md:text-[30px]`}
+                          >
+                            {c.title}
+                          </h3>
+                          <p className="mt-4 text-[17px] leading-relaxed">{c.summary}</p>
+
+                          {c.flow && (
+                            <figure className="mt-6">
+                              <ol className="flex flex-wrap items-center gap-x-2 gap-y-2">
+                                {c.flow.map((step, i) => (
+                                  <li key={step} className="flex items-center gap-2">
+                                    <span
+                                      className={`${mono} border px-2.5 py-1 text-[12px] uppercase tracking-[0.1em] ${
+                                        i === c.flow!.length - 1
+                                          ? 'border-[#282A27] bg-[#282A27] text-[#F3ECDD]'
+                                          : 'border-[#282A27]'
+                                      }`}
+                                    >
+                                      {step}
+                                    </span>
+                                    {i < c.flow!.length - 1 && (
+                                      <span aria-hidden="true" className="text-[#D95724]">
+                                        →
+                                      </span>
+                                    )}
+                                  </li>
+                                ))}
+                              </ol>
+                              {c.flowNote && (
+                                <figcaption className="mt-3 text-sm leading-relaxed">{c.flowNote}</figcaption>
+                              )}
+                            </figure>
+                          )}
+
+                          <h4 className={`${label} mt-8`}>What happened</h4>
+                          <ul className="mt-4 space-y-3">
+                            {c.happened.map((p) => (
+                              <li key={p} className="flex gap-3 text-[15px] leading-relaxed">
+                                <Marker />
+                                <span>{p}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="flex flex-col">
+                          <h4 className={label}>Measured result</h4>
+                          <dl className="mt-4 grid grid-cols-2 gap-px border border-[#D3C6AD] bg-[#D3C6AD]">
+                            {c.facts.map((f) => (
+                              <div key={f.label} className="bg-[#F3ECDD] p-4">
+                                <dt className="text-[13px] leading-snug">{f.label}</dt>
+                                <dd className={`${serif} mt-2 text-xl font-semibold leading-snug`}>{f.value}</dd>
+                              </div>
+                            ))}
+                          </dl>
+
+                          <div className="mt-6 border-l-4 border-[#282A27] bg-[#D3C6AD]/40 px-5 py-4 text-[15px] leading-relaxed">
+                            <span className="font-semibold">Limits:</span> {c.limits}
+                          </div>
+
+                          <div className="mt-6">
+                            <p className={label}>Related service</p>
+                            <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+                              {c.services.map((s) => (
+                                <li key={s.id}>
+                                  <a
+                                    href={`#${s.id}`}
+                                    className={`text-[15px] font-semibold underline decoration-[#D95724] decoration-2 underline-offset-[6px] hover:decoration-[#282A27] ${focus}`}
+                                  >
+                                    {s.name}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <p className="mt-12 max-w-3xl text-lg leading-relaxed">
+                  Want the same method applied to your agents, integrations or workflows?
+                </p>
+                <a href="/contact" className={`${btnDark} mt-6`}>
+                  Discuss an engagement <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>

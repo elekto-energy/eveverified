@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.5 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.6 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -8,6 +8,9 @@
   v1.5 written 2026-10-31 by owner direction, adding section I (Services design prototype, preview only).
   Sections A-H and the recorded deviations are unchanged from v1.4
   (sha256 86d431e6c2ff8d629a19304a8c9def765608118de190a41254e25f32e7bb0b86).
+  v1.6 written 2026-10-31 by owner direction, adding section J (EVE Verified Lab, three case studies).
+  Sections A-I and the recorded deviations are unchanged from v1.5
+  (sha256 3ab1f2d18157951ca8020c08dbbbeaf7c035af2f59c2a99f1fade38f822bf5c4).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -931,3 +934,132 @@ Atlas 02_ACTIVE_WORK zone.
     3  owner review of the preview on desktop and mobile, and of the I4 copy
     4  claim scan: no invented status, metric, customer or certification claim
     5  separate OWNER-GO for merge into main and production publication
+
+---
+
+## J. EVE VERIFIED LAB - THREE CASE STUDIES ON /services (v1.6 - 2026-10-31)
+
+**Scope:** one new section "EVE Verified Lab" on /services, placed after the three service
+branches and directly before "Public technical work", plus a 32px column-alignment fix
+(gap-x-4) in the four section bodies built in v1.5. No new route, no navigation change, no
+change to any other page, API, global style or demonstration.
+
+**Copy source (release input):** owner work order "EVE Verified - Services Lab case studies",
+owner decisions of 2026-10-31 (three cards with separate roles; HR-1 to HR-9 as a separate
+card; review cost not shown publicly), and the owner brief "LAB_CASE_STUDIES_BRIEF_2026-10-31"
+(card structure and claim locks). Every sentence was checked against registered Atlas
+records (zone 01_AUTO_SYNC) and corrected where the records differ (J2). This section was
+revised once before release; the earlier unreleased v1.6 preview (two cards) is superseded.
+
+**Destination:** /services#lab.
+
+### J1 - Card structure (labCases data in app/services/page.tsx)
+
+    fields   id, kind, title, summary, flow?, flowNote?, happened[], facts[], limits,
+             services[]
+    layout   per card: title, summary, "What happened", "Measured result", "Limits",
+             related service links; cards stacked; two columns inside a card on desktop
+    A        "AI agents reviewing and improving each other's work"   (2026-10-20 run)
+    B        "AI reviewers finding real defects in an AI-built task runner" (HR-1 to HR-9,
+             2026-10-29)
+    C        "Evidence sync: about 16 minutes to under 5"             (2026-10-31 run)
+    links    A, C -> Agent Verification Review; B -> Agent Verification Review and
+             EVA Business Workflows. No claim that either service is production-qualified.
+
+### J2 - Evidence-to-claim map and corrections
+
+Card A - verified-handoff record (2026-10-20) and review-phase result record.
+
+    write/review/correct cycle, two agents            CONFIRMED
+    reviewer "supplied a script that reproduces"      CONFIRMED  owner draft "proposed corrections"
+                                                                 NOT used: the developer wrote the
+                                                                 fixes
+    four defect categories                            CONFIRMED
+    21 passed -> 28 passed                            CONFIRMED
+    replay: 1 accepted, 5 rejected                    CONFIRMED  3 of 5 refused by package /
+                                                                 single-use checks, 2 by EVE; copy
+                                                                 says "EVE handoff verification
+                                                                 together with package integrity
+                                                                 checks"
+    small validator written for the exercise          CONFIRMED  domain not named on the page
+    same model; independence not established          CONFIRMED  "independent" not used positively
+    not admitted or stopped live by EVE               CONFIRMED  post-hoc replay
+
+Card B - five review-round records, resolution tables, review-request generator, install
+document (registered copy), enable record, first unattended period result (2026-10-29).
+
+    package: takes owner-approved tasks, runs them    CONFIRMED  built by the developer agent;
+    through the verification chain, reports results              three helper modules by another
+                                                                 agent were included unchanged
+    one agent reviews, a second checks the review     CONFIRMED  "a second agent checked each
+                                                                 review" - not "accepted"
+    owner signed each review period before it ran     CONFIRMED  signature on the period, not on
+                                                                 the outcomes
+    5 rounds, 9 sessions, 6 REJECT with blocking      CONFIRMED  R1 HR-1 REJECT, HR-2 REJECT;
+    findings, 3 ACCEPT, accepted in round 5                      R2 HR-3 ACCEPT, HR-4 REJECT;
+                                                                 R3 HR-5 REJECT, HR-6 REJECT;
+                                                                 R4 HR-7 ACCEPT, HR-8 REJECT;
+                                                                 R5 HR-9 ACCEPT
+    three defect examples                             CONFIRMED  first example worded as "a result
+                                                                 whose evidence did not match was
+                                                                 still counted as reported"
+    fixes, resubmission, one resolution table         CONFIRMED  the table overstated what was
+    wrong and caught                                             included
+    installed and switched on the same day after      CONFIRMED  an earlier "installed, not
+    owner approval; first unattended period: three               switched on" reading reflected
+    small tasks, each accepted by the reviewing                  an earlier moment the same day;
+    agent, no one stepping in                                    the tasks were small and done by
+                                                                 a worker agent
+    reviewers same model, same provider               CONFIRMED  "not independent review"
+    review cost                                       NOT SHOWN  owner decision
+
+Card C - synchronisation live-run record, both revision reports, both code reviews, owner
+installation approval (2026-10-31).
+
+    cause: more than 3,600 checks one after another   CONFIRMED
+    up to four checks in parallel, same rules,        CONFIRMED  four approved; higher
+    nothing published if a check fails                           concurrency not approved
+    reviewer from a different AI provider; seven      CONFIRMED  provider from the registered
+    points, chiefly the shared-login refresh risk;               project pointer; "independent"
+    serialised, tests added, accepted; reviewer did              NOT used; reviewer name not
+    not run the tests                                            published
+    tests on the production machine; previous         CONFIRMED
+    version kept for rollback
+    faulty existing test, failed for old and new      CONFIRMED  documented; corrected copy used
+    about 16 min -> 4 min 50 s; 3.3x; 3,678; 0        CONFIRMED  one live run; no authentication
+    errors                                                       or rate-limit lines in its log
+
+### J3 - Leak and claim scans (app/services/page.tsx, before commit)
+
+    leak scan   no local or server paths, host names, IP addresses, workspace or account ids,
+                e-mail, agent ids, record ids, run/period/mandate ids, hashes, git refs,
+                Drive ids, reviewer names, model or provider names, cost figures, internal
+                labels or the agent framework name: 0 hits
+    claim scan  "independen*", "certif*", "audit*", "guarantee", "autonomous",
+                "self-improv*", "production-ready", "fully", "proven", "secure": only in
+                negations or in copy approved in v1.4
+
+### J4 - Verification before commit
+
+    typecheck   tsc --noEmit: exit 0
+    isolation   / and /contact: Inter, no services fonts; /services nav: Inter (unchanged)
+    width       no horizontal overflow at 1440px and 390px
+    visual      desktop and mobile screenshots reviewed
+
+### J5 - Tracking
+
+No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchanged.
+
+### J6 - Files touched by v1.6 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.6 hash
+    EDIT app/services/page.tsx              Lab section, labCases data, alignment fix
+
+### J7 - Release (owner GO of 2026-10-31, conditional)
+
+    1  this file's sha256 equals the pin in data/demonstrations.ts
+    2  Vercel preview build of the branch head READY (build of record)
+    3  pull request opened; merged as a merge commit only if 1-2 pass and no deviation
+    4  production check: /services 200, the three cards and the contact link present
+    5  result recorded in the Atlas 02_ACTIVE_WORK zone
