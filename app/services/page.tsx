@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { BranchesTrack, ClipReveal, CountUp, HeroChain, Reveal, ThemeSwitch, WordReveal } from './ServicesMotion'
 
 // Governed by app/stories/WEB_RELEASE_MODEL.md v1.5 section I (supersedes the
 // v1.4 section H layout of this page; H's verbatim copy is reused where listed).
@@ -11,8 +12,8 @@ import Footer from '@/components/Footer'
 // for non-text marks and for text at 24px and larger. Olive Grey is used only
 // for rules and borders.
 
-// Palette: Signal Orange #D95724, Warm Ivory #F3ECDD, Graphite #282A27,
-// Olive Grey #777868, Sand #D3C6AD (used as Tailwind arbitrary values below).
+// Colours: only var(--ev-*) tokens, defined per theme in app/services/theme.css
+// (Evidence Systems, FlowWink Light, FlowWink Dark).
 
 type NamedItem = { name: string; description: string }
 
@@ -249,14 +250,14 @@ export const metadata: Metadata = {
 const serif = 'font-[family-name:var(--ev-font-serif)]'
 const mono = 'font-[family-name:var(--ev-font-mono)]'
 const focus =
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D95724]'
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ev-accent)]'
 const wrap = 'mx-auto w-full max-w-6xl px-5 sm:px-8'
 const label = `${mono} text-[11px] font-medium uppercase tracking-[0.16em]`
-const btnDark = `inline-flex items-center gap-2 rounded-sm bg-[#282A27] px-5 py-3 text-sm font-semibold text-[#F3ECDD] transition-colors hover:bg-black ${focus}`
-const btnLight = `inline-flex items-center gap-2 rounded-sm bg-[#F3ECDD] px-5 py-3 text-sm font-semibold text-[#282A27] transition-colors hover:bg-white ${focus}`
+const btnDark = `inline-flex items-center gap-2 rounded-sm border border-[var(--ev-border-strong)] bg-[var(--ev-ink)] px-5 py-3 text-sm font-semibold text-[var(--ev-on-ink)] transition-colors hover:opacity-90 ${focus}`
+const btnLight = `inline-flex items-center gap-2 rounded-sm bg-[var(--ev-on-ink)] px-5 py-3 text-sm font-semibold text-[var(--ev-ink)] transition-colors hover:opacity-90 ${focus}`
 
 function Marker() {
-  return <span aria-hidden="true" className="mt-[0.55em] h-1.5 w-1.5 shrink-0 bg-[#D95724]" />
+  return <span aria-hidden="true" className="mt-[0.55em] h-1.5 w-1.5 shrink-0 bg-[var(--ev-accent)]" />
 }
 
 function NamedList({ items }: { items: NamedItem[] }) {
@@ -276,36 +277,36 @@ function NamedList({ items }: { items: NamedItem[] }) {
 
 function SectionHead({ index, kicker, title }: { index: string; kicker: string; title: string }) {
   return (
-    <div className="mb-10 grid gap-4 border-t border-[#777868] pt-6 md:grid-cols-[120px_1fr]">
-      <div className={`${mono} text-sm text-[#282A27]`}>{index}</div>
+    <Reveal className="mb-10 grid gap-4 border-t border-[var(--ev-rule)] pt-6 md:grid-cols-[120px_1fr]">
+      <div className={`${mono} text-sm text-[var(--ev-text)]`}>{index}</div>
       <div>
         <p className={label}>{kicker}</p>
-        <h2 className={`${serif} mt-3 text-3xl font-semibold leading-tight tracking-[-0.01em] md:text-[42px]`}>
-          {title}
-        </h2>
+        <WordReveal text={title} className={`${serif} mt-3 text-3xl font-semibold leading-tight tracking-[-0.01em] md:text-[42px]`} />
       </div>
-    </div>
+    </Reveal>
   )
 }
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-[#282A27]">
+    <main className="min-h-screen bg-[var(--ev-ink)]">
       <Navigation />
 
-      <div className="font-[family-name:var(--ev-font-sans)] text-[#282A27] antialiased">
-        {/* Hero */}
-        <section className="bg-[#282A27] pb-20 pt-32 text-[#F3ECDD] md:pb-28 md:pt-40">
-          <div className={`${wrap} grid gap-14 lg:grid-cols-[1.25fr_1fr] lg:items-end`}>
+      <div className="font-[family-name:var(--ev-font-sans)] text-[var(--ev-text)] antialiased">
+        {/* Hero - pinned verification chain (v1.7 section K) */}
+        <HeroChain
+          chain={chain}
+          caption="Each transition is inspected on its own. Evidence does not establish a claim by itself, and authorization is not proof that the action occurred."
+          intro={
             <div>
-              <p className={`${label} text-[#D3C6AD]`}>EVE Verified / Services</p>
+              <p className={`${label} text-[var(--ev-on-ink-muted)]`}>EVE Verified / Services</p>
               <h1
                 className={`${serif} mt-6 text-[40px] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[56px] lg:text-[68px]`}
               >
                 Can you prove your AI agent was{' '}
-                <span className="text-[#D95724]">authorized to act?</span>
+                <span className="text-[var(--ev-accent)]">authorized to act?</span>
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#D3C6AD]">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--ev-on-ink-muted)]">
                 Bounded engagements with a fixed scope and a fixed deliverable.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -314,75 +315,23 @@ export default function ServicesPage() {
                 </a>
                 <a
                   href="#services"
-                  className={`text-sm font-semibold text-[#F3ECDD] underline decoration-[#D95724] decoration-2 underline-offset-[6px] hover:decoration-[#F3ECDD] ${focus}`}
+                  className={`text-sm font-semibold text-[var(--ev-on-ink)] underline decoration-[var(--ev-accent)] decoration-2 underline-offset-[6px] hover:decoration-[var(--ev-on-ink)] ${focus}`}
                 >
                   See the three services
                 </a>
               </div>
-            </div>
-
-            {/* Verification chain inside a scope boundary */}
-            <figure className="relative">
-              <div className="rounded-sm border border-dashed border-[#777868] p-6 sm:p-8">
-                <p className={`${label} absolute -top-2.5 left-5 bg-[#282A27] px-2 text-[#D3C6AD]`}>
-                  Agreed scope
-                </p>
-                <ol className="relative space-y-3">
-                  <span
-                    aria-hidden="true"
-                    className="absolute bottom-3 left-[7px] top-3 w-px bg-[#777868]"
-                  />
-                  {chain.map((stage, i) => (
-                    <li key={stage} className="relative flex items-center gap-4">
-                      <span
-                        aria-hidden="true"
-                        className={`relative z-10 h-[15px] w-[15px] shrink-0 border-2 ${
-                          i === chain.length - 1
-                            ? 'border-[#D95724] bg-[#D95724]'
-                            : 'border-[#D3C6AD] bg-[#282A27]'
-                        }`}
-                      />
-                      <span className={`${mono} text-[13px] uppercase tracking-[0.12em] text-[#F3ECDD]`}>
-                        {stage}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
+              <div className="mt-8">
+                <ThemeSwitch />
               </div>
-              <figcaption className="mt-4 text-sm leading-relaxed text-[#D3C6AD]">
-                Each transition is inspected on its own. Evidence does not establish a claim by
-                itself, and authorization is not proof that the action occurred.
-              </figcaption>
-            </figure>
-          </div>
-        </section>
-
-        {/* Branch overview */}
-        <section id="services" className="scroll-mt-20 bg-[#F3ECDD] py-20 md:py-24">
-          <div className={wrap}>
-            <p className={label}>Three service branches</p>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {branches.map((b) => (
-                <a
-                  key={b.id}
-                  href={`#${b.id}`}
-                  className={`group flex flex-col border border-[#D3C6AD] bg-[#F3ECDD] p-6 transition-colors hover:border-[#282A27] ${focus}`}
-                >
-                  <span aria-hidden="true" className="mb-6 h-1 w-10 bg-[#D95724]" />
-                  <span className={`${mono} text-sm`}>{b.index}</span>
-                  <span className={`${serif} mt-2 text-2xl font-semibold leading-snug`}>{b.name}</span>
-                  <span className="mt-3 flex-1 text-[15px] leading-relaxed">{b.line}</span>
-                  <span className="mt-6 text-sm font-semibold underline decoration-[#D95724] decoration-2 underline-offset-[6px] group-hover:decoration-[#282A27]">
-                    Details <span aria-hidden="true">↓</span>
-                  </span>
-                </a>
-              ))}
             </div>
-          </div>
-        </section>
+          }
+        />
+
+        {/* Branch overview - horizontal track on desktop (v1.7 section K) */}
+        <BranchesTrack branches={branches} />
 
         {/* 01 Agent Verification Review */}
-        <section id="agent-verification-review" className="scroll-mt-20 bg-[#F3ECDD] pb-24">
+        <section id="agent-verification-review" className="scroll-mt-20 bg-[var(--ev-bg)] pb-24">
           <div className={wrap}>
             <SectionHead
               index="01"
@@ -399,7 +348,7 @@ export default function ServicesPage() {
                     integrations and the evidence behind verification claims.
                   </p>
 
-                  <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-l-4 border-[#D95724] pl-5">
+                  <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-l-4 border-[var(--ev-accent)] pl-5">
                     <span className={`${serif} text-[32px] font-semibold leading-none`}>From €4,500</span>
                     <span className="text-[15px]">depending on scope</span>
                   </div>
@@ -421,14 +370,14 @@ export default function ServicesPage() {
 
                 {/* Evidence card: structure of the written review, no values */}
                 <aside aria-labelledby="report-structure" className="self-start">
-                  <div className="border border-[#282A27] bg-[#F3ECDD]">
-                    <div className="flex items-center justify-between border-b border-[#282A27] bg-[#282A27] px-5 py-3">
-                      <p id="report-structure" className={`${label} text-[#F3ECDD]`}>
+                  <div className="border border-[var(--ev-border-strong)] bg-[var(--ev-surface)]">
+                    <div className="ev-ink flex items-center justify-between border-b border-[var(--ev-border-strong)] bg-[var(--ev-ink)] px-5 py-3">
+                      <p id="report-structure" className={`${label} text-[var(--ev-on-ink)]`}>
                         Written review
                       </p>
-                      <span aria-hidden="true" className="h-2 w-2 bg-[#D95724]" />
+                      <span aria-hidden="true" className="h-2 w-2 bg-[var(--ev-accent)]" />
                     </div>
-                    <dl className="divide-y divide-[#D3C6AD]">
+                    <dl className="divide-y divide-[var(--ev-border)]">
                       {reportFields.map((f, i) => (
                         <div key={f} className="flex items-baseline gap-4 px-5 py-3">
                           <dt className={`${mono} w-6 shrink-0 text-xs`}>{String(i + 1).padStart(2, '0')}</dt>
@@ -448,7 +397,7 @@ export default function ServicesPage() {
         </section>
 
         {/* 02 Pilot Partnerships */}
-        <section id="pilot-partnerships" className="scroll-mt-20 bg-[#D3C6AD] py-24">
+        <section id="pilot-partnerships" className="scroll-mt-20 bg-[var(--ev-bg-alt)] py-24">
           <div className={wrap}>
             <SectionHead index="02" kicker="Pilot partners wanted" title="Pilot Partnerships" />
             <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
@@ -471,7 +420,7 @@ export default function ServicesPage() {
                     Apply for a pilot <span aria-hidden="true">→</span>
                   </a>
                 </div>
-                <div className="self-start border border-dashed border-[#282A27] p-6">
+                <div className="self-start border border-dashed border-[var(--ev-border-strong)] p-6">
                   <ul className="space-y-3 text-[15px]">
                     {[
                       'Scoped technical engagements',
@@ -492,7 +441,7 @@ export default function ServicesPage() {
         </section>
 
         {/* 03 EVA Business Workflows */}
-        <section id="eva-business-workflows" className="scroll-mt-20 bg-[#F3ECDD] py-24">
+        <section id="eva-business-workflows" className="scroll-mt-20 bg-[var(--ev-bg)] py-24">
           <div className={wrap}>
             <SectionHead
               index="03"
@@ -510,14 +459,14 @@ export default function ServicesPage() {
                   {workflowExamples.map((w) => (
                     <li
                       key={w}
-                      className="flex min-h-[96px] flex-col justify-between border border-[#D3C6AD] p-5"
+                      className="flex min-h-[96px] flex-col justify-between border border-[var(--ev-border)] p-5"
                     >
-                      <span aria-hidden="true" className="h-1 w-6 bg-[#D95724]" />
+                      <span aria-hidden="true" className="h-1 w-6 bg-[var(--ev-accent)]" />
                       <span className={`${serif} mt-4 text-xl font-semibold`}>{w}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-8 max-w-3xl border-l-4 border-[#282A27] bg-[#D3C6AD]/40 px-5 py-4 text-[15px] leading-relaxed">
+                <div className="mt-8 max-w-3xl border-l-4 border-[var(--ev-border-strong)] bg-[var(--ev-callout)] px-5 py-4 text-[15px] leading-relaxed">
                   <span className="font-semibold">Scope boundary:</span> this is custom development
                   and qualification, not a ready-made automation platform. A workflow is relied on
                   only after it has been qualified against the agreed scope.
@@ -533,7 +482,7 @@ export default function ServicesPage() {
         {/* EVE Verified Lab - v1.6 section J. Every statement maps to a registered
             Atlas record (section J2). No internal ids, paths, hosts, hashes,
             costs or model ids are published. */}
-        <section id="lab" className="scroll-mt-20 border-t border-[#D3C6AD] bg-[#F3ECDD] py-24">
+        <section id="lab" className="scroll-mt-20 border-t border-[var(--ev-border)] bg-[var(--ev-bg)] py-24">
           <div className={wrap}>
             <SectionHead index="Lab" kicker="EVE Verified Lab" title="Engineering intelligence. Verified results." />
             <div className="grid gap-x-4 gap-y-12 md:grid-cols-[120px_1fr]">
@@ -546,15 +495,15 @@ export default function ServicesPage() {
 
                 <div className="mt-12 space-y-10">
                   {labCases.map((c) => (
+                    <ClipReveal key={c.id}>
                     <article
-                      key={c.id}
                       id={c.id}
                       aria-labelledby={`${c.id}-title`}
-                      className="scroll-mt-24 border border-[#282A27] bg-[#F3ECDD]"
+                      className="scroll-mt-24 border border-[var(--ev-border-strong)] bg-[var(--ev-surface)]"
                     >
-                      <div className="flex items-center justify-between gap-4 border-b border-[#282A27] bg-[#282A27] px-6 py-3">
-                        <p className={`${label} text-[#F3ECDD]`}>{c.kind}</p>
-                        <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-[#D95724]" />
+                      <div className="ev-ink flex items-center justify-between gap-4 border-b border-[var(--ev-border-strong)] bg-[var(--ev-ink)] px-6 py-3">
+                        <p className={`${label} text-[var(--ev-on-ink)]`}>{c.kind}</p>
+                        <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-[var(--ev-accent)]" />
                       </div>
                       <div className="grid gap-10 p-6 sm:p-8 lg:grid-cols-[1.45fr_1fr]">
                         <div>
@@ -574,14 +523,14 @@ export default function ServicesPage() {
                                     <span
                                       className={`${mono} border px-2.5 py-1 text-[12px] uppercase tracking-[0.1em] ${
                                         i === c.flow!.length - 1
-                                          ? 'border-[#282A27] bg-[#282A27] text-[#F3ECDD]'
-                                          : 'border-[#282A27]'
+                                          ? 'border-[var(--ev-border-strong)] bg-[var(--ev-ink)] text-[var(--ev-on-ink)]'
+                                          : 'border-[var(--ev-border-strong)]'
                                       }`}
                                     >
                                       {step}
                                     </span>
                                     {i < c.flow!.length - 1 && (
-                                      <span aria-hidden="true" className="text-[#D95724]">
+                                      <span aria-hidden="true" className="text-[var(--ev-accent)]">
                                         →
                                       </span>
                                     )}
@@ -607,16 +556,18 @@ export default function ServicesPage() {
 
                         <div className="flex flex-col">
                           <h4 className={label}>Measured result</h4>
-                          <dl className="mt-4 grid grid-cols-2 gap-px border border-[#D3C6AD] bg-[#D3C6AD]">
+                          <dl className="mt-4 grid grid-cols-2 gap-px border border-[var(--ev-border)] bg-[var(--ev-border)]">
                             {c.facts.map((f) => (
-                              <div key={f.label} className="bg-[#F3ECDD] p-4">
+                              <div key={f.label} className="bg-[var(--ev-surface)] p-4">
                                 <dt className="text-[13px] leading-snug">{f.label}</dt>
-                                <dd className={`${serif} mt-2 text-xl font-semibold leading-snug`}>{f.value}</dd>
+                                <dd className={`${serif} mt-2 text-xl font-semibold leading-snug`}>
+                                  <CountUp value={f.value} />
+                                </dd>
                               </div>
                             ))}
                           </dl>
 
-                          <div className="mt-6 border-l-4 border-[#282A27] bg-[#D3C6AD]/40 px-5 py-4 text-[15px] leading-relaxed">
+                          <div className="mt-6 border-l-4 border-[var(--ev-border-strong)] bg-[var(--ev-callout)] px-5 py-4 text-[15px] leading-relaxed">
                             <span className="font-semibold">Limits:</span> {c.limits}
                           </div>
 
@@ -627,7 +578,7 @@ export default function ServicesPage() {
                                 <li key={s.id}>
                                   <a
                                     href={`#${s.id}`}
-                                    className={`text-[15px] font-semibold underline decoration-[#D95724] decoration-2 underline-offset-[6px] hover:decoration-[#282A27] ${focus}`}
+                                    className={`text-[15px] font-semibold underline decoration-[var(--ev-accent)] decoration-2 underline-offset-[6px] hover:decoration-[var(--ev-text)] ${focus}`}
                                   >
                                     {s.name}
                                   </a>
@@ -638,6 +589,7 @@ export default function ServicesPage() {
                         </div>
                       </div>
                     </article>
+                    </ClipReveal>
                   ))}
                 </div>
 
@@ -653,23 +605,23 @@ export default function ServicesPage() {
         </section>
 
         {/* Public technical work - verbatim from v1.4 section H */}
-        <section className="bg-[#282A27] py-24 text-[#F3ECDD]">
+        <section className="ev-ink bg-[var(--ev-ink)] py-24 text-[var(--ev-on-ink)]">
           <div className={`${wrap} grid gap-10 md:grid-cols-[120px_1fr]`}>
-            <p className={`${label} text-[#D3C6AD]`}>Public record</p>
+            <p className={`${label} text-[var(--ev-on-ink-muted)]`}>Public record</p>
             <div className="max-w-3xl">
               <h2 className={`${serif} text-3xl font-semibold leading-tight md:text-[42px]`}>
                 Public technical work
               </h2>
-              <p className="mt-6 text-[17px] leading-relaxed text-[#D3C6AD]">
+              <p className="mt-6 text-[17px] leading-relaxed text-[var(--ev-on-ink-muted)]">
                 EVE Verified has submitted public technical comments on the Proof-of-Control working
                 draft at Linux Foundation Decentralized Trust.
               </p>
-              <p className="mt-6 text-[17px] leading-relaxed text-[#D3C6AD]">Our contributions include:</p>
-              <ul className="mt-4 space-y-3 text-[16px] leading-relaxed text-[#D3C6AD]">
+              <p className="mt-6 text-[17px] leading-relaxed text-[var(--ev-on-ink-muted)]">Our contributions include:</p>
+              <ul className="mt-4 space-y-3 text-[16px] leading-relaxed text-[var(--ev-on-ink-muted)]">
                 <li className="flex gap-3">
                   <Marker />
                   <span>
-                    <span className="font-semibold text-[#F3ECDD]">Verification scope</span>: a
+                    <span className="font-semibold text-[var(--ev-on-ink)]">Verification scope</span>: a
                     proposal for machine-readable disclosure of what a verification result does and
                     does not assess, including NOT_ASSESSED for content outside the verified scope.
                   </span>
@@ -677,14 +629,14 @@ export default function ServicesPage() {
                 <li className="flex gap-3">
                   <Marker />
                   <span>
-                    <span className="font-semibold text-[#F3ECDD]">Evidence integrity</span>: a
+                    <span className="font-semibold text-[var(--ev-on-ink)]">Evidence integrity</span>: a
                     reproducible analysis showing that a fail-closed refusal and an omitted record
                     produce identical results from the published verifier, at a pinned commit of the
                     reference implementation.
                   </span>
                 </li>
               </ul>
-              <p className="mt-6 text-[17px] leading-relaxed text-[#D3C6AD]">
+              <p className="mt-6 text-[17px] leading-relaxed text-[var(--ev-on-ink-muted)]">
                 {"Comment #77 is listed in the working group's public-comment register as an open item for the working group to take up. These contributions show our approach to evidence-based technical review."}
               </p>
               <ul className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8">
@@ -694,14 +646,14 @@ export default function ServicesPage() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${mono} text-sm text-[#F3ECDD] underline decoration-[#D95724] decoration-2 underline-offset-[6px] hover:decoration-[#F3ECDD] ${focus}`}
+                      className={`${mono} text-sm text-[var(--ev-on-ink)] underline decoration-[var(--ev-accent)] decoration-2 underline-offset-[6px] hover:decoration-[var(--ev-on-ink)] ${focus}`}
                     >
                       {link.label}
                     </a>
                   </li>
                 ))}
               </ul>
-              <p className="mt-8 text-sm leading-relaxed text-[#D3C6AD]">
+              <p className="mt-8 text-sm leading-relaxed text-[var(--ev-on-ink-muted)]">
                 These are public technical contributions, not certifications, endorsements,
                 organizational membership claims or adopted standard requirements.
               </p>
@@ -710,16 +662,16 @@ export default function ServicesPage() {
         </section>
 
         {/* How an engagement works - verbatim from v1.4 section H */}
-        <section className="bg-[#F3ECDD] py-24">
+        <section className="bg-[var(--ev-bg)] py-24">
           <div className={wrap}>
             <SectionHead index="—" kicker="Process" title="How an engagement works" />
-            <ol className="grid gap-px border border-[#D3C6AD] bg-[#D3C6AD] md:ml-[120px] md:grid-cols-3">
+            <ol className="grid gap-px border border-[var(--ev-border)] bg-[var(--ev-border)] md:ml-[120px] md:grid-cols-3">
               {[
                 ['Scope', 'we agree in writing on the system, the questions and the deliverable.'],
                 ['Work', 'stays inside the agreed scope.'],
                 ['Delivery', 'a documented result with reproducible evidence.'],
               ].map(([name, text], i) => (
-                <li key={name} className="bg-[#F3ECDD] p-6">
+                <li key={name} className="bg-[var(--ev-surface)] p-6">
                   <span className={`${mono} text-sm`}>{`0${i + 1}`}</span>
                   <p className="mt-3 text-[15px] leading-relaxed">
                     <span className={`${serif} text-xl font-semibold`}>{name}:</span> {text}
@@ -731,7 +683,7 @@ export default function ServicesPage() {
         </section>
 
         {/* What this is not - verbatim from v1.4 section H */}
-        <section className="bg-[#F3ECDD] pb-24">
+        <section className="bg-[var(--ev-bg)] pb-24">
           <div className={wrap}>
             <SectionHead index="—" kicker="Limitations" title="What this is not" />
             <ul className="space-y-3 md:ml-[120px]">
@@ -750,7 +702,7 @@ export default function ServicesPage() {
         </section>
 
         {/* Closing CTA */}
-        <section className="border-t-4 border-[#D95724] bg-[#282A27] py-20 text-[#F3ECDD]">
+        <section className="ev-ink border-t-4 border-[var(--ev-accent)] bg-[var(--ev-ink)] py-20 text-[var(--ev-on-ink)]">
           <div className={`${wrap} flex flex-col items-start justify-between gap-8 md:flex-row md:items-center`}>
             <p className={`${serif} max-w-2xl text-3xl font-semibold leading-tight md:text-[40px]`}>
               Start with a scoped conversation.

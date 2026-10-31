@@ -1,4 +1,5 @@
 import localFont from 'next/font/local'
+import './theme.css'
 
 // Governed by app/stories/WEB_RELEASE_MODEL.md v1.5 section I.
 // Scoped to /services and its sub-routes only. These fonts are exposed as CSS
@@ -32,6 +33,22 @@ const serif = localFont({
   display: 'swap',
 })
 
+// Default colour theme for /services: 'evidence' | 'light' | 'dark'
+// (definitions in app/services/theme.css). A visitor's choice from the theme
+// switch is stored in localStorage ('ev-theme') and applied before paint.
+const DEFAULT_THEME = 'evidence'
+
+const applyStoredTheme = `(function(){try{var t=localStorage.getItem('ev-theme');if(t==='evidence'||t==='light'||t==='dark'){document.currentScript.parentElement.setAttribute('data-ev-theme',t)}}catch(e){}})()`
+
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {
-  return <div className={`${sans.variable} ${mono.variable} ${serif.variable}`}>{children}</div>
+  return (
+    <div
+      data-ev-theme={DEFAULT_THEME}
+      suppressHydrationWarning
+      className={`${sans.variable} ${mono.variable} ${serif.variable}`}
+    >
+      <script dangerouslySetInnerHTML={{ __html: applyStoredTheme }} />
+      {children}
+    </div>
+  )
 }

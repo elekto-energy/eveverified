@@ -1,0 +1,91 @@
+/*
+ * EVE Verified /services - colour themes (WEB_RELEASE_MODEL v1.7 section K).
+ *
+ * All colours of the /services route come from these variables; components use
+ * only var(--ev-*). To change the default theme, edit DEFAULT_THEME in
+ * app/services/layout.tsx. To change a theme, edit its block below.
+ *
+ * Scope: only elements inside [data-ev-theme] (the /services wrapper). Nothing
+ * here applies to other pages.
+ *
+ * Tokens
+ *   --ev-bg            page section background
+ *   --ev-bg-alt        alternate section background
+ *   --ev-surface       cards and panels
+ *   --ev-text          body text on bg / bg-alt / surface
+ *   --ev-border        light borders and grid gaps
+ *   --ev-border-strong strong borders (cards, buttons)
+ *   --ev-rule          section rules and decorative lines
+ *   --ev-accent        marks, underlines, focus, large accent text (>= 24px)
+ *   --ev-callout       callout box background
+ *   --ev-ink           dark bands (hero, record, closing), header bars, buttons
+ *   --ev-on-ink        text on ink
+ *   --ev-on-ink-muted  secondary text on ink
+ *   --ev-accent-on-ink accent inside .ev-ink regions (dark bands); remapped below
+ */
+
+/* Evidence Systems - owner palette of 2026-10-31 (default). */
+[data-ev-theme='evidence'] {
+  --ev-bg: #f3ecdd;
+  --ev-bg-alt: #d3c6ad;
+  --ev-surface: #f3ecdd;
+  --ev-text: #282a27;
+  --ev-border: #d3c6ad;
+  --ev-border-strong: #282a27;
+  --ev-rule: #777868;
+  --ev-accent: #d95724;
+  --ev-callout: rgba(211, 198, 173, 0.4);
+  --ev-ink: #282a27;
+  --ev-on-ink: #f3ecdd;
+  --ev-on-ink-muted: #d3c6ad;
+  --ev-accent-on-ink: #d95724;
+  color-scheme: light;
+}
+
+/* FlowWink Light - platform default tokens, flowwink src/index.css :root
+   (commit 30e3648c). Ink = FlowWink's inverse (dark) surface. */
+[data-ev-theme='light'] {
+  --ev-bg: hsl(210 20% 99%);
+  --ev-bg-alt: hsl(210 15% 93%);
+  --ev-surface: hsl(0 0% 100%);
+  --ev-text: hsl(220 25% 12%);
+  --ev-border: hsl(214 20% 88%);
+  --ev-border-strong: hsl(220 25% 12%);
+  --ev-rule: hsl(220 10% 45%);
+  --ev-accent: hsl(220 100% 26%);
+  --ev-callout: hsl(180 45% 92%);
+  --ev-ink: hsl(220 25% 8%);
+  --ev-on-ink: hsl(210 20% 95%);
+  --ev-on-ink-muted: hsl(210 10% 60%);
+  /* FlowWink dark primary: deep blue would be 1.5:1 on ink */
+  --ev-accent-on-ink: hsl(210 60% 60%);
+  color-scheme: light;
+}
+
+/* FlowWink Dark - platform default tokens, flowwink src/index.css .dark
+   (commit 30e3648c). */
+[data-ev-theme='dark'] {
+  --ev-bg: hsl(220 25% 8%);
+  --ev-bg-alt: hsl(220 25% 12%);
+  --ev-surface: hsl(220 25% 12%);
+  --ev-text: hsl(210 20% 95%);
+  --ev-border: hsl(220 15% 22%);
+  --ev-border-strong: hsl(210 10% 60%);
+  --ev-rule: hsl(210 10% 60%);
+  --ev-accent: hsl(210 60% 60%);
+  --ev-callout: hsl(180 30% 20%);
+  --ev-ink: hsl(220 20% 18%);
+  --ev-on-ink: hsl(210 20% 95%);
+  --ev-on-ink-muted: hsl(210 10% 60%);
+  --ev-accent-on-ink: hsl(210 60% 60%);
+  color-scheme: dark;
+}
+
+/* Inside dark bands the accent switches to the variant that reads on ink. */
+[data-ev-theme] .ev-ink {
+  --ev-accent: var(--ev-accent-on-ink);
+}
+
+[data-ev-theme] {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
