@@ -8,8 +8,8 @@
 // demonstration describes an outcome that was measured and can be checked.
 //
 // Governed by:
-//   app/stories/WEB_RELEASE_MODEL.md            v1.9
-//     073ab5cf51fdc3c32be241e5ce2226664a807baadfce5452bef4a2ad9a2f9439
+//   app/stories/WEB_RELEASE_MODEL.md            v1.10
+//     97c06c40b5db87d3c9e7124359af54bd1d8018f06ab177d122a1a9600e0a93a6
 //     (measured on the working-copy bytes, LF line endings, 2026-11-02)
 //   app/stories/PROVIDER_BACKED_STORY_MODEL.md  v1.2
 //     c293fb6fac0f483b0a37659111a074c45ef8196c5de08034a70380eb3a36ff5b

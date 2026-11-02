@@ -9,6 +9,7 @@ import type { MetadataRoute } from 'next';
  *   /pilot   — pilot program landing (intentionally unlisted)
  *   /eve-verified — 301 to verify.eveverified.com (next.config.js)
  *   /about   — redirects to /about/what-is-eve; a sitemap lists the target
+ *   /eve, /about/determinism, /philosophy — 301 (next.config.js), consolidated
  *
  * Update lastModified when content changes substantially.
  */
@@ -26,10 +27,8 @@ type Route = {
 const ROUTES: Route[] = [
   // Top-level
   { path: '/',                          priority: 1.0, changeFrequency: 'monthly' },
-  { path: '/eve',                       priority: 0.9, changeFrequency: 'monthly' },
   { path: '/solutions/tprm',            priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-06-12') },
   { path: '/elekto',                    priority: 0.8, changeFrequency: 'monthly' },
-  { path: '/philosophy',                priority: 0.7, changeFrequency: 'monthly' },
   { path: '/services',                  priority: 0.7, changeFrequency: 'monthly', lastModified: new Date('2026-10-31') },
 
   // Insights
@@ -52,8 +51,7 @@ const ROUTES: Route[] = [
   { path: '/ask/legal/journalism',      priority: 0.6, changeFrequency: 'monthly' },
 
   // About
-  { path: '/about/what-is-eve',         priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/about/determinism',         priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/about/what-is-eve',         priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-11-02') },
   { path: '/about/eve-control-room',    priority: 0.6, changeFrequency: 'monthly' },
   { path: '/about/company',             priority: 0.5, changeFrequency: 'monthly' },
 ];

@@ -311,7 +311,7 @@ export default function OriginPage() {
               View the signal layer →
             </a>
             <a
-              href="/philosophy"
+              href="/#philosophy"
               className="text-sm text-gray-500 hover:text-white transition-colors font-mono tracking-wide"
             >
               Read the philosophy →
