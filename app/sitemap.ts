@@ -34,6 +34,7 @@ const ROUTES: Route[] = [
   // Insights
   { path: '/insights',                  priority: 0.8, changeFrequency: 'weekly' },
   { path: '/insights/ai-act-proof-v1',  priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/insights/agentic-ai-verifiable-boundaries', priority: 0.8, changeFrequency: 'monthly', lastModified: new Date('2026-11-02') },
 
   // Stories
   // NOTE: /stories itself is NOT listed. It redirects to /stories/accountability
