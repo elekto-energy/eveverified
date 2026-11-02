@@ -76,7 +76,7 @@ export const navItems = [
     children: [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
       { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
-      { name: 'Architecture', href: '/#architecture' },
+      { name: 'Architecture', href: '/#how-it-works' },
       { name: 'Control Chain', href: '/control-chain' },
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
       { name: 'ASK Research', href: 'https://research.eveverified.com' },

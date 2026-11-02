@@ -41,12 +41,19 @@ export default function Footer() {
             <ul className="space-y-2">
               {products.map(product => (
                 <li key={product.id}>
-                  <a
-                    href={product.href || `#${product.id}`}
-                    className="text-ent-dim hover:text-ent-text transition-colors text-sm"
-                  >
-                    {product.name}
-                  </a>
+                  {/* A product without its own page is listed as text: the former
+                      `#${product.id}` fallback pointed at an anchor that exists on
+                      no page (WEB_RELEASE_MODEL.md v1.9 section M). */}
+                  {product.href ? (
+                    <a
+                      href={product.href}
+                      className="text-ent-dim hover:text-ent-text transition-colors text-sm"
+                    >
+                      {product.name}
+                    </a>
+                  ) : (
+                    <span className="text-ent-dim text-sm">{product.name}</span>
+                  )}
                 </li>
               ))}
             </ul>
