@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.8 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.9 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -17,6 +17,9 @@
   v1.8 written 2026-11-02 by owner GO (preview only), adding section L (CETaS article in /insights).
   Sections A-K and the recorded deviations are unchanged from v1.7
   (sha256 523a5a5807e93d9c5dd442089510a988c44ba68ad8d723ec927d14d6e6ee86c2).
+  v1.9 written 2026-11-02 by owner GO (R1 only, preview only), adding section M (link and sitemap cleanup).
+  Sections A-L and the recorded deviations are unchanged from v1.8
+  (sha256 6709a34ceedcbcb5c87bf9af18e3f4e091ff8f18513dd3617886690f57233d40).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1270,3 +1273,65 @@ No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchang
     EDIT app/sitemap.ts                     one route entry
     NEW  app/insights/agentic-ai-verifiable-boundaries/page.tsx
     NEW  app/insights/agentic-ai-verifiable-boundaries/layout.tsx
+
+## M. R1 - BROKEN LINKS, UNUSED ANCHORS, /eve-verified AND SITEMAP (v1.9 - 2026-11-02)
+
+**Scope:** release R1 of the site cleanup proposal of 2026-11-02 (Atlas 02_ACTIVE_WORK,
+WEB_SITE-CLEANUP_2026-11-02). Website only. No change to EVE Core, VHR, DURING, Atlas
+governance or the agent platform. No page copy, design, API or form is changed. No file is
+deleted. Branch + Vercel preview + pull request; merge and production publication need a
+separate OWNER-GO. R2-R6 have direction approval only and are not part of this section.
+
+### M1 - Baseline (crawl of 32 routes, local server, Playwright, Chromium)
+
+Two broken internal targets were found; every other internal link resolved:
+
+    #codegate        footer on every page; the CodeGate product has no page, and the footer
+                     fell back to `#${product.id}`, an anchor that exists on no page
+    /#architecture   navigation "More > Architecture"; the id exists only in an
+                     unreferenced component (components/EVECore), not on the home page
+
+/eve-verified posts to a local-only verification endpoint and cannot complete for any
+visitor; the public verification service is verify.eveverified.com. The sitemap listed
+/eve-verified and /about (a redirect to /about/what-is-eve) and omitted the published
+article /insights/accountability-continuity-checkpoint.
+
+### M2 - Changes
+
+    EDIT components/Footer/index.tsx   a product without href is rendered as plain text
+    EDIT lib/constants.ts              Architecture -> /#how-it-works (the home section that
+                                       carries the chain and architecture properties)
+    EDIT next.config.js                /eve-verified -> https://verify.eveverified.com, 301;
+                                       app/eve-verified is kept as development history
+    EDIT app/sitemap.ts                remove /eve-verified and /about; add
+                                       /insights/accountability-continuity-checkpoint with
+                                       lastModified 2026-06-14 (its last commit date);
+                                       ASK entries kept (ASK is not unpublished)
+    EDIT data/demonstrations.ts        pin block re-pinned to THIS file's v1.9 hash
+
+### M3 - Code without importers: listed, not removed
+
+No importer was found for components/AgentNode, components/BRFViz, components/EVECore,
+components/MarinaViz and components/AskComponents.tsx. All are older implementations or
+belong to ASK; they are kept under the owner rule to preserve older implementations. Any
+removal is a separate decision.
+
+### M4 - Checks (local production build, next start, Playwright, Chromium)
+
+    typecheck   tsc --noEmit: pass
+    build       next build: pass (local placeholder values for the mail and database
+                environment variables; they are not part of the change)
+    crawl       31 routes (/eve-verified now redirects off-site): 0 missing anchors
+                (baseline, 32 routes: #codegate on 30 pages, /#architecture in the
+                navigation); the only remaining finding is /stories, see M5
+    redirect    GET /eve-verified -> 301, location https://verify.eveverified.com/
+    sitemap     20 URLs, all 200 on the local build
+    visual      desktop 1440px and mobile 390px: footer CodeGate renders as text in the same
+                style; /#how-it-works lands at the section top
+
+### M5 - Observed, not changed (outside R1)
+
+/about and /stories use a server-side redirect inside a prerendered page; both the local
+build and production answer 307 without a Location header and the browser follows client-
+side. Crawlers that do not run JavaScript do not follow. Candidate for a later release
+(config redirect), not part of R1.

@@ -7,6 +7,8 @@ import type { MetadataRoute } from 'next';
  * Excluded routes:
  *   /medical — login gate to medical.eveverified.com (no public content)
  *   /pilot   — pilot program landing (intentionally unlisted)
+ *   /eve-verified — 301 to verify.eveverified.com (next.config.js)
+ *   /about   — redirects to /about/what-is-eve; a sitemap lists the target
  *
  * Update lastModified when content changes substantially.
  */
@@ -26,7 +28,6 @@ const ROUTES: Route[] = [
   { path: '/',                          priority: 1.0, changeFrequency: 'monthly' },
   { path: '/eve',                       priority: 0.9, changeFrequency: 'monthly' },
   { path: '/solutions/tprm',            priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-06-12') },
-  { path: '/eve-verified',              priority: 0.8, changeFrequency: 'monthly' },
   { path: '/elekto',                    priority: 0.8, changeFrequency: 'monthly' },
   { path: '/philosophy',                priority: 0.7, changeFrequency: 'monthly' },
   { path: '/services',                  priority: 0.7, changeFrequency: 'monthly', lastModified: new Date('2026-10-31') },
@@ -35,6 +36,7 @@ const ROUTES: Route[] = [
   { path: '/insights',                  priority: 0.8, changeFrequency: 'weekly' },
   { path: '/insights/ai-act-proof-v1',  priority: 0.9, changeFrequency: 'monthly' },
   { path: '/insights/agentic-ai-verifiable-boundaries', priority: 0.8, changeFrequency: 'monthly', lastModified: new Date('2026-11-02') },
+  { path: '/insights/accountability-continuity-checkpoint', priority: 0.8, changeFrequency: 'monthly', lastModified: new Date('2026-06-14') },
 
   // Stories
   // NOTE: /stories itself is NOT listed. It redirects to /stories/accountability
@@ -50,7 +52,6 @@ const ROUTES: Route[] = [
   { path: '/ask/legal/journalism',      priority: 0.6, changeFrequency: 'monthly' },
 
   // About
-  { path: '/about',                     priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about/what-is-eve',         priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about/determinism',         priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about/eve-control-room',    priority: 0.6, changeFrequency: 'monthly' },
