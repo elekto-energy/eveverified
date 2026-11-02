@@ -30,6 +30,15 @@ type Insight = {
 
 const insights: Insight[] = [
   {
+    slug: 'agentic-ai-verifiable-boundaries',
+    title: 'Agentic AI Needs More Than Oversight. It Needs Verifiable Boundaries.',
+    description:
+      'What new research from The Alan Turing Institute reveals about the challenge of governing autonomous AI agents — and what we are learning by building EVE.',
+    published: '2026-11-02',
+    tags: ['Agentic AI', 'Behavioural assurance', 'Research & Perspectives'],
+    color: '#D95724',
+  },
+  {
     slug: 'ai-act-proof-v1',
     title: 'From AI Act Documents to Verifiable Proof',
     description:

@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.7 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.8 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -14,6 +14,9 @@
   v1.7 written 2026-10-31 by owner GO, adding section K (scroll-driven presentation and colour themes of /services).
   Sections A-J and the recorded deviations are unchanged from v1.6
   (sha256 f4c599ad589e2ee46a5369cbf5e3e8694633511aa4dfb5e89acd4447c00448d7).
+  v1.8 written 2026-11-02 by owner GO (preview only), adding section L (CETaS article in /insights).
+  Sections A-K and the recorded deviations are unchanged from v1.7
+  (sha256 523a5a5807e93d9c5dd442089510a988c44ba68ad8d723ec927d14d6e6ee86c2).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1180,3 +1183,90 @@ No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchang
     EDIT app/services/layout.tsx
     NEW  app/services/ServicesMotion.tsx
     NEW  app/services/theme.css
+
+---
+
+## L. INSIGHTS ARTICLE - AGENTIC AI AND VERIFIABLE BOUNDARIES (v1.8 - 2026-11-02)
+
+**Scope:** one new article route /insights/agentic-ai-verifiable-boundaries, one new entry
+in the existing Insights list (app/insights/page.tsx), one sitemap entry. No other page,
+navigation, footer, API or global style is changed. Branch + Vercel preview + pull request;
+merge and production publication need a separate OWNER-GO.
+
+**Copy source (release input):** owner draft DRAFT_EVE_CETAS_VERIFIABLE_BOUNDARIES_ARTICLE_2026-11-02
+(Atlas 02_ACTIVE_WORK) and owner GO of 2026-11-02. The "What we have demonstrated" section
+was rewritten to the wording that registered Atlas records support (L2).
+
+**Destination:** /insights/agentic-ai-verifiable-boundaries; listed first on /insights.
+
+### L1 - Source attribution
+
+Rick Hennessy and Carolyn Ashurst, "Behavioural Assurance of Agentic AI for Sensitive and
+High-Stakes Organisations", CETaS, The Alan Turing Institute, September 2026. Title,
+authors, publisher, month, the eight behavioural failure categories (including goal
+displacement, misreporting, policy-invisible violations and pseudo-corroboration) and the
+argument that behaviour, not only final output, must be assessed were verified by the owner
+against the original PDF. The article states that EVE Verified is not affiliated with CETaS
+or The Alan Turing Institute and that the authors have not reviewed or endorsed EVE.
+
+### L2 - EVE claims checked against registered Atlas records (01_AUTO_SYNC, 2026-11-02)
+
+    C1 agents and handoff check       CONFIRMED  owner-approved, bounded runs with OpenClaw- and
+                                                 Hermes-based agents; EVE's verified-handoff check
+                                                 ran inside the execution chain before each
+                                                 receiving agent started (first on 2026-10-22);
+                                                 producer-tested, not independently verified.
+                                                 The earlier 2026-10-20 case was a post-hoc replay
+                                                 and is not what this sentence describes
+    C2 CHAIN_VERIFIED                 CONFIRMED  meaning stated: the recorded chain is complete and
+                                                 consistent within the chain verifier's checks;
+                                                 not a statement that the code is correct
+    C3 reviewer rejection             PARTIAL    rewritten: rejection can rest on an unmet
+                                                 acceptance criterion; no claim that the reviewer
+                                                 found the defect on its own
+    C4 interrupted run, cost          CONFIRMED  as a documented risk found by code analysis, not
+                                                 a production incident; stricter journal under
+                                                 qualification
+    C5 gateway after client exit      CONFIRMED  as source analysis and isolated tests; not
+                                                 measured in production; stated as a principle
+    C6 credentials                    REPLACED   documented risk, not an observed incident;
+                                                 published only as the least-privilege and
+                                                 credential-isolation principle; no environment
+                                                 details, exposure paths or open items
+    C7 DURING v1                      CONFIRMED  defines contracts, observations, assessments and
+                                                 directive-outcome links; does not execute or stop
+                                                 actions; not yet used in agent runs
+    C8 correction loop, hardening     CONFIRMED  built and tested in isolation, under
+                                                 qualification, not production-proven
+
+### L3 - Design
+
+Same Evidence identity as /services: self-hosted fonts from app/services/fonts and colour
+tokens from app/services/theme.css, applied by an article-scoped layout; Reveal and
+WordReveal from app/services/ServicesMotion.tsx. No new dependency.
+
+### L4 - Scans and checks before commit (local dev server, Playwright, Chromium)
+
+    leak scan    no internal record ids, version strings, host names, paths, hashes, reviewer
+                 names, credential details or internal labels in the article: 0 hits
+    claim scan   no certification, independent-verification or production-readiness claim
+                 outside a negation
+    render       desktop 1440px and mobile 390px: one h1, h2 order as above, no horizontal
+                 overflow; no console errors
+    metadata     title, description, canonical, og:type article, JSON-LD Article with citation
+    links        CETaS link (target _blank, rel noopener noreferrer) and /contact present
+    listing      /insights links to the article; sitemap.xml contains it
+    typecheck    tsc --noEmit: exit 0
+
+### L5 - Tracking
+
+No EVE-GOV act record; ACCEPTED_BASELINE_WEB not advanced; Atlas roadmap unchanged.
+
+### L6 - Files touched by v1.8 (complete)
+
+    EDIT app/stories/WEB_RELEASE_MODEL.md   status block; this section
+    EDIT data/demonstrations.ts             pin block re-pinned to THIS file's v1.8 hash
+    EDIT app/insights/page.tsx              one list entry
+    EDIT app/sitemap.ts                     one route entry
+    NEW  app/insights/agentic-ai-verifiable-boundaries/page.tsx
+    NEW  app/insights/agentic-ai-verifiable-boundaries/layout.tsx
