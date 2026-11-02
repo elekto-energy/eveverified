@@ -80,7 +80,7 @@ export const navItems = [
       { name: 'Control Chain', href: '/control-chain' },
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
       { name: 'ASK Research', href: 'https://research.eveverified.com' },
-      { name: 'Stories', href: '/stories' },
+      { name: 'Stories', href: '/stories/accountability' },
       { name: 'Marine', href: 'https://marine.eveverified.com' },
       { name: 'Company', href: '/about/company' },
       { name: 'Pilot Program', href: '/pilot' },
