@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.9 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.10 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -20,6 +20,9 @@
   v1.9 written 2026-11-02 by owner GO (R1 only, preview only), adding section M (link and sitemap cleanup).
   Sections A-L and the recorded deviations are unchanged from v1.8
   (sha256 6709a34ceedcbcb5c87bf9af18e3f4e091ff8f18513dd3617886690f57233d40).
+  v1.10 written 2026-11-02 by owner GO (R2, preview only), adding section N (What is EVE? and consolidation).
+  Sections A-M and the recorded deviations are unchanged from v1.9
+  (sha256 073ab5cf51fdc3c32be241e5ce2226664a807baadfce5452bef4a2ad9a2f9439).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1335,3 +1338,97 @@ removal is a separate decision.
 build and production answer 307 without a Location header and the browser follows client-
 side. Crawlers that do not run JavaScript do not follow. Candidate for a later release
 (config redirect), not part of R1.
+
+## N. R2 - WHAT IS EVE? AND CONSOLIDATION OF OLDER EXPLANATION PAGES (v1.10 - 2026-11-02)
+
+**Scope:** release R2 of the site cleanup proposal of 2026-11-02, from the published R1 baseline
+(main 18c165d). Website only. No change to EVE Core, VHR, DURING, Atlas governance or the agent
+platform. No file is deleted. Branch + Vercel preview + pull request; merge and production
+publication need a separate OWNER-GO.
+
+### N1 - Changes
+
+    REWRITE app/about/what-is-eve/page.tsx   current architecture: agents, separate verification,
+                                             execution environment, authorised people; agents and
+                                             EVE as complements (replaces "EVE vs Traditional AI");
+                                             Before / During / After with a status per phase;
+                                             demonstrated / tested / not yet established; principles
+                                             (#principles); what EVE is not; links to demonstrations
+                                             and to the applications formerly listed on /eve
+    NEW     app/about/what-is-eve/layout.tsx  Evidence identity (fonts and tokens from /services)
+    EDIT    next.config.js                    server redirects (below)
+    EDIT    app/sitemap.ts                    remove /eve, /philosophy, /about/determinism;
+                                              /about/what-is-eve lastModified 2026-11-02
+    EDIT    lib/constants.ts                  navigation Stories -> /stories/accountability
+    EDIT    app/origin/page.tsx               /philosophy link -> /#philosophy
+    EDIT    data/demonstrations.ts            pin block re-pinned to THIS file's v1.10 hash
+
+    redirect             status  target                           reason
+    /eve                 301     /about/what-is-eve               consolidated
+    /about/determinism   301     /about/what-is-eve#principles    consolidated
+    /philosophy          301     /#philosophy                     same component as the home section
+    /about               301     /about/what-is-eve               replaces in-page redirect (M5)
+    /stories             307     /stories/accountability          index whose target can change (M5)
+
+The route files of /eve, /about/determinism, /philosophy, /about and /stories are kept; the
+config redirects run before them.
+
+### N2 - Claims checked against registered Atlas records (01_AUTO_SYNC, CURRENT 20261102T015003Z)
+
+Sources used: the agent-platform handover and the VHR production-boundaries handover, both
+hash-matched to their CURRENT pointers, and the track-state handover pinned by the former.
+Four other pointers (research, governed-action review, MCP, developer) could not be
+hash-matched in this check and were not used. Sentences reused from section L2 keep their
+L2 status.
+
+    handoffs in the execution chain   SUPPORTED  narrow, tested locally by the team that built
+                                                 them; independent verification and production
+                                                 use not established; reused from L2 C1
+    CHAIN_VERIFIED                    SUPPORTED  reused from L2 C2
+    DURING v1                         SUPPORTED  test suite passes offline; available, not used in
+                                                 agent runs; not deployed; reused from L2 C7
+    budget / time limits              SUPPORTED  enforced by the agent platform per handoff, not by
+                                                 EVE; the page says so (Before phase)
+    signed work periods, owner GO     SUPPORTED  periods signed, signature verified before start;
+                                                 steps that write, run or publish need owner GO
+    fail-closed handoff refusal       SUPPORTED  negative handoff cases refused
+    deterministic checks              SUPPORTED  separate deterministic verifier; in-sample
+    sealed, checkable records         PARTIAL    sealed records and a separate verifier exist; the
+                                                 records document limits of local sealing, so the
+                                                 page makes no tamper-proof or "any change is
+                                                 detected" claim
+    Before / During / After           NOT FOUND  as a defined model; used as the architecture's
+                                                 three questions (as in section L) with each
+                                                 phase's established status stated
+    "independent verification"        NOT EST.   the page says "separate", not "independent"
+    correction loop, turn journal     CONFLICT / not stated on this page (L2 C4 and C8 left to
+                                      NOT FOUND  the article; not repeated here)
+    NO_ANSWER answer engine           NOT FOUND  not stated on this page
+    term "VHR"                        NOT FOUND  no public expansion or rule; not used on the page
+
+Removed from the former page, not carried over: "Cryptographic proof", "Complete proof. Full
+audit trail.", "proves exactly which version was approved, by whom, unchanged", "Full history
+preserved", "Every action is logged", the AI comparison naming other products, and "If
+something must still be correct years from now, it belongs in EVE". Former /eve content
+(patent status, latency figures, comparison table) is no longer reachable; the code is kept.
+
+### N3 - Checks (local production build, next start, Playwright, Chromium)
+
+    typecheck   tsc --noEmit: pass
+    build       next build: pass (local placeholder values for mail and database variables)
+    redirects   curl without JavaScript: each source above returns its status with a Location
+                header; /about/determinism lands on #principles
+    crawl       26 routes: 0 non-200, 0 missing anchors, 0 broken internal targets; no
+                internal link points at a redirect source
+    page        one h1; h2 order as N1; canonical set; no console errors; no horizontal
+                overflow at 1440, 768 and 390 px; five-card grids fill their rows
+
+### N4 - Open points for the owner (not changed)
+
+- /stories uses 307 (temporary) because it is an index; 301 if the target is fixed.
+- The track-state record notes that page wording on mandate binding attributed the agent
+  platform's check to EVE. No such wording was found on eveverified.com; this page now
+  states that budget and time limits are enforced by the agent platform.
+- The home page description still mentions NO_ANSWER (not verified in this check).
+- Live status of the external applications was not verifiable from the build environment;
+  the page states no status for them.
