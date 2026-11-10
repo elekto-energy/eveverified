@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   // Added as a documented deviation from WEB_RELEASE_MODEL v1.2 (metadata only,
   // no claim or content change).
   metadataBase: new URL('https://eveverified.com'),
-  title: 'EVE Verified | Evidence Verification Engine',
-  description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
-  keywords: ['evidence verification', 'deterministic', 'EVE', 'governance', 'TPRM', 'vendor review', 'compliance', 'GDPR', 'NIS2', 'EU AI Act'],
+  title: 'EVE Verified | Verifiable Autonomy. Compliance by Design.',
+  description: 'EVE is an evidence verification architecture for AI agents, autonomous systems and governed workflows. One verification core, multiple domains, human accountability preserved. Evidence, not certification.',
+  keywords: ['evidence verification', 'verifiable autonomy', 'AI agents', 'autonomous systems', 'agent handoffs', 'maritime evidence', 'governance', 'TPRM', 'DORA', 'EVE'],
   authors: [{ name: 'Organiq Sweden AB' }],
   creator: 'Organiq Sweden AB',
   publisher: 'Organiq Sweden AB',
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://eveverified.com',
     siteName: 'EVE Verified',
-    title: 'EVE Verified | Evidence Verification Engine',
-    description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
+    title: 'EVE Verified | Verifiable Autonomy. Compliance by Design.',
+    description: 'EVE is an evidence verification architecture for AI agents, autonomous systems and governed workflows. One verification core, multiple domains, human accountability preserved. Evidence, not certification.',
     images: [
       {
         url: '/og-image.png',
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EVE Verified | Evidence Verification Engine',
-    description: 'Deterministic evidence verification for governance, vendor review and regulated workflows. EVE returns NO_ANSWER when approved evidence is missing.',
+    title: 'EVE Verified | Verifiable Autonomy. Compliance by Design.',
+    description: 'EVE is an evidence verification architecture for AI agents, autonomous systems and governed workflows. One verification core, multiple domains, human accountability preserved. Evidence, not certification.',
     images: ['/og-image.png'],
   },
   icons: {

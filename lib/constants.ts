@@ -75,6 +75,8 @@ export const navItems = [
     href: '/about/what-is-eve',
     children: [
       { name: 'What is EVE?', href: '/about/what-is-eve' },
+      { name: 'EVE Verified Lab', href: '/services#lab' },
+      { name: 'Insights', href: '/insights' },
       { name: 'Pre-Action API', href: 'https://grc.eveverified.com/chain/pre-action' },
       { name: 'Architecture', href: '/#how-it-works' },
       { name: 'Control Chain', href: '/control-chain' },
@@ -83,7 +85,7 @@ export const navItems = [
       { name: 'Stories', href: '/stories/accountability' },
       { name: 'Marine', href: 'https://marine.eveverified.com' },
       { name: 'Company', href: '/about/company' },
-      { name: 'Pilot Program', href: '/pilot' },
+      { name: 'Pilot Partnerships', href: '/services#pilot-partnerships' },
     ]
   },
 ]

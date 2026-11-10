@@ -212,24 +212,11 @@ export default function ElektoPage() {
         </div>
       </section>
 
-      {/* Pilot CTA */}
+      {/* Boundary statement. The ELEKTO pilot programme is closed (owner, 2026-11-10;
+          WEB_RELEASE_MODEL §O), so the pilot call-to-action is removed. */}
       <section className="py-16 px-6 text-center">
         <div className="max-w-xl mx-auto">
-          <h2 className="text-xl font-extralight tracking-wide mb-3 text-white/90">
-            Interested in a pilot?
-          </h2>
-          <p className="text-gray-500 text-sm mb-6">
-            We are looking for housing communities, marinas, and infrastructure operators
-            interested in verified internal energy accounting.
-          </p>
-          <a href="/pilot?category=energy_infrastructure"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-eve-green/10 border border-eve-green/30 text-eve-green hover:bg-eve-green/20 transition-all text-sm">
-            Apply for Pilot Program
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-          <p className="text-gray-700 text-xs mt-6">
+          <p className="text-gray-700 text-xs">
             ELEKTO is not presented as a public electricity marketplace, financial instrument or utility billing system. It is a verified internal kWh accounting and control-chain evidence layer for controlled communities and infrastructure environments.
           </p>
         </div>

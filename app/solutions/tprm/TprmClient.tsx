@@ -7,7 +7,7 @@
 // verdict language is the page language; architecture only under How it works.
 // The demo section replays the SEALED production runs of the synthetic vendors
 // (EVE-TPRM-00004556 / 00004561) — real data in data/syntheticAssessments.ts.
-// No prices on this page (locked until 3 paid deliveries calibrate them).
+// No prices on this page (owner decision 2026-11-10: no prices; WEB_RELEASE_MODEL §O).
 // No public upload in v1 — that belongs in the pilot flow.
 // ============================================================================
 
@@ -120,7 +120,7 @@ export default function TprmClient() {
 
             <div className="flex flex-wrap gap-4">
               <a
-                href="/pilot"
+                href="/contact"
                 className="px-6 py-3 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
               >
                 Request an assessment
@@ -192,11 +192,11 @@ export default function TprmClient() {
               </div>
             ))}
             <div className="border border-slate-400/30 rounded-sm p-6">
-              <h3 className="text-white font-mono text-sm tracking-wide mb-3">Fixed price. Fixed lead time.</h3>
+              <h3 className="text-white font-mono text-sm tracking-wide mb-3">Fixed scope. Fixed lead time.</h3>
               <p className="text-sm text-gray-400 leading-relaxed">
                 One vendor assessment, base scope, delivered five business days
                 from complete intake. Volume and quarterly reassessment programs
-                available. <a href="/pilot" className="text-slate-200 underline decoration-slate-500 hover:text-white">Request a quote.</a>
+                available. <a href="/contact" className="text-slate-200 underline decoration-slate-500 hover:text-white">Request a quote.</a>
               </p>
             </div>
           </div>
@@ -290,20 +290,16 @@ export default function TprmClient() {
                   <span className="text-gray-200 text-right">1 full Vendor Evidence Assessment, base scope</span>
                 </div>
                 <div className="flex justify-between gap-6">
-                  <span className="text-gray-400">Fee</span>
-                  <span className="font-mono text-gray-200">5 000 SEK ex VAT</span>
-                </div>
-                <div className="flex justify-between gap-6">
                   <span className="text-gray-400">In return</span>
                   <span className="text-gray-200 text-right">Structured written feedback on the workpaper + one follow-up call</span>
                 </div>
                 <div className="flex justify-between gap-6">
                   <span className="text-gray-400">Slots</span>
-                  <span className="font-mono text-gray-200">3 · then full price applies</span>
+                  <span className="font-mono text-gray-200">3</span>
                 </div>
               </div>
               <a
-                href="/pilot"
+                href="/contact"
                 className="inline-block mt-6 px-6 py-3 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
               >
                 Claim a design partner slot
@@ -321,11 +317,11 @@ export default function TprmClient() {
             <span className="text-gray-100">Get back proof.</span>
           </h2>
           <p className="text-gray-400 mb-10 max-w-xl mx-auto">
-            Fixed price, five business days from complete intake, sealed and
+            Fixed scope, five business days from complete intake, sealed and
             cryptographically verifiable.
           </p>
           <a
-            href="/pilot"
+            href="/contact"
             className="inline-block px-8 py-4 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
           >
             Request an assessment
