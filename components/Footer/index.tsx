@@ -22,8 +22,9 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-ent-dim text-sm leading-relaxed max-w-sm">
-              A pre-action verification platform for AI agents, governance workflows
-              and critical operational decisions. EVE proves the chain. The organisation acts on it.
+              An evidence verification architecture for AI agents, autonomous systems and
+              governed workflows. EVE verifies the evidence chain. The organisation retains
+              responsibility for decisions and enforcement.
             </p>
             <div className="mt-4 text-ent-muted text-xs">
               {company.name} · org.nr {company.orgNr}
@@ -82,6 +83,16 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/services" className="text-ent-dim hover:text-ent-text transition-colors text-sm">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="/insights" className="text-ent-dim hover:text-ent-text transition-colors text-sm">
+                  Insights
+                </a>
+              </li>
+              <li>
                 <a
                   href="/contact"
                   className="text-ent-dim hover:text-ent-text transition-colors text-sm"
@@ -99,7 +110,7 @@ export default function Footer() {
             © {new Date().getFullYear()} {company.name}.
           </span>
           <span className="text-ent-muted text-xs">
-            EVE proves the chain. The organisation acts on it.
+            Verifiable Autonomy. Compliance by Design.
           </span>
         </div>
       </div>

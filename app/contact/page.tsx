@@ -79,7 +79,7 @@ export default function ContactPage() {
                 <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ent-accent-hi">Contact</span>
                 <h1 className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-ent-text">Get in touch</h1>
                 <p className="mt-3 text-sm text-ent-dim leading-relaxed">
-                  Questions about Pre-Action verification, a pilot, or governance use cases?
+                  Questions about a technical review, a pilot partnership, agent or autonomous-system verification, or governance use cases?
                   Send a message and we will get back to you.
                 </p>
               </div>

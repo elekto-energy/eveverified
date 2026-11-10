@@ -28,7 +28,7 @@ export default function Hero() {
       >
         <span className="h-1.5 w-1.5 rounded-full bg-ent-verified shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
         <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ent-verified">
-          Live · Evidence Verification for AI &amp; Automated Systems
+          Live · Evidence Verification for AI Agents &amp; Autonomous Systems
         </span>
       </motion.div>
 
@@ -40,30 +40,39 @@ export default function Hero() {
         className="relative z-10 text-center font-semibold tracking-[-0.03em] text-ent-text"
         style={{ fontSize: 'clamp(40px, 7vw, 76px)', lineHeight: 1.05 }}
       >
-        Verify before
+        Verifiable Autonomy.
         <br />
-        systems act.
+        <span className="text-ent-accent-hi">Compliance by Design.</span>
       </motion.h1>
 
-      {/* Sub — LOCKED POSITIONING. The mechanism, not only the principle.
-          The four roles are kept distinct and must not be merged:
-            EVE                   verifies the evidence
-            Human-defined policy  determines what happens next
-            Customer workflow     enforces the outcome
-            EVE                   does not execute the action
-          "EVE proves the chain. The organisation acts on it." is retained as
-          the principle/signature line on secondary surfaces (footer), not as
-          the main thesis. */}
+      {/* Sub — POSITIONING v1.11 (owner direction 2026-11-10, WEB_RELEASE_MODEL §O).
+          "Verifiable Autonomy. Compliance by Design." is a working tagline, not a product
+          rename or a certification. "Compliance by Design" = engineering approach (traceable
+          evidence, explicit control results, auditable human accountability), stated in the
+          "Evidence, not certification" section below.
+          "is designed to verify ... before, during and after" — DURING v1 exists and is tested
+          offline but is not yet used in agent runs (§L2 C7, §N2), so the sentence describes
+          the architecture, not a measured capability per phase.
+          The four roles of the previous locked positioning are kept: EVE verifies the evidence;
+          human-defined policy decides; the customer workflow enforces; EVE does not execute. */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="relative z-10 mt-7 max-w-xl text-center text-lg leading-relaxed text-ent-dim"
+        className="relative z-10 mt-7 max-w-2xl text-center text-lg leading-relaxed text-ent-dim"
       >
-        <span className="font-semibold text-ent-text">EVE verifies evidence</span> against
-        requirements fixed beforehand.{' '}
-        <span className="font-semibold text-ent-text">Human-defined policy</span> determines
-        what happens next.
+        <span className="font-semibold text-ent-text">EVE is an evidence verification architecture</span> for
+        AI agents, autonomous systems and governed workflows. It is designed to verify the evidence
+        behind authority, actions and outcomes — before, during and after execution.
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="relative z-10 mt-4 max-w-xl text-center text-base font-semibold leading-relaxed text-ent-text"
+      >
+        One verification core. Multiple domains. Human accountability preserved.
       </motion.p>
 
       <motion.p
@@ -81,7 +90,8 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 0.55 }}
         className="relative z-10 mt-3 text-center text-sm text-ent-muted"
       >
-        The customer workflow enforces the outcome. EVE does not execute the action.
+        Human-defined policy determines what happens next. The customer workflow enforces the
+        outcome. EVE does not execute the action.
       </motion.p>
 
       {/* CTAs — two complementary entry points, not two of the same kind.

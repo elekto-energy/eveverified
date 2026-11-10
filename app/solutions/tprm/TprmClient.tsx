@@ -120,7 +120,7 @@ export default function TprmClient() {
 
             <div className="flex flex-wrap gap-4">
               <a
-                href="/pilot"
+                href="/contact"
                 className="px-6 py-3 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
               >
                 Request an assessment
@@ -196,7 +196,7 @@ export default function TprmClient() {
               <p className="text-sm text-gray-400 leading-relaxed">
                 One vendor assessment, base scope, delivered five business days
                 from complete intake. Volume and quarterly reassessment programs
-                available. <a href="/pilot" className="text-slate-200 underline decoration-slate-500 hover:text-white">Request a quote.</a>
+                available. <a href="/contact" className="text-slate-200 underline decoration-slate-500 hover:text-white">Request a quote.</a>
               </p>
             </div>
           </div>
@@ -303,7 +303,7 @@ export default function TprmClient() {
                 </div>
               </div>
               <a
-                href="/pilot"
+                href="/contact"
                 className="inline-block mt-6 px-6 py-3 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
               >
                 Claim a design partner slot
@@ -325,7 +325,7 @@ export default function TprmClient() {
             cryptographically verifiable.
           </p>
           <a
-            href="/pilot"
+            href="/contact"
             className="inline-block px-8 py-4 rounded-sm bg-slate-200 text-black text-sm font-medium hover:bg-white transition-colors"
           >
             Request an assessment

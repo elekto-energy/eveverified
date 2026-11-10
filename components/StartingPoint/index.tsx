@@ -19,12 +19,20 @@ const audiences = [
     cta: 'Explore Governance',
     href: 'https://grc.eveverified.com/chain',
   },
+  {
+    kicker: 'For teams building agents or autonomous systems',
+    title: 'Start a bounded engagement',
+    desc: 'A version-bound technical review, a scoped pilot partnership, or agent workflows developed and qualified with your team. Fixed scope, documented findings, stated limits.',
+    points: ['Agent Verification Review', 'Pilot Partnerships', 'EVA Business Workflows'],
+    cta: 'See the services',
+    href: '/services',
+  },
 ]
 
 export default function StartingPoint() {
   return (
     <section id="starting-point" className="bg-ent-panel border-y border-ent-border">
-      <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-6 py-20 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -32,13 +40,19 @@ export default function StartingPoint() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ent-accent-hi">Built for two audiences</span>
+          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ent-accent-hi">Three starting points</span>
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.02em] text-ent-text">
             Choose your starting point
           </h2>
+          <p className="mt-4 text-sm text-ent-dim">
+            Prefer to talk first?{' '}
+            <a href="/services#pilot-partnerships" className="font-semibold text-ent-accent-hi hover:text-ent-text">Discuss a pilot</a>
+            {' '}or{' '}
+            <a href="/contact" className="font-semibold text-ent-accent-hi hover:text-ent-text">contact us</a>.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-3 gap-5">
           {audiences.map((a, i) => (
             <motion.div
               key={a.kicker}
