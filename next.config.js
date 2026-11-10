@@ -29,6 +29,8 @@ const nextConfig = {
       // /stories is an index that currently opens the first story; the target
       // can change, so the redirect is temporary.
       { source: '/stories', destination: '/stories/accountability', statusCode: 307 },
+      // The ELEKTO pilot programme is closed and /pilot had no remaining inbound link (§O).
+      { source: '/pilot', destination: '/services#pilot-partnerships', statusCode: 301 },
     ]
   },
 }

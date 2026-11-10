@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.10 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.11 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -23,6 +23,9 @@
   v1.10 written 2026-11-02 by owner GO (R2, preview only), adding section N (What is EVE? and consolidation).
   Sections A-M and the recorded deviations are unchanged from v1.9
   (sha256 073ab5cf51fdc3c32be241e5ce2226664a807baadfce5452bef4a2ad9a2f9439).
+  v1.11 written 2026-11-10 by owner direction (preview only), adding section O (Verifiable Autonomy
+  positioning). Sections A-N and the recorded deviations are unchanged from v1.10
+  (sha256 97c06c40b5db87d3c9e7124359af54bd1d8018f06ab177d122a1a9600e0a93a6).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1432,3 +1435,146 @@ something must still be correct years from now, it belongs in EVE". Former /eve 
 - The home page description still mentions NO_ANSWER (not verified in this check).
 - Live status of the external applications was not verifiable from the build environment;
   the page states no status for them.
+
+## O. VERIFIABLE AUTONOMY - POSITIONING, DOMAINS AND MILESTONES (v1.11 - 2026-11-10)
+
+**Scope:** owner direction 2026-11-10 ("CLAUDE CODE - Uppdatera EVEVerified.com och Organiq.se"),
+from the published R2 baseline (main 83f3d80). Website only. No change to EVE Core, VHR, DURING,
+GRC rules, Atlas governance, agent mandates or any marine HOLD/HALT. No file is deleted.
+Branch claude/verifiable-autonomy-2026-11-10 + Vercel preview + pull request; merge and
+production publication need a separate OWNER-GO.
+
+### O1 - Changes
+
+    EDIT components/Hero/index.tsx        H1 "Verifiable Autonomy. Compliance by Design." (working
+                                          tagline, not a product rename or certification); new
+                                          sub-copy; the four roles of the previous locked
+                                          positioning are kept (EVE verifies; human-defined policy
+                                          decides; the customer workflow enforces; EVE does not
+                                          execute); CTAs, caption and chain illustration unchanged
+    NEW  components/Autonomy/index.tsx    "Autonomy needs evidence"; three domains as ONE
+                                          architecture with a status line each; "Evidence, not
+                                          certification"; six design distinctions + review
+                                          integrity, stated without attribution to a person
+    NEW  components/Milestones/index.tsx  three recent milestones, each with label and limit;
+                                          kept apart from data/demonstrations.ts (production
+                                          demonstrations, hash-pinned, NOT changed)
+    NEW  components/Maritime/index.tsx    "For teams building autonomous maritime systems": six
+                                          capability rows with a status each, what EVE does not do,
+                                          CTA to /services#pilot-partnerships; no external
+                                          organisation is named (owner decision 2026-11-10)
+    EDIT app/page.tsx                     order: Hero -> Autonomy -> VerifiedDemonstrations ->
+                                          Milestones -> Maritime -> Products -> StartingPoint ->
+                                          HowItWorks -> Philosophy
+    EDIT app/elekto/page.tsx              pilot call-to-action removed (ELEKTO pilot programme
+                                          closed, owner 2026-11-10); boundary sentence kept
+    EDIT next.config.js                   /pilot -> /services#pilot-partnerships, 301 (no inbound
+                                          link remains); app/pilot and /api/pilot are kept
+    EDIT components/StartingPoint         third starting point "Start a bounded engagement" ->
+                                          /services; text links to /services#pilot-partnerships
+                                          and /contact
+    EDIT lib/constants.ts                 More: + EVE Verified Lab (/services#lab), + Insights;
+                                          "Pilot Program" (/pilot) -> "Pilot Partnerships"
+                                          (/services#pilot-partnerships). Top-level items unchanged
+    EDIT components/Footer/index.tsx      description follows the new positioning; + Services,
+                                          + Insights; signature line "EVE proves the chain. The
+                                          organisation acts on it." -> "Verifiable Autonomy.
+                                          Compliance by Design." ("proves" flagged in the
+                                          2026-11-02 site audit)
+    EDIT app/solutions/tprm/TprmClient.tsx  4 CTAs /pilot -> /contact (the conflicting pilot
+                                          offers of the site audit, top finding 3); no prices
+                                          (owner 2026-11-10): design-partner fee row and "then
+                                          full price applies" removed; "Fixed price" -> "Fixed
+                                          scope" (heading and final CTA)
+    EDIT app/solutions/tprm/page.tsx      metadata description: "Fixed price" -> "Fixed scope"
+    EDIT app/contact/page.tsx             one line: names technical review, pilot partnership,
+                                          agent / autonomous-system verification, governance
+    EDIT app/layout.tsx                   title, description, Open Graph and Twitter text,
+                                          keywords; the NO_ANSWER sentence (§N4: not verified)
+                                          is no longer in the site description
+    EDIT data/demonstrations.ts           pin block re-pinned to THIS file's v1.11 hash
+
+### O2 - Claims checked against Atlas (CURRENT 20261110T102604Z, published 20261110T103322Z)
+
+Sources read: EVE MASTER ROADMAP section "ONE EVE SYSTEM FOR VERIFIABLE AUTONOMY AND COMPLIANCE"
+(2026-11-10); the Milestone A owner decision record (2026-11-08); the design-review acceptance
+criteria (2026-10-23); the internal maritime fit assessment (2026-11-06) and capability mapping
+(2026-11-09); the DORA inventory (2026-10-27); the site audit (2026-11-02).
+Read through Google Drive (no byte-exact copy; sha256 not measured for these files).
+
+    "Verifiable Autonomy. Compliance by     SUPPORTED  roadmap 2026-11-10: proposed tagline; "Compliance
+     Design." (tagline)                                by Design" = engineering approach; NOT certified,
+                                                       NOT compliant; the page carries that boundary
+    "is designed to verify ... before,     SUPPORTED  as design: Before/During/After is the
+     during and after execution"            (design)  architecture's three questions (§L, §N2); DURING
+                                                       v1 is not used in agent runs, so the sentence
+                                                       says "designed to", not "verifies"
+    one verification core, domain          SUPPORTED  roadmap: "no second verification engine";
+     integrations, not three engines                   fit assessment 4.1: Voyage Evidence is a
+                                                       domain adapter on the Pre-Action architecture
+    AI agents status line                  SUPPORTED  §L2 C1, MA record: producer-tested, NOT E-3
+    EVA Milestone A REACHED 2026-11-08     SUPPORTED  OWNER_DECISION_MA_REACHED: A built (26/26) ->
+     A built, B correction, A fixed,                   B CHANGES_REQUIRED -> A fixed -> B ACCEPT;
+     B accepted; own chain verifier                    CHAIN_VERIFIED_ACCEPTED_AFTER_CORRECTION;
+                                                       E-4 PASS; "NOT E-3 (same provider, separate
+                                                       contexts)" stated on the card
+    Voyage Evidence, synthetic only        SUPPORTED  fit assessment 4.1 approved wording used
+                                                       verbatim; production_trust FALSE; REAL_SENSOR
+                                                       never exercised. 037_Marine is
+                                                       PROJECT_NOT_NAVIGABLE in Atlas (source: chat
+                                                       records + live page 2026-11-06), stated here
+    maritime domain list (time/position    PARTIAL    describes the domain; demonstrated on synthetic
+     provenance, offline, gaps)                        data only (clock-jump SOURCE_HEALTH demonstrated,
+                                                       offline resync tested locally); the card says
+                                                       "synthetic maritime data only"
+    DORA: ten source-mapped draft rules,   SUPPORTED  DORA_INVENTORY: 10 rules pending, production_use
+     demo module, none approved, no SME                false, SME registry empty; demo module code
+     validation, not re-run since June                 present, last recorded matrix 2026-06-05,
+                                                       hosted state HOLD
+    maritime rows (components/Maritime)               internal maritime capability classes:
+      sealed timestamped, georeferenced   SUPPORTED   A (synthetic): frozen v2 contract, R1-R3
+      per-condition post-mission report   SUPPORTED   A (synthetic): R5 SUPPORTED / PARTIAL /
+                                                      CONTRADICTED / NOT_EVALUATED
+      outages / resync recorded as gaps   SUPPORTED   B: R-1..R-10 at database/verifier level, LOCAL;
+                                                      G3 not_evaluated semantics (R7, signed norm)
+      third-party re-verification         SUPPORTED   capability implemented, producer-reproduced;
+                                                      PERFORMED external re-verification NOT
+                                                      ESTABLISHED - both stated on the row
+      decisions / operator actions        SUPPORTED   C / D: PRE/DURING/POST exists for software
+                                                      actions, never applied to vehicle autonomy;
+                                                      operator-override recording NOT_BUILT (row
+                                                      says "where the platform exposes them")
+      one contract across platforms       SUPPORTED   design: v2 contract not tied to a vehicle
+                                          (design)
+      "does not do" list                  SUPPORTED   internal class E (outside EVE's responsibility)
+    "EVE is not certified against ISO      SUPPORTED  roadmap and TRACK A AC-2.2; no certification
+     42001 ... no claim of DORA                        record exists
+     compliance or independent verif."
+    six distinctions + review integrity    SUPPORTED  roadmap 2026-11-10 "ASSURANCE GATES"; TRACK A
+                                                       S-1..S-6; stated as design-review questions
+                                                       with NO attribution (AC-6.4: the reviewer is not
+                                                       presented as verifier, certifier or endorser)
+
+Not used / not stated: no external organisation, customer, agreement or commercial term is named
+or implied; no Jetson, Azure ingestion, STANAG, real-sensor or external-anchoring claim; no
+"VERIFIED" label is added.
+
+### O3 - Checks (local production build, next start, Playwright, Chromium)
+
+    typecheck   tsc --noEmit: pass
+    build       next build: pass (local placeholder values for mail and database variables)
+    lint        not run: no ESLint configuration in the repo (see INCIDENT)
+    home        one h1 "Verifiable Autonomy. Compliance by Design."; no console errors; no
+                horizontal overflow at 1440 and 390 px
+    links       home: 10 internal links, 0 non-200, 0 missing anchors (#lab,
+                #pilot-partnerships on /services exist)
+
+### O4 - Open points for the owner (not changed)
+
+- Resolved 2026-11-10 by owner: the ELEKTO pilot is closed; /pilot now redirects to
+  /services#pilot-partnerships (§O1).
+- Resolved 2026-11-10 by owner: no prices on /solutions/tprm (§O1).
+- Unmerged branches claude/friendly-volta-anypeo (2026-10-23, a11y + API fixes) and
+  redesign-enterprise (2026-06-25) predate main and were not touched.
+- Owner decision 2026-11-10: the maritime section names no external organisation and
+  addresses the documentation needs of autonomous maritime systems in general terms.
