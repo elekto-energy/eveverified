@@ -22,7 +22,8 @@ const milestones = [
     title: 'Voyage Evidence — maritime evidence chain',
     body: 'A cryptographically verifiable evidence chain from recorded observations to a post-mission report. Synthetic source data processed through the real EVE Voyage Evidence pipeline.',
     limit: 'No real sensor integration has been demonstrated. EVE never states that a time, position or detection was correct.',
-    href: 'https://marine.eveverified.com',
+    // §P: Voyage Evidence moved to /voyage-evidence/ in the production switch of 2026-11-12.
+    href: 'https://marine.eveverified.com/voyage-evidence/',
     linkText: 'Open the synthetic demonstration',
   },
   {

@@ -1,5 +1,5 @@
 # WEB RELEASE MODEL — provider-backed story + homepage review (LOCK before code)
-**Status:** LOCKED FOR BUILD v1.11 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
+**Status:** LOCKED FOR BUILD v1.12 — v1.2 locked 2026-08-24; v1.3 locked 2026-09-06 after owner review,
   adding section G (governed-development demonstration). Sections A–F and the recorded deviations are
   unchanged from v1.2 (sha256 752ba0a51191e7640dec0fa7ba1629af50b4f44f5ada877bfd8a27a3110df2ba).
   v1.4 locked 2026-10-31 by owner decision, adding section H (Services page and navigation entry).
@@ -26,6 +26,9 @@
   v1.11 written 2026-11-10 by owner direction (preview only), adding section O (Verifiable Autonomy
   positioning). Sections A-N and the recorded deviations are unchanged from v1.10
   (sha256 97c06c40b5db87d3c9e7124359af54bd1d8018f06ab177d122a1a9600e0a93a6).
+  v1.12 written 2026-11-12 by owner request (preview only), adding section P (Marine demonstration
+  discoverability). Sections A-O and the recorded deviations are unchanged from v1.11
+  (sha256 f3e82baaaa67c7386fc13751a539d90d5efb789b7b915e4cc56b73c716c59bc6).
   v1.1 recorded the View-refusal excerpts and the interaction specification.
   v1.2 carries the three comprehension rules, which GOVERN that specification.
   Amended before any build consumed the earlier hashes
@@ -1578,3 +1581,82 @@ or implied; no Jetson, Azure ingestion, STANAG, real-sensor or external-anchorin
   redesign-enterprise (2026-06-25) predate main and were not touched.
 - Owner decision 2026-11-10: the maritime section names no external organisation and
   addresses the documentation needs of autonomous maritime systems in general terms.
+
+## P. MARINE DEMONSTRATION - DISCOVERABILITY AND CURRENT DESCRIPTION (v1.12 - 2026-11-12)
+
+**Scope:** owner request 2026-11-12: everything on the home page stays; the marine demonstration
+must be easy to find; its description is brought up to date from Atlas and the project card.
+Website only. No change to marine.eveverified.com, EVE Core, VHR, DURING, GRC rules, Atlas
+governance, agent mandates or any HOLD/HALT. No file is deleted. Branch + Vercel preview + pull
+request; merge and production publication need a separate OWNER-GO.
+
+### P1 - Changes
+
+    NEW  components/MarineDemoBar/index.tsx  one bar above the hero (the hero is not changed):
+                                             "New · synthetic data", the public name, one line,
+                                             "Open the demonstration" -> marine.eveverified.com/,
+                                             "What it shows" -> /#maritime
+    EDIT app/page.tsx                        MarineDemoBar before Hero; order otherwise unchanged
+    EDIT components/Maritime/index.tsx       two cards for the online demonstrations (Marine -
+                                             Autonomous Operations; EVE Voyage Evidence at
+                                             /voyage-evidence/), each with what it shows, the
+                                             synthetic marking and a link; one boundary line;
+                                             the six capability rows, "does not do" list and the
+                                             partnership CTA are unchanged; the former secondary
+                                             link "See the synthetic demonstration" is replaced
+                                             by the card links
+    EDIT components/Milestones/index.tsx     Voyage Evidence card -> /voyage-evidence/ (since the
+                                             production switch the root shows Marine - Autonomous
+                                             Operations, not Voyage Evidence)
+    EDIT lib/constants.ts                    new top-level group "Autonomous Systems": Marine -
+                                             Autonomous Operations, For maritime teams (/#maritime);
+                                             "Marine" removed from More (duplicate)
+    EDIT components/Navigation/index.tsx     full menu row from 1024 px (lg) instead of 768 px
+                                             (md); below, the existing mobile menu. Measured: the
+                                             row already wrapped to two lines at 768-820 px before
+                                             this change, and the new group made it three
+    EDIT data/demonstrations.ts              pin block re-pinned to THIS file's v1.12 hash
+
+### P2 - Sources (Atlas 2026-11-12, read through Google Drive; project card comments read in full)
+
+    production switch result      marine.eveverified.com/ shows Marine - Autonomous Operations;
+                                  Voyage Evidence under /voyage-evidence/; old /?case= links
+                                  redirect there; checked live in this release (both 200)
+    owner decision, public name   "Marine - Autonomous Operations" (heading Marine, sub heading
+                                  Autonomous Operations, EVE as sender); the internal working name
+                                  and no external organisation are used on this site
+    owner directive, target       what the main demonstration presents (vessels, missions,
+                                  operations overview, chart, positions, events, replay, evidence
+                                  chains, checkpoints, verification results) and Voyage Evidence as
+                                  the complementary after-the-fact review of one claim
+    reviewed copy precisions      "device-signed checkpoints protect the recorded chains; every other
+                                  value is marked as bound by a file hash or as derived by the
+                                  verifier"; the chart is not evidence; "No external time anchor is
+                                  demonstrated"; NOT_EVALUATED is not a negative result
+    report page                   per-condition SUPPORTED / PARTIAL / NOT_EVALUATED, downloads with
+                                  their SHA-256 values
+    chart                         modelled depth, not an official chart, not for navigation
+    Voyage Evidence live page     claim under review, trust panel, technical and legal exports;
+                                  incident, vessel and protected area synthetic
+    reviewer recommendation       one durable top-level area for autonomous systems with Marine as
+                                  its first entry; keep the home maritime section and the hero;
+                                  no placeholder links for domains not yet demonstrated
+
+Not stated: no real vessel, sensor, fleet or partner; no test counts; no claim that the site's
+values are true; no independent re-verification.
+
+### P3 - Checks (local production build, next start, Playwright, Chromium)
+
+    typecheck   tsc --noEmit: pass
+    build       next build: pass (local placeholder values for mail and database variables)
+    crawl       25 routes: 0 non-200, 0 missing anchors; external marine targets: / and
+                /voyage-evidence/, both 200 when fetched live on 2026-11-12
+    home        bar not covered by the menu at 390, 768, 900, 1024 and 1440 px; menu height
+                64-68 px (one row) at all widths; no horizontal overflow; no console errors;
+                dropdown and mobile menu show the new group
+
+### P4 - Open points for the owner
+
+- The menu group label: "Autonomous Systems" (used) or the shorter "Autonomy".
+- Voyage Evidence itself loads map resources from two outside hosts and has no
+  Content-Security-Policy (known on the marine site; not changed here).

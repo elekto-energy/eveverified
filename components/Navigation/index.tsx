@@ -1,4 +1,6 @@
 'use client'
+// §P (v1.12): the full menu row shows from 1024 px (lg). Below that the existing
+// mobile menu is used; at 768-1023 px the row wrapped onto two or three lines.
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -55,7 +57,7 @@ export default function Navigation() {
         </a>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8" ref={dropdownRef}>
+        <div className="hidden lg:flex items-center gap-8" ref={dropdownRef}>
           {navItems.map((item) => (
             'children' in item && item.children ? (
               // Dropdown item
@@ -121,7 +123,7 @@ export default function Navigation() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2"
+          className="lg:hidden p-2"
         >
           <div className="w-6 h-5 flex flex-col justify-between">
             <span className={`w-full h-0.5 bg-white transition-all duration-300 ${
@@ -144,7 +146,7 @@ export default function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-eve-dark/95 backdrop-blur-xl border-b border-white/5"
+            className="lg:hidden bg-eve-dark/95 backdrop-blur-xl border-b border-white/5"
           >
             <div className="px-6 py-4 flex flex-col gap-2">
               {navItems.map((item) => (

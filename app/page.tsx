@@ -9,11 +9,13 @@ import Footer from '@/components/Footer'
 import Autonomy from '@/components/Autonomy'
 import Milestones from '@/components/Milestones'
 import Maritime from '@/components/Maritime'
+import MarineDemoBar from '@/components/MarineDemoBar'
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-ent-bg">
       <Navigation />
+      <MarineDemoBar />
       <Hero />
       <Autonomy />
       <VerifiedDemonstrations />

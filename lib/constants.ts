@@ -70,6 +70,16 @@ export const navItems = [
   { name: 'GRC', href: 'https://grc.eveverified.com' },
   { name: 'Verify', href: 'https://verify.eveverified.com' },
   { name: 'Services', href: '/services' },
+  // §P (v1.12): one durable area for autonomous-system demonstrations. Marine is the
+  // first; further domains are added only when demonstrated and approved.
+  {
+    name: 'Autonomous Systems',
+    href: 'https://marine.eveverified.com/',
+    children: [
+      { name: 'Marine – Autonomous Operations', href: 'https://marine.eveverified.com/' },
+      { name: 'For maritime teams', href: '/#maritime' },
+    ]
+  },
   {
     name: 'More',
     href: '/about/what-is-eve',
@@ -83,7 +93,6 @@ export const navItems = [
       { name: 'ComplieDocs', href: 'https://compliedocs.com' },
       { name: 'ASK Research', href: 'https://research.eveverified.com' },
       { name: 'Stories', href: '/stories/accountability' },
-      { name: 'Marine', href: 'https://marine.eveverified.com' },
       { name: 'Company', href: '/about/company' },
       { name: 'Pilot Partnerships', href: '/services#pilot-partnerships' },
     ]
